@@ -122,26 +122,48 @@ const std::vector<FMCButtonDef> &XCraftsFMCProfile::buttonDefs() const {
                         {FMCKey::LSK5R, "XCrafts/ERJ/" + cdu + "/RSK5"},
                         {FMCKey::LSK6R, "XCrafts/ERJ/" + cdu + "/RSK6"},
 
-                        {FMCKey::PFP_INIT_REF, "XCrafts/ERJ/" + cdu + "_WW_Key_INIT_REF"},
-                        {FMCKey::PFP_ROUTE, "XCrafts/ERJ/" + cdu + "_WW_Key_RTE"},
-                        {FMCKey::PFP3_CLB, "XCrafts/ERJ/" + cdu + "_WW_Key_CLB"},
-                        {FMCKey::PFP3_CRZ, "XCrafts/ERJ/" + cdu + "_WW_Key_CRZ"},
-                        {FMCKey::PFP3_DES, "XCrafts/ERJ/" + cdu + "_WW_Key_DES"},
-                        {FMCKey::MENU, "XCrafts/ERJ/" + cdu + "_WW_Key_MENU"},
-                        {FMCKey::PFP_LEGS, "XCrafts/ERJ/" + cdu + "_WW_Key_LEGS"},
-                        {FMCKey::PFP_DEP_ARR, "XCrafts/ERJ/" + cdu + "_WW_Key_DEP_ARR"},
-                        {FMCKey::PFP_HOLD, "XCrafts/ERJ/" + cdu + "_WW_Key_HOLD"},
-                        {FMCKey::PROG, "XCrafts/ERJ/" + cdu + "_WW_Key_PROG"},
-                        {FMCKey::PFP_EXEC, "XCrafts/ERJ/" + cdu + "_WW_Key_EXEC"},
-                        {FMCKey::PFP3_N1_LIMIT, "XCrafts/ERJ/" + cdu + "_WW_Key_N1_LIMIT"},
-                        {FMCKey::PFP_FIX, "XCrafts/ERJ/" + cdu + "_WW_Key_FIX"},
-                        {FMCKey::PAGE_PREV, "XCrafts/ERJ/" + cdu + "_WW_Key_PREV_PAGE"},
-                        {FMCKey::PAGE_NEXT, "XCrafts/ERJ/" + cdu + "_WW_Key_NEXT_PAGE"},
-                        {FMCKey::PFP4_ATC, "XCrafts/ERJ/" + cdu + "_WW_Key_ATC"},
-                        {std::vector<FMCKey>{FMCKey::PFP4_VNAV, FMCKey::PFP7_VNAV}, "XCrafts/ERJ/" + cdu + "_WW_Key_VNAV"},
-                        {std::vector<FMCKey>{FMCKey::PFP4_FMC_COMM, FMCKey::PFP7_FMC_COMM}, "XCrafts/ERJ/" + cdu + "_WW_Key_FMC_COMM"},
-                        {std::vector<FMCKey>{FMCKey::PFP4_NAV_RAD, FMCKey::PFP7_NAV_RAD}, "XCrafts/ERJ/" + cdu + "_WW_Key_NAV_RAD"},
-                        {FMCKey::PFP7_ALTN, "XCrafts/ERJ/" + cdu + "_WW_Key_ALTN"},
+                        // {FMCKey::PFP_INIT_REF, "XCrafts/ERJ/" + cdu + "_WW_Key_INIT_REF"},
+                        // {FMCKey::PFP_ROUTE, "XCrafts/ERJ/" + cdu + "_WW_Key_RTE"},
+                        // {FMCKey::PFP3_CLB, "XCrafts/ERJ/" + cdu + "_WW_Key_CLB"},
+                        // {FMCKey::PFP3_CRZ, "XCrafts/ERJ/" + cdu + "_WW_Key_CRZ"},
+                        // {FMCKey::PFP3_DES, "XCrafts/ERJ/" + cdu + "_WW_Key_DES"},
+                        // {FMCKey::MENU, "XCrafts/ERJ/" + cdu + "_WW_Key_MENU"},
+                        // {FMCKey::PFP_LEGS, "XCrafts/ERJ/" + cdu + "_WW_Key_LEGS"},
+                        // {FMCKey::PFP_DEP_ARR, "XCrafts/ERJ/" + cdu + "_WW_Key_DEP_ARR"},
+                        // {FMCKey::PFP_HOLD, "XCrafts/ERJ/" + cdu + "_WW_Key_HOLD"},
+                        // {FMCKey::PROG, "XCrafts/ERJ/" + cdu + "_WW_Key_PROG"},
+                        // {FMCKey::PFP_EXEC, "XCrafts/ERJ/" + cdu + "_WW_Key_EXEC"},
+                        // {FMCKey::PFP3_N1_LIMIT, "XCrafts/ERJ/" + cdu + "_WW_Key_N1_LIMIT"},
+                        // {FMCKey::PFP_FIX, "XCrafts/ERJ/" + cdu + "_WW_Key_FIX"},
+                        // {FMCKey::PAGE_PREV, "XCrafts/ERJ/" + cdu + "_WW_Key_PREV_PAGE"},
+                        // {FMCKey::PAGE_NEXT, "XCrafts/ERJ/" + cdu + "_WW_Key_NEXT_PAGE"},
+                        // {FMCKey::PFP4_ATC, "XCrafts/ERJ/" + cdu + "_WW_Key_ATC"},
+                        // {std::vector<FMCKey>{FMCKey::PFP4_VNAV, FMCKey::PFP7_VNAV}, "XCrafts/ERJ/" + cdu + "_WW_Key_VNAV"},
+                        // {std::vector<FMCKey>{FMCKey::PFP4_FMC_COMM, FMCKey::PFP7_FMC_COMM}, "XCrafts/ERJ/" + cdu + "_WW_Key_FMC_COMM"},
+                        // {std::vector<FMCKey>{FMCKey::PFP4_NAV_RAD, FMCKey::PFP7_NAV_RAD}, "XCrafts/ERJ/" + cdu + "_WW_Key_NAV_RAD"},
+                        // {FMCKey::PFP7_ALTN, "XCrafts/ERJ/" + cdu + "_WW_Key_ALTN"},
+
+                        {std::vector<FMCKey>{FMCKey::MCDU_SEC_FPLN, FMCKey::PFP_INIT_REF}, "XCrafts/ERJ/" + cdu + "/Key_NAV;XCrafts/ERJ/" + cdu + "/LSK4"}, // Nav IDENT
+                        {FMCKey::PFP3_CLB, "XCrafts/ERJ/" + cdu + "/Key_PERF;XCrafts/ERJ/" + cdu + "/RSK2"},                                                // Perf CLIMB
+                        {FMCKey::PFP3_CRZ, "XCrafts/ERJ/" + cdu + "/Key_PERF;XCrafts/ERJ/" + cdu + "/LSK2"},                                                // Perf CRUISE
+                        {std::vector<FMCKey>{FMCKey::MCDU_AIRPORT, FMCKey::PFP3_DES}, "XCrafts/ERJ/" + cdu + "/Key_PERF;XCrafts/ERJ/" + cdu + "/LSK3"},     // Perf DESCENT
+                                                                                                                                                            //        {std::vector<FMCKey>{FMCKey::PFP4_VNAV, FMCKey::PFP7_VNAV}, "XCrafts/ERJ/"+cdu+"/Key_NAV;XCrafts/ERJ/"+cdu+"/LSK3"}, // Nav TOD details
+                                                                                                                                                            //        {FMCKey::PFP_HOLD, "XCrafts/ERJ/"+cdu+"/Key_NAV;XCrafts/ERJ/"+cdu+"/LSK3"}, // Nav HOLD
+                                                                                                                                                            //        {FMCKey::PFP_FIX, "XCrafts/ERJ/"+cdu+"/Key_NAV;XCrafts/ERJ/"+cdu+"/LSK3"}, // Nav PILOT WAYPOINT
+
+                        //        {FMCKey::PFP_EXEC, "custom_tbd"},
+                        //        {FMCKey::PFP_DEP_ARR, "custom_tbd"},
+
+                        {FMCKey::PROG, "XCrafts/ERJ/" + cdu + "/Key_PROG"},
+                        {FMCKey::PFP3_N1_LIMIT, "XCrafts/ERJ/" + cdu + "/Key_TRS"},
+                        {FMCKey::MCDU_PERF, "XCrafts/ERJ/" + cdu + "/Key_PERF"},
+                        {std::vector<FMCKey>{FMCKey::MCDU_INIT, FMCKey::PFP_ROUTE}, "XCrafts/ERJ/" + cdu + "/Key_RTE"},
+                        {std::vector<FMCKey>{FMCKey::MCDU_DATA, FMCKey::PFP4_FMC_COMM, FMCKey::PFP7_FMC_COMM}, "XCrafts/ERJ/" + cdu + "/Key_DLK"},
+                        {std::vector<FMCKey>{FMCKey::MCDU_FPLN, FMCKey::PFP_LEGS}, "XCrafts/ERJ/" + cdu + "/Key_FPL"},
+                        {std::vector<FMCKey>{FMCKey::MCDU_RAD_NAV, FMCKey::PFP4_NAV_RAD, FMCKey::PFP7_NAV_RAD}, "XCrafts/ERJ/" + cdu + "/Key_RADIO"},
+                        {FMCKey::MENU, "XCrafts/ERJ/" + cdu + "/Key_DLK"},
+                        {FMCKey::PAGE_PREV, "XCrafts/ERJ/" + cdu + "/Key_PREV"},
+                        {FMCKey::PAGE_NEXT, "XCrafts/ERJ/" + cdu + "/Key_NEXT"},
 
                         // Numeric Keys
                         {FMCKey::KEY1, "XCrafts/ERJ/" + cdu + "/Key_1"},
@@ -346,8 +368,6 @@ void XCraftsFMCProfile::updatePage(std::vector<std::vector<char>> &page) {
 
         // Parse XCrafts format: RRCCFS[TEXT]
         // RR CC F S
-        // 05 18 1 2 IRMA8A ST     DEPARTUREv                    
-        // 13 15 6 0 10DEPARTUREv                                
         // 13 15 6 0 10DEPARTUREv
         // 13 10 6 0 15ACT APP SPEEDv
         // 13 17 2 0 TAKEOFFv
@@ -375,7 +395,18 @@ void XCraftsFMCProfile::updatePage(std::vector<std::vector<char>> &page) {
             continue;
         }
 
-        constexpr unsigned char textStartIndex = 6;
+        unsigned char textStartIndex = 6;
+        bool isSmallFont = fontStyle == XCraftsFMCFontStyle::Small || fontStyle == XCraftsFMCFontStyle::SmallReverseVideo || fontStyle == XCraftsFMCFontStyle::SmallReverseVideoBoxed;
+        bool isBoxed = fontStyle == XCraftsFMCFontStyle::SmallReverseVideoBoxed || fontStyle == XCraftsFMCFontStyle::LargeReverseVideoBoxed;
+        if (isBoxed) {
+            if (text.size() > 6 && std::isdigit(text[6])) {
+                textStartIndex = 7;
+                if (text.size() > 7 && std::isdigit(text[7])) {
+                    textStartIndex = 8;
+                }
+            }
+        }
+
         if (text.size() > textStartIndex) {
             for (int j = textStartIndex; j < text.size() && (colIndex + (j - textStartIndex)) < ProductFMC::PageCharsPerLine; j++) {
                 unsigned char c = text[j];
@@ -384,10 +415,8 @@ void XCraftsFMCProfile::updatePage(std::vector<std::vector<char>> &page) {
                 }
 
                 int displayCol = colIndex + (j - textStartIndex);
-                bool isSmallFont = fontStyle == XCraftsFMCFontStyle::Small || fontStyle == XCraftsFMCFontStyle::SmallReverseVideo || fontStyle == XCraftsFMCFontStyle::SmallReverseVideoBoxed;
-
                 char existing = product->getPageCharacter(page, lineIndex, displayCol);
-                if (existing && c == 0x20) {
+                if (!isBoxed && existing && c == 0x20) {
                     continue;
                 }
 

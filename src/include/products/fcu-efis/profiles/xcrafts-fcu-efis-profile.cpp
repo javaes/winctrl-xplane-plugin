@@ -28,6 +28,8 @@ XCraftsFCUEfisProfile::XCraftsFCUEfisProfile(ProductFCUEfis *product) : FCUEfisA
         bool engaged = (mode == 2);
         product->setLedBrightness(FCUEfisLed::AP1_GREEN, engaged ? 1 : 0);
         product->setLedBrightness(FCUEfisLed::AP2_GREEN, engaged ? 1 : 0);
+        product->setLedBrightness(FCUEfisLed::EFISL_FD_GREEN, engaged ? 1 : 0);
+        product->setLedBrightness(FCUEfisLed::EFISR_FD_GREEN, engaged ? 1 : 0);
     });
 
     Dataref::getInstance()->monitorExistingDataref<int>("XCrafts/ERJ/autothrottle_armed", [product](int armed) {
@@ -68,6 +70,7 @@ const std::vector<std::string> &XCraftsFCUEfisProfile::displayDatarefs() const {
 
         "sim/cockpit2/gauges/actuators/barometer_setting_in_hg_pilot",
         "sim/physics/metric_press",
+        "XCrafts/ERJ/STD_visible",
     };
 
     return datarefs;
@@ -79,7 +82,7 @@ const std::unordered_map<uint16_t, FCUEfisButtonDef> &XCraftsFCUEfisProfile::but
         {1, {"LOC", "XCrafts/ERJ/LNAV"}},
         {2, {"TRK/FPA", "XCrafts/ERJ/FPA"}},
         {3, {"AP1", "XCrafts/APYD_Toggle"}},
-        {4, {"AP2", "XCrafts/ERJ/TOGA"}},
+        {4, {"AP2", "XCrafts/APYD_Toggle"}},
         {5, {"A/THR", "XCrafts/ERJ/AutoThrottle"}},
         {7, {"METRIC", "XCrafts/ERJ/PFD/altitude_meters"}},
         {8, {"APPR", "XCrafts/ERJ/APPCH"}},
@@ -110,6 +113,17 @@ const std::unordered_map<uint16_t, FCUEfisButtonDef> &XCraftsFCUEfisProfile::but
         {41, {"L_PRESS DEC", "custom", FCUEfisDatarefType::BAROMETER_PILOT, -1.0}},
         {42, {"L_PRESS INC", "custom", FCUEfisDatarefType::BAROMETER_PILOT, 1.0}},
 
+        {45, {"L_MODE LS", "XCrafts/ERJ/MFD/MAP_tab"}},
+        {46, {"L_MODE VOR", "XCrafts/ERJ/MFD/MAP_tab"}},
+        {47, {"L_MODE NAV", "XCrafts/ERJ/MFD/SYS_tab"}},
+        {48, {"L_MODE ARC", "XCrafts/ERJ/MFD/MAP_tab"}},
+        {49, {"L_MODE PLAN", "XCrafts/ERJ/MFD/PLAN_tab"}},
+        {50, {"L_RANGE 10", "sim/cockpit/switches/EFIS_map_range_selector", FCUEfisDatarefType::SET_VALUE, 0.0}},
+        {51, {"L_RANGE 20", "sim/cockpit/switches/EFIS_map_range_selector", FCUEfisDatarefType::SET_VALUE, 1.0}},
+        {52, {"L_RANGE 40", "sim/cockpit/switches/EFIS_map_range_selector", FCUEfisDatarefType::SET_VALUE, 2.0}},
+        {53, {"L_RANGE 80", "sim/cockpit/switches/EFIS_map_range_selector", FCUEfisDatarefType::SET_VALUE, 3.0}},
+        {54, {"L_RANGE 160", "sim/cockpit/switches/EFIS_map_range_selector", FCUEfisDatarefType::SET_VALUE, 4.0}},
+        {55, {"L_RANGE 320", "sim/cockpit/switches/EFIS_map_range_selector", FCUEfisDatarefType::SET_VALUE, 5.0}},
         // Buttons 62-63 reserved
 
         {64, {"R_FD", "XCrafts/ERJ/fdir_toggle"}},
@@ -163,7 +177,7 @@ void XCraftsFCUEfisProfile::updateDisplayData(FCUDisplayData &data) {
     data.fpaMode = false;
 
     // Altitude
-    float altitude = dr->getCached<float>("XCrafts/ERJ/autopilot/altitude");
+    float altitude = dr->getCached<float>("XCrafts/ERJ/autopilot/altitude"); // ugh.. 11900 (rounded FL110 maar display zegt FL111)
     if (altitude >= 0) {
         int altInt = (static_cast<int>(altitude) / 100) * 100;
         std::stringstream ss;
@@ -206,15 +220,15 @@ void XCraftsFCUEfisProfile::updateDisplayData(FCUDisplayData &data) {
         .displayTest = false,
         .baro = "",
         .unitIsInHg = !isMetric,
-        .isStd = false,
+        .isStd = dr->getCached<bool>("XCrafts/ERJ/STD_visible"),
     };
 
-    if (baroInHg > 0) {
+    if (baroInHg > 0 && !efisValue.isStd) {
         efisValue.setBaro(baroInHg, !isMetric);
     }
 
     data.efisLeft = efisValue;
-    data.efisRight = efisValue;
+    data.efisRight = {.displayEnabled = false};
 }
 
 void XCraftsFCUEfisProfile::buttonPressed(const FCUEfisButtonDef *button, XPLMCommandPhase phase) {

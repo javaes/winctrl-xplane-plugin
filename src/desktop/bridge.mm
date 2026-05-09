@@ -23,6 +23,14 @@ XPLMDataRef XPLMFindDataRef(const char* name);
 XPLMDataRef createMockDataRefWithInference(const char* name, XPLMDataTypeID preferredType);
 void clearAllMockDataRefs();
 
+typedef int XPLMHostApplicationID;
+
+void XPLMGetVersions(int* outXPlaneVersion, int* outXPLMVersion, XPLMHostApplicationID* outHostID) {
+    if (outXPlaneVersion) *outXPlaneVersion = 12000;
+    if (outXPLMVersion)   *outXPLMVersion   = 400;
+    if (outHostID)        *outHostID         = 1;
+}
+
 
 // Helper function to ensure dataref exists before setting
 void ensureDatarefExists(const char* ref, XPLMDataTypeID preferredType) {

@@ -602,36 +602,6 @@ void ProductPAP3MCP::didReceiveData(int reportId, uint8_t *report, int reportLen
     lastButtonStateLo = buttonsLo;
     lastButtonStateHi = buttonsHi;
 
-    static uint8_t lastSwitchBytes[7] = {0}; // Track switch states for bytes 0x04-0x06
-    static const std::pair<uint8_t, uint8_t> switches[] = {
-        {0x04, 0x08}, // FD CAPT (OFF line)
-        {0x04, 0x20}, // FD FO (OFF line)
-        {0x04, 0x80}, // AP DISCONNECT UP
-        {0x05, 0x01}, // AP DISCONNECT DOWN
-        {0x06, 0x01}, // A/T ARMED
-        {0x06, 0x02}  // A/T DISARMED
-    };
-
-    for (const auto &sw : switches) {
-        uint8_t byteOffset = sw.first;
-        uint8_t bitMask = sw.second;
-
-        if (byteOffset >= reportLength) {
-            continue;
-        }
-
-        bool currentState = (report[byteOffset] & bitMask) != 0;
-        bool lastState = (lastSwitchBytes[byteOffset] & bitMask) != 0;
-
-        if (currentState != lastState) {
-            profile->handleSwitchChanged(byteOffset, bitMask, currentState);
-        }
-    }
-
-    for (int i = 4; i <= 6 && i < reportLength; i++) {
-        lastSwitchBytes[i] = report[i];
-    }
-
     for (int byteIndex = 1; byteIndex <= 6 && byteIndex < reportLength; byteIndex++) {
         uint8_t buttonByte = report[byteIndex];
 
@@ -641,22 +611,56 @@ void ProductPAP3MCP::didReceiveData(int reportId, uint8_t *report, int reportLen
             didReceiveButton(hardwareButtonIndex, pressed);
         }
     }
-
-    // Process bank angle switch (byte 0x05)
-    static uint8_t lastBankAngleByte = 0;
-    if (reportLength > 0x05) {
-        uint8_t currentBankAngleByte = report[0x05];
-        if (currentBankAngleByte != lastBankAngleByte) {
-            profile->handleBankAngleSwitch(currentBankAngleByte);
-            lastBankAngleByte = currentBankAngleByte;
-        }
-    }
 }
 
 void ProductPAP3MCP::didReceiveButton(uint16_t hardwareButtonIndex, bool pressed, uint8_t count) {
     USBDevice::didReceiveButton(hardwareButtonIndex, pressed, count);
 
     if (!connected || !profile) {
+        return;
+    }
+
+    // Maintained switches: not in buttonDefs, routed to handleSwitchChanged.
+    // pressedButtonIndices tracks the last known state so this is edge-triggered
+    // on both macOS (IOHIDQueue) and Windows/Linux (raw report button loop).
+    static const struct {
+        uint16_t idx;
+        uint8_t byteOffset;
+        uint8_t bitMask;
+    } switchDefs[] = {
+        {27, 0x04, 0x08}, // FD CAPT (OFF line)
+        {29, 0x04, 0x20}, // FD FO (OFF line)
+        {31, 0x04, 0x80}, // AP DISCONNECT UP
+        {32, 0x05, 0x01}, // AP DISCONNECT DOWN
+        {40, 0x06, 0x01}, // A/T ARMED
+        {41, 0x06, 0x02}, // A/T DISARMED
+    };
+
+    for (const auto &sw : switchDefs) {
+        if (hardwareButtonIndex == sw.idx) {
+            bool wasPressed = pressedButtonIndices.count(hardwareButtonIndex) > 0;
+            if (pressed && !wasPressed) {
+                pressedButtonIndices.insert(hardwareButtonIndex);
+                profile->handleSwitchChanged(sw.byteOffset, sw.bitMask, true);
+            } else if (!pressed && wasPressed) {
+                pressedButtonIndices.erase(hardwareButtonIndex);
+                profile->handleSwitchChanged(sw.byteOffset, sw.bitMask, false);
+            }
+            return;
+        }
+    }
+
+    // Bank angle rotary (byte 0x05, bits 1-5 → indices 33-37).
+    // Only act on the rising edge (the newly active position).
+    if (hardwareButtonIndex >= 33 && hardwareButtonIndex <= 37) {
+        bool wasPressed = pressedButtonIndices.count(hardwareButtonIndex) > 0;
+        if (pressed && !wasPressed) {
+            pressedButtonIndices.insert(hardwareButtonIndex);
+            uint8_t bit = static_cast<uint8_t>(1u << (hardwareButtonIndex - 32));
+            profile->handleBankAngleSwitch(bit);
+        } else if (!pressed && wasPressed) {
+            pressedButtonIndices.erase(hardwareButtonIndex);
+        }
         return;
     }
 

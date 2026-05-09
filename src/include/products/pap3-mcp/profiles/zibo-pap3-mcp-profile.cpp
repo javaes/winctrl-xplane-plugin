@@ -223,8 +223,20 @@ const std::unordered_map<uint16_t, PAP3MCPButtonDef> &ZiboPAP3MCPProfile::button
         {24, {"ALT INC", "laminar/B738/autopilot/altitude_up"}},
         {25, {"CRS FO DEC", "laminar/B738/autopilot/course_copilot_dn"}},
         {26, {"CRS FO INC", "laminar/B738/autopilot/course_copilot_up"}},
+        // 27: FD CAPT       - Handled by handleSwitchChanged (byte 0x04, bit 0x08)
+        // 29: FD FO         - Handled by handleSwitchChanged (byte 0x04, bit 0x20)
+        // 31: AP DISC DOWN  - Handled by handleSwitchChanged (byte 0x04, bit 0x80)
+        // 32: AP DISC UP    - Handled by handleSwitchChanged (byte 0x05, bit 0x01)
+        // 33: Bank angle 10° - Handled by handleBankAngleSwitch (byte 0x05, bit 0x02)
+        // 34: Bank angle 15° - Handled by handleBankAngleSwitch (byte 0x05, bit 0x04)
+        // 35: Bank angle 20° - Handled by handleBankAngleSwitch (byte 0x05, bit 0x08)
+        // 36: Bank angle 25° - Handled by handleBankAngleSwitch (byte 0x05, bit 0x10)
+        // 37: Bank angle 30° - Handled by handleBankAngleSwitch (byte 0x05, bit 0x20)
         {38, {"VS DEC", "sim/autopilot/vertical_speed_down"}},
-        {39, {"VS INC", "sim/autopilot/vertical_speed_up"}}};
+        {39, {"VS INC", "sim/autopilot/vertical_speed_up"}}
+        // 40: A/T ARMED     - Handled by handleSwitchChanged (byte 0x06, bit 0x01)
+        // 41: A/T DISARMED  - Handled by handleSwitchChanged (byte 0x06, bit 0x02)
+    };
     return buttons;
 }
 
@@ -355,16 +367,16 @@ void ZiboPAP3MCPProfile::maybeToggle(const char *dataref, bool hwState, const ch
 
 // Handle maintained switches (FD CAPT/FO, A/T, AP Disconnect)
 void ZiboPAP3MCPProfile::handleSwitchChanged(uint8_t byteOffset, uint8_t bitMask, bool state) {
-    // FD CAPT: byte 0x04, bit 0x08 = OFF line; bit is HIGH when switch is OFF, LOW when switch is ON
+    // FD CAPT: byte 0x04, bit 0x08; bit is HIGH when switch is ON
     if (byteOffset == 0x04 && bitMask == 0x08) {
-        hwFDCaptOn = !state; // OFF line active (state=true) means switch is OFF
+        hwFDCaptOn = state;
         maybeToggle("laminar/B738/autopilot/flight_director_pos", hwFDCaptOn, "laminar/B738/autopilot/flight_director_toggle");
         return;
     }
 
-    // FD FO: byte 0x04, bit 0x20 = OFF line; bit is HIGH when switch is OFF, LOW when switch is ON
+    // FD FO: byte 0x04, bit 0x20; bit is HIGH when switch is ON
     if (byteOffset == 0x04 && bitMask == 0x20) {
-        hwFDFoOn = !state; // OFF line active (state=true) means switch is OFF
+        hwFDFoOn = state;
         maybeToggle("laminar/B738/autopilot/flight_director_fo_pos", hwFDFoOn, "laminar/B738/autopilot/flight_director_fo_toggle");
         return;
     }
@@ -391,21 +403,19 @@ void ZiboPAP3MCPProfile::handleSwitchChanged(uint8_t byteOffset, uint8_t bitMask
         return;
     }
 
-    // AP DISCONNECT: byte 0x04, bit 0x80 = UP line, byte 0x05, bit 0x01 = DOWN line
-    // The bar is a latching (non-spring) switch. When it moves, both lines transition
-    // in the same frame. Only act on the rising edge of each line to avoid double-toggle.
+    // AP DISCONNECT: byte 0x04, bit 0x80 goes HIGH when bar is DOWN (disengaged),
+    // byte 0x05, bit 0x01 goes HIGH when bar is UP (re-engaged). Hardware bit naming
+    // is the inverse of physical position. Only act on rising edges.
     if (byteOffset == 0x04 && bitMask == 0x80) {
         if (state) {
-            // UP line rising: bar just clicked back up (re-engage position)
-            hwApDiscEngaged = true;
+            hwApDiscEngaged = false;
             maybeToggle("laminar/B738/autopilot/disconnect_pos", hwApDiscEngaged, "laminar/B738/autopilot/disconnect_toggle");
         }
         return;
     }
     if (byteOffset == 0x05 && bitMask == 0x01) {
         if (state) {
-            // DOWN line rising: bar just clicked down (disengage position)
-            hwApDiscEngaged = false;
+            hwApDiscEngaged = true;
             maybeToggle("laminar/B738/autopilot/disconnect_pos", hwApDiscEngaged, "laminar/B738/autopilot/disconnect_toggle");
         }
         return;

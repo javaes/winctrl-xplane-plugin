@@ -28,6 +28,7 @@ class ProductPDC : public USBDevice {
         const PDCDeviceVariant deviceVariant;
 
         const char *classIdentifier() override;
+        const char *activeProfileName() const override;
         bool connect() override;
         void update() override;
         void blackout() override;

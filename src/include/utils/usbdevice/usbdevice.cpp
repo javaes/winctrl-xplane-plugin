@@ -144,6 +144,10 @@ const char *USBDevice::classIdentifier() {
     return "USBDevice (none)";
 }
 
+const char *USBDevice::activeProfileName() const {
+    return "none";
+}
+
 void USBDevice::blackout() {
     // noop, expect override
 }

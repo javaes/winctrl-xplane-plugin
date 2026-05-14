@@ -35,6 +35,10 @@ const char *ProductTCAS::classIdentifier() {
     return "TCAS";
 }
 
+const char *ProductTCAS::activeProfileName() const {
+    return profile ? typeid(*profile).name() : "none";
+}
+
 void ProductTCAS::setProfileForCurrentAircraft() {
     if (TolissTCASProfile::IsEligible()) {
         profile = new TolissTCASProfile(this);

@@ -4,6 +4,7 @@
 #include "config.h"
 
 #include <atomic>
+#include <typeinfo>
 #include <condition_variable>
 #include <cstdint>
 #include <mutex>
@@ -72,6 +73,7 @@ class USBDevice {
         std::string productName;
 
         virtual const char *classIdentifier();
+        virtual const char *activeProfileName() const;
         virtual bool connect();
         void disconnect();
         virtual void update();

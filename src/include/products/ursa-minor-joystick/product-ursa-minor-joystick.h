@@ -23,6 +23,7 @@ class ProductUrsaMinorJoystick : public USBDevice {
         float vibrationMultiplier;
 
         const char *classIdentifier() override;
+        const char *activeProfileName() const override;
         bool connect() override;
         void update() override;
         void blackout() override;

@@ -121,6 +121,10 @@ const char *ProductFMC::classIdentifier() {
     return "FMC (unknown hardware)";
 }
 
+const char *ProductFMC::activeProfileName() const {
+    return profile ? typeid(*profile).name() : "none";
+}
+
 bool ProductFMC::connect() {
     if (USBDevice::connect()) {
         uint8_t col_bg[] = {0x00, 0x00, 0x00};

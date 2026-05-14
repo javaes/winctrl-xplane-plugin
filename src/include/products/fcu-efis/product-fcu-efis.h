@@ -32,6 +32,7 @@ class ProductFCUEfis : public USBDevice {
         static constexpr unsigned char EfisLeftIdentifierByte = 0x0D;
 
         const char *classIdentifier() override;
+        const char *activeProfileName() const override;
         bool connect() override;
         void update() override;
         void blackout() override;

@@ -28,6 +28,10 @@ const char *ProductUrsaMinorJoystick::classIdentifier() {
     return "Ursa Minor Joystick";
 }
 
+const char *ProductUrsaMinorJoystick::activeProfileName() const {
+    return profile ? typeid(*profile).name() : "none";
+}
+
 void ProductUrsaMinorJoystick::setProfileForCurrentAircraft() {
     if (TolissUrsaMinorJoystickProfile::IsEligible()) {
         profile = new TolissUrsaMinorJoystickProfile(this);

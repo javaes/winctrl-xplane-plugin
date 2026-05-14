@@ -89,7 +89,7 @@ PLUGIN_API int XPluginStart(char *name, char *sig, char *desc) {
 
                 Logger::getInstance()->info("[%s.%03lld] Write queue sizes:\n", timeBuffer, nowMs.count());
                 for (auto &device : USBController::getInstance()->devices) {
-                    Logger::getInstance()->info("[%s.%03lld] - %s: %zu pending packets\n", timeBuffer, nowMs.count(), device->classIdentifier(), device->getWriteQueueSize());
+                    Logger::getInstance()->info("[%s.%03lld] - %s (%s): %zu pending packets\n", timeBuffer, nowMs.count(), device->classIdentifier(), device->activeProfileName(), device->getWriteQueueSize());
                 }
 
                 AppState::getInstance()->executeAfter(5000, *action);

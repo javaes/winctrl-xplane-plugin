@@ -40,6 +40,7 @@ class ProductFMC : public USBDevice {
         const FMCDeviceVariant deviceVariant;
 
         const char *classIdentifier() override;
+        const char *activeProfileName() const override;
         bool connect() override;
         void unloadProfile();
         void update() override;

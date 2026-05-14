@@ -35,6 +35,10 @@ const char *ProductUrsaMinorThrottle::classIdentifier() {
     return "Ursa Minor Throttle";
 }
 
+const char *ProductUrsaMinorThrottle::activeProfileName() const {
+    return profile ? typeid(*profile).name() : "none";
+}
+
 void ProductUrsaMinorThrottle::setProfileForCurrentAircraft() {
     if (TolissUrsaMinorThrottleProfile::IsEligible()) {
         profile = new TolissUrsaMinorThrottleProfile(this);

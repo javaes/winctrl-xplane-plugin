@@ -47,6 +47,9 @@ class ProductECAM : public USBDevice {
         static constexpr unsigned char IdentifierByte = 0x70;
 
         const char *classIdentifier() override;
+
+        const char *activeProfileName() const override;
+
         bool connect() override;
         void blackout() override;
         void didReceiveData(int reportId, uint8_t *report, int reportLength) override;

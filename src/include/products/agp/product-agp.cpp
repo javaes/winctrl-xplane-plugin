@@ -35,6 +35,10 @@ const char *ProductAGP::classIdentifier() {
     return "AGP Metal";
 }
 
+const char *ProductAGP::activeProfileName() const {
+    return profile ? typeid(*profile).name() : "none";
+}
+
 void ProductAGP::setProfileForCurrentAircraft() {
     if (TolissAGPProfile::IsEligible()) {
         profile = new TolissAGPProfile(this);

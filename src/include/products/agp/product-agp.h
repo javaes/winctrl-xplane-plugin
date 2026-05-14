@@ -58,6 +58,7 @@ class ProductAGP : public USBDevice {
         AGPTerrainNDPreference terrainNDPreference;
 
         const char *classIdentifier() override;
+        const char *activeProfileName() const override;
         bool connect() override;
         void update() override;
         void blackout() override;

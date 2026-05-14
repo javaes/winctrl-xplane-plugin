@@ -31,6 +31,10 @@ const char *ProductECAM::classIdentifier() {
     return "ECAM";
 }
 
+const char *ProductECAM::activeProfileName() const {
+    return profile ? typeid(*profile).name() : "none";
+}
+
 void ProductECAM::setProfileForCurrentAircraft() {
     if (TolissECAMProfile::IsEligible()) {
         profile = new TolissECAMProfile(this);

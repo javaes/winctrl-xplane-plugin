@@ -82,6 +82,10 @@ const char *ProductFCUEfis::classIdentifier() {
     return "FCU-EFIS";
 }
 
+const char *ProductFCUEfis::activeProfileName() const {
+    return profile ? typeid(*profile).name() : "none";
+}
+
 bool ProductFCUEfis::connect() {
     if (USBDevice::connect()) {
         initializeDisplays();

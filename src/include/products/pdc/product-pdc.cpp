@@ -32,6 +32,10 @@ const char *ProductPDC::classIdentifier() {
     return "PDC";
 }
 
+const char *ProductPDC::activeProfileName() const {
+    return profile ? typeid(*profile).name() : "none";
+}
+
 void ProductPDC::setProfileForCurrentAircraft() {
     if (ZiboPDCProfile::IsEligible()) {
         profile = new ZiboPDCProfile(this);

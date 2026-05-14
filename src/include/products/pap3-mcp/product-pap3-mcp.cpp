@@ -70,6 +70,10 @@ const char *ProductPAP3MCP::classIdentifier() {
     return "PAP3-MCP";
 }
 
+const char *ProductPAP3MCP::activeProfileName() const {
+    return profile ? typeid(*profile).name() : "none";
+}
+
 bool ProductPAP3MCP::connect() {
     if (USBDevice::connect()) {
         initializeDisplays();

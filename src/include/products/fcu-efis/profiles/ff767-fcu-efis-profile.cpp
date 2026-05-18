@@ -467,7 +467,7 @@ void FF767FCUEfisProfile::updateDisplayData(FCUDisplayData &data) {
     data.hdgManaged = false;
 
     // to be disabled on 767: no TRK mode!?
-    //data.hdgTrk = datarefManager->getCached<bool>("1-sim/AP/hdgConfButton") == false;
+    //data.headingHdg = datarefManager->getCached<bool>("1-sim/AP/hdgConfButton") == false;
 
     // ALT ------------------------------------------------------------------------------
     float altitude = datarefManager->getCached<float>("1-sim/AP/dig5/altSetting");
@@ -501,7 +501,7 @@ void FF767FCUEfisProfile::updateDisplayData(FCUDisplayData &data) {
     data.fpaIndication = false;
     data.vsVerticalLine = true;
 
-    data.latMode = true;
+    data.headingLat = true;
 
     for (int i = 0; i < 2; i++) {
         bool isCaptain = i == 0;

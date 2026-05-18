@@ -68,6 +68,7 @@ const std::vector<std::string> &XCraftsFCUEfisProfile::displayDatarefs() const {
         "XCrafts/ERJ/autopilot/autothrottle_system_active",
         "XCrafts/speed_knob_fms_man",
 
+        "XCrafts/ERJ/cockpit/annunciators_test",
         "sim/cockpit2/gauges/actuators/barometer_setting_in_hg_pilot",
         "sim/physics/metric_press",
         "XCrafts/ERJ/STD_visible",
@@ -108,6 +109,7 @@ const std::unordered_map<uint16_t, FCUEfisButtonDef> &XCraftsFCUEfisProfile::but
         // Buttons 27-31 reserved
 
         {32, {"L_FD", "XCrafts/ERJ/fdir_toggle"}},
+        {33, {"L_LS", "XCrafts/PFD/PREV"}},
         {39, {"L_STD", "XCrafts/ERJ/STD"}},
         {40, {"L_STD PULL", "XCrafts/ERJ/STD"}},
         {41, {"L_PRESS DEC", "custom", FCUEfisDatarefType::BAROMETER_PILOT, -1.0}},
@@ -127,6 +129,7 @@ const std::unordered_map<uint16_t, FCUEfisButtonDef> &XCraftsFCUEfisProfile::but
         // Buttons 62-63 reserved
 
         {64, {"R_FD", "XCrafts/ERJ/fdir_toggle"}},
+        {65, {"R_LS", "XCrafts/PFD/PREV"}},
         {71, {"R_STD", "XCrafts/ERJ/STD"}},
         {72, {"R_STD PULL", "XCrafts/ERJ/STD"}},
         {73, {"R_PRESS DEC", "custom", FCUEfisDatarefType::BAROMETER_FO, -1.0}},
@@ -141,7 +144,8 @@ void XCraftsFCUEfisProfile::updateDisplayData(FCUDisplayData &data) {
     auto dr = Dataref::getInstance();
 
     data.displayEnabled = true;
-    data.displayTest = false;
+    data.displayTest = dr->getCached<bool>("XCrafts/ERJ/cockpit/annunciators_test");
+    data.displayEnabledWindowsFlag &= ~FCUDisplayData::Window::LevelChangeHeader;
 
     // Speed / Mach
     data.spdMach = dr->getCached<bool>("sim/cockpit/autopilot/airspeed_is_mach");
@@ -172,9 +176,11 @@ void XCraftsFCUEfisProfile::updateDisplayData(FCUDisplayData &data) {
     }
 
     // HDG/TRK and VS/FPA mode — no readable state dataref provided, default to HDG/VS
-    data.hdgTrk = false;
+    data.headingHdg = true;
+    data.headingTrk = false;
     data.vsMode = true;
     data.fpaMode = false;
+    data.headingLat = false;
 
     // Altitude
     float altitude = dr->getCached<float>("XCrafts/ERJ/autopilot/altitude"); // ugh.. 11900 (rounded FL110 maar display zegt FL111)
@@ -206,7 +212,6 @@ void XCraftsFCUEfisProfile::updateDisplayData(FCUDisplayData &data) {
     data.fpaIndication = false;
     data.vsVerticalLine = data.vsMode && (data.verticalSpeed != "-----");
 
-    data.latMode = true;
     data.spdManaged = Dataref::getInstance()->getCached<int>("XCrafts/speed_knob_fms_man") == 1;
     data.hdgManaged = false;
     data.altManaged = false;
@@ -216,8 +221,8 @@ void XCraftsFCUEfisProfile::updateDisplayData(FCUDisplayData &data) {
     bool isMetric = dr->getCached<bool>("sim/physics/metric_press");
 
     EfisDisplayValue efisValue = {
-        .displayEnabled = true,
-        .displayTest = false,
+        .displayEnabled = data.displayEnabled,
+        .displayTest = data.displayTest,
         .baro = "",
         .unitIsInHg = !isMetric,
         .isStd = dr->getCached<bool>("XCrafts/ERJ/STD_visible"),

@@ -5,6 +5,7 @@
 #include "dataref.h"
 #include "plugins-menu.h"
 #include "profiles/c172-fcu-efis-profile.h"
+#include "profiles/cis-seneca-fcu-efis-profile.h"
 #include "profiles/ff350-fcu-efis-profile.h"
 #include "profiles/ff767-fcu-efis-profile.h"
 #include "profiles/ff777-fcu-efis-profile.h"
@@ -59,6 +60,9 @@ void ProductFCUEfis::setProfileForCurrentAircraft() {
         profileReady = true;
     } else if (C172FCUEfisProfile::IsEligible()) {
         profile = new C172FCUEfisProfile(this);
+        profileReady = true;
+    } else if (CISSenecaFCUEfisProfile::IsEligible()) {
+        profile = new CISSenecaFCUEfisProfile(this);
         profileReady = true;
     } else if (LaminarA333FCUEfisProfile::IsEligible()) {
         profile = new LaminarA333FCUEfisProfile(this);
@@ -241,85 +245,122 @@ void ProductFCUEfis::sendFCUDisplay(const std::string &speed, const std::string 
     std::vector<uint8_t> flagBytes(17, 0);
 
     // Set flags based on display data
-    if (displayData.spdMach) {
-        flagBytes[static_cast<int>(DisplayByteIndex::H3)] |= 0x04;
-    }
-    if (displayData.spdManaged) {
-        flagBytes[static_cast<int>(DisplayByteIndex::H3)] |= 0x02;
-    }
-    if (!displayData.spdMach) {
-        flagBytes[static_cast<int>(DisplayByteIndex::H3)] |= 0x08; // SPD
+    if (displayData.displayEnabledWindowsFlag & FCUDisplayData::Window::SpeedMachHeader) {
+        if (displayData.spdMach) {
+            flagBytes[static_cast<int>(DisplayByteIndex::H3)] |= 0x04; // Mach
+        } else {
+            flagBytes[static_cast<int>(DisplayByteIndex::H3)] |= 0x08; // SPD
+        }
     }
 
-    if (displayData.hdgTrk) {
-        flagBytes[static_cast<int>(DisplayByteIndex::H0)] |= 0x40; // TRK
-    } else {
-        flagBytes[static_cast<int>(DisplayByteIndex::H0)] |= 0x80; // HDG
-    }
-    if (displayData.hdgManaged) {
-        flagBytes[static_cast<int>(DisplayByteIndex::H0)] |= 0x10;
-    }
-    if (displayData.latMode) {
-        flagBytes[static_cast<int>(DisplayByteIndex::H0)] |= 0x20; // LAT
+    if (displayData.displayEnabledWindowsFlag & FCUDisplayData::Window::SpeedMachValue) {
+        if (displayData.spdMach) {
+            flagBytes[static_cast<int>(DisplayByteIndex::S1)] |= 0x01; // Mach comma
+        }
+
+        if (displayData.spdManaged) {
+            flagBytes[static_cast<int>(DisplayByteIndex::H3)] |= 0x02;
+        }
     }
 
-    if (displayData.altIndication) {
-        flagBytes[static_cast<int>(DisplayByteIndex::A4)] |= 0x10; // ALT
-    }
-    if (displayData.altManaged) {
-        flagBytes[static_cast<int>(DisplayByteIndex::V1)] |= 0x10;
+    if (displayData.displayEnabledWindowsFlag & FCUDisplayData::Window::HeadingTrackHeader) {
+        if (displayData.headingHdg) {
+            flagBytes[static_cast<int>(DisplayByteIndex::H0)] |= 0x80; // HDG
+        }
+
+        if (displayData.headingTrk) {
+            flagBytes[static_cast<int>(DisplayByteIndex::H0)] |= 0x40; // TRK
+        }
+
+        if (displayData.headingLat) {
+            flagBytes[static_cast<int>(DisplayByteIndex::H0)] |= 0x20; // LAT
+        }
     }
 
-    if (displayData.vsMode) {
-        flagBytes[static_cast<int>(DisplayByteIndex::A5)] |= 0x04; // V/S
-    }
-    if (displayData.fpaMode) {
-        flagBytes[static_cast<int>(DisplayByteIndex::A5)] |= 0x01; // FPA
-    }
-    if (displayData.hdgTrk) {
-        flagBytes[static_cast<int>(DisplayByteIndex::A5)] |= 0x02; // TRK
-    }
-    if (!displayData.hdgTrk) {
-        flagBytes[static_cast<int>(DisplayByteIndex::A5)] |= 0x08; // HDG
+    if (displayData.displayEnabledWindowsFlag & FCUDisplayData::Window::HeadingTrackValue) {
+        if (displayData.hdgManaged) {
+            flagBytes[static_cast<int>(DisplayByteIndex::H0)] |= 0x10;
+        }
     }
 
-    if (displayData.vsHorizontalLine) {
-        flagBytes[static_cast<int>(DisplayByteIndex::A0)] |= 0x10;
-    }
-    if (displayData.vsVerticalLine) {
-        flagBytes[static_cast<int>(DisplayByteIndex::V2)] |= 0x20; // Move to different bit
-    }
-    if (displayData.lvlChange) {
-        flagBytes[static_cast<int>(DisplayByteIndex::A2)] |= 0x10;
-    }
-    if (displayData.lvlChangeLeft) {
-        flagBytes[static_cast<int>(DisplayByteIndex::A3)] |= 0x10;
-    }
-    if (displayData.lvlChangeRight) {
-        flagBytes[static_cast<int>(DisplayByteIndex::A1)] |= 0x10;
+    if (displayData.displayEnabledWindowsFlag & FCUDisplayData::Window::HdgTrkVsFpaHeader) {
+        if (displayData.vsMode) {
+            flagBytes[static_cast<int>(DisplayByteIndex::A5)] |= 0x04; // V/S
+        }
+        if (displayData.fpaMode) {
+            flagBytes[static_cast<int>(DisplayByteIndex::A5)] |= 0x01; // FPA
+        }
+
+        if (displayData.headingHdg) {
+            flagBytes[static_cast<int>(DisplayByteIndex::A5)] |= 0x08; // HDG
+        }
+        if (displayData.headingTrk) {
+            flagBytes[static_cast<int>(DisplayByteIndex::A5)] |= 0x02; // TRK
+        }
     }
 
-    if (displayData.vsIndication) {
-        flagBytes[static_cast<int>(DisplayByteIndex::V0)] |= 0x40;
-    }
-    if (displayData.fpaIndication) {
-        flagBytes[static_cast<int>(DisplayByteIndex::V0)] |= 0x80;
-    }
-    if (displayData.fpaComma) {
-        flagBytes[static_cast<int>(DisplayByteIndex::V3)] |= 0x10; // Decimal after 1st digit for X.XX format
-    }
-    if (displayData.vsSign) {
-        flagBytes[static_cast<int>(DisplayByteIndex::V2)] |= 0x10; // VS sign: true = positive, false = negative (per Python impl)
-    }
-    if (displayData.spdMach) { // Mach comma
-        flagBytes[static_cast<int>(DisplayByteIndex::S1)] |= 0x01;
+    if (displayData.displayEnabledWindowsFlag & FCUDisplayData::Window::AltitudeHeader) {
+        if (displayData.altIndication) {
+            flagBytes[static_cast<int>(DisplayByteIndex::A4)] |= 0x10; // ALT
+        }
     }
 
-    if (!displayData.displayEnabled || displayData.displayTest) {
+    if (displayData.displayEnabledWindowsFlag & FCUDisplayData::Window::AltitudeValue) {
+        if (displayData.altManaged) {
+            flagBytes[static_cast<int>(DisplayByteIndex::V1)] |= 0x10;
+        }
+    }
+
+    if (displayData.displayEnabledWindowsFlag & FCUDisplayData::Window::LevelChangeHeader) {
+        if (displayData.lvlChange) {
+            flagBytes[static_cast<int>(DisplayByteIndex::A2)] |= 0x10;
+        }
+        if (displayData.lvlChangeLeft) {
+            flagBytes[static_cast<int>(DisplayByteIndex::A3)] |= 0x10;
+        }
+        if (displayData.lvlChangeRight) {
+            flagBytes[static_cast<int>(DisplayByteIndex::A1)] |= 0x10;
+        }
+    }
+
+    if (displayData.displayEnabledWindowsFlag & FCUDisplayData::Window::VerticalSpeedFPAHeader) {
+        if (displayData.vsIndication) {
+            flagBytes[static_cast<int>(DisplayByteIndex::V0)] |= 0x40;
+        }
+        if (displayData.fpaIndication) {
+            flagBytes[static_cast<int>(DisplayByteIndex::V0)] |= 0x80;
+        }
+    }
+
+    if (displayData.displayEnabledWindowsFlag & FCUDisplayData::Window::VerticalSpeedFPAValue) {
+        if (displayData.vsHorizontalLine) {
+            flagBytes[static_cast<int>(DisplayByteIndex::A0)] |= 0x10;
+        }
+        if (displayData.vsVerticalLine) {
+            flagBytes[static_cast<int>(DisplayByteIndex::V2)] |= 0x20; // Move to different bit
+        }
+        if (displayData.fpaComma) {
+            flagBytes[static_cast<int>(DisplayByteIndex::V3)] |= 0x10; // Decimal after 1st digit for X.XX format
+        }
+        if (displayData.vsSign) {
+            flagBytes[static_cast<int>(DisplayByteIndex::V2)] |= 0x10; // VS sign: true = positive, false = negative
+        }
+    }
+
+    bool displayOffOrTesting = !displayData.displayEnabled || displayData.displayTest;
+    if (displayOffOrTesting || !(displayData.displayEnabledWindowsFlag & FCUDisplayData::Window::SpeedMachValue)) {
         std::fill(speedData.begin(), speedData.end(), displayData.displayTest ? 0xFF : 0);
+    }
+    if (displayOffOrTesting || !(displayData.displayEnabledWindowsFlag & FCUDisplayData::Window::HeadingTrackValue)) {
         std::fill(headingData.begin(), headingData.end(), displayData.displayTest ? 0xFF : 0);
+    }
+    if (displayOffOrTesting || !(displayData.displayEnabledWindowsFlag & FCUDisplayData::Window::AltitudeValue)) {
         std::fill(altitudeData.begin(), altitudeData.end(), displayData.displayTest ? 0xFF : 0);
+    }
+    if (displayOffOrTesting || !(displayData.displayEnabledWindowsFlag & FCUDisplayData::Window::VerticalSpeedFPAValue)) {
         std::fill(vsData.begin(), vsData.end(), displayData.displayTest ? 0xFF : 0);
+    }
+    if (displayOffOrTesting) {
         std::fill(flagBytes.begin(), flagBytes.end(), displayData.displayTest ? 0xFF : 0);
     }
 

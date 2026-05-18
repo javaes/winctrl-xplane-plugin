@@ -447,7 +447,8 @@ void FF777FCUEfisProfile::updateDisplayData(FCUDisplayData &data) {
     }
 
     data.hdgManaged = false;
-    data.hdgTrk = datarefManager->getCached<bool>("1-sim/output/mcp/isHdgTrg") == false;
+    data.headingHdg = datarefManager->getCached<bool>("1-sim/output/mcp/isHdgTrg");
+    data.headingTrk = !data.headingHdg;
 
     float altitude = datarefManager->getCached<float>("1-sim/output/mcp/alt");
     if (altitude >= 0) {
@@ -479,7 +480,7 @@ void FF777FCUEfisProfile::updateDisplayData(FCUDisplayData &data) {
     data.fpaIndication = false;
     data.vsVerticalLine = true;
 
-    data.latMode = true;
+    data.headingLat = true;
 
     for (int i = 0; i < 2; i++) {
         bool isCaptain = i == 0;

@@ -144,9 +144,38 @@ struct FCUDisplayData {
         bool displayEnabled = true;
         bool displayTest = false;
 
+        enum Window : uint16_t {
+            None = 0,
+            SpeedMachHeader = 1 << 0,
+            SpeedMachValue = 1 << 1,
+            HeadingTrackHeader = 1 << 2,
+            HeadingTrackValue = 1 << 3,
+            HdgTrkVsFpaHeader = 1 << 4,
+            AltitudeHeader = 1 << 5,
+            AltitudeValue = 1 << 6,
+            LevelChangeHeader = 1 << 7,
+            VerticalSpeedFPAHeader = 1 << 8,
+            VerticalSpeedFPAValue = 1 << 9,
+
+            All = SpeedMachHeader |
+                  SpeedMachValue |
+                  HeadingTrackHeader |
+                  HeadingTrackValue |
+                  HdgTrkVsFpaHeader |
+                  AltitudeHeader |
+                  AltitudeValue |
+                  LevelChangeHeader |
+                  VerticalSpeedFPAHeader |
+                  VerticalSpeedFPAValue,
+        };
+
+        uint16_t displayEnabledWindowsFlag = Window::All;
+
         // Display flags
         bool spdMach = false;
-        bool hdgTrk = false;
+        bool headingHdg = false;
+        bool headingTrk = false;
+        bool headingLat = false;
         bool altManaged = false;
         bool spdManaged = false;
         bool hdgManaged = false;
@@ -154,7 +183,6 @@ struct FCUDisplayData {
         bool fpaMode = false;
 
         // Additional display flags for proper 7-segment display
-        bool latMode = false;
         bool altIndication = true;
         bool vsHorizontalLine = true;
         bool vsVerticalLine = false;
@@ -172,14 +200,17 @@ struct FCUDisplayData {
                    altitude == other.altitude &&
                    verticalSpeed == other.verticalSpeed &&
                    spdMach == other.spdMach &&
-                   hdgTrk == other.hdgTrk &&
+                   headingHdg == other.headingHdg &&
+                   headingTrk == other.headingTrk &&
+                   headingLat == other.headingLat &&
                    altManaged == other.altManaged &&
                    spdManaged == other.spdManaged &&
                    hdgManaged == other.hdgManaged &&
                    vsMode == other.vsMode &&
                    fpaMode == other.fpaMode &&
                    displayEnabled == other.displayEnabled &&
-                   displayTest == other.displayTest;
+                   displayTest == other.displayTest &&
+                   displayEnabledWindowsFlag == other.displayEnabledWindowsFlag;
         }
 };
 

@@ -391,9 +391,10 @@ void TolissFCUEfisProfile::updateDisplayData(FCUDisplayData &data) {
     bool vsDashed = datarefManager->getCached<bool>("AirbusFBW/VSdashed");
 
     // HDG/TRK mode
-    data.hdgTrk = datarefManager->getCached<bool>("AirbusFBW/HDGTRKmode");
-    data.vsMode = !data.hdgTrk; // VS mode when HDG mode
-    data.fpaMode = data.hdgTrk; // FPA mode when TRK mode
+    data.headingTrk = datarefManager->getCached<bool>("AirbusFBW/HDGTRKmode");
+    data.headingHdg = !data.headingTrk;
+    data.vsMode = !data.headingTrk; // VS mode when HDG mode
+    data.fpaMode = data.headingTrk; // FPA mode when TRK mode
 
     if (vsDashed) {
         // When dashed, show 5 dashes with minus sign
@@ -451,7 +452,7 @@ void TolissFCUEfisProfile::updateDisplayData(FCUDisplayData &data) {
     data.vsVerticalLine = data.vsMode && (data.verticalSpeed != "-----");
 
     // LAT mode - Typically always on for Airbus
-    data.latMode = true;
+    data.headingLat = true;
 
     for (int i = 0; i < 2; i++) {
         bool isCaptain = i == 0;

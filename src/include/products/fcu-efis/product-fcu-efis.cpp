@@ -10,6 +10,7 @@
 #include "profiles/ff767-fcu-efis-profile.h"
 #include "profiles/ff777-fcu-efis-profile.h"
 #include "profiles/fps748-fcu-efis-profile.h"
+#include "profiles/jar330-fcu-efis-profile.h"
 #include "profiles/jf146-fcu-efis-profile.h"
 #include "profiles/laminar-737-fcu-efis-profile.h"
 #include "profiles/laminar-a333-fcu-efis-profile.h"
@@ -17,6 +18,7 @@
 #include "profiles/toliss-fcu-efis-profile.h"
 #include "profiles/xcrafts-ejets-fcu-efis-profile.h"
 #include "profiles/xcrafts-erj-fcu-efis-profile.h"
+#include "profiles/zibo-fcu-efis-profile.h"
 #include "segment-display.h"
 
 #include <algorithm>
@@ -49,7 +51,10 @@ ProductFCUEfis::~ProductFCUEfis() {
 }
 
 void ProductFCUEfis::setProfileForCurrentAircraft() {
-    if (FF350FCUEfisProfile::IsEligible()) {
+    if (JAR330FCUEfisProfile::IsEligible()) {
+        profile = new JAR330FCUEfisProfile(this);
+        profileReady = true;
+    } else if (FF350FCUEfisProfile::IsEligible()) {
         profile = new FF350FCUEfisProfile(this);
         profileReady = true;
     } else if (XCraftsEjetsFCUEfisProfile::IsEligible()) {
@@ -60,9 +65,6 @@ void ProductFCUEfis::setProfileForCurrentAircraft() {
         profileReady = true;
     } else if (TolissFCUEfisProfile::IsEligible()) {
         profile = new TolissFCUEfisProfile(this);
-        profileReady = true;
-    } else if (Laminar737FCUEfisProfile::IsEligible()) {
-        profile = new Laminar737FCUEfisProfile(this);
         profileReady = true;
     } else if (C172FCUEfisProfile::IsEligible()) {
         profile = new C172FCUEfisProfile(this);
@@ -87,6 +89,12 @@ void ProductFCUEfis::setProfileForCurrentAircraft() {
         profileReady = true;
     } else if (JF146FCUEfisProfile::IsEligible()) {
         profile = new JF146FCUEfisProfile(this);
+        profileReady = true;
+    } else if (ZiboFCUEfisProfile::IsEligible()) {
+        profile = new ZiboFCUEfisProfile(this);
+        profileReady = true;
+    } else if (Laminar737FCUEfisProfile::IsEligible()) {
+        profile = new Laminar737FCUEfisProfile(this);
         profileReady = true;
     } else {
         profile = nullptr;

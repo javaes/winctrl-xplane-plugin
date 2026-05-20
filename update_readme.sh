@@ -38,12 +38,13 @@ rotatemd11|Rotate MD-11
 ixeg733|IXEG 737
 fps748|FPS 747-800i V2 (SSG) and V3
 jf146|JustFlight 146
+cis-seneca|CIS Seneca II
 laminar-737|Laminar 737
 laminar-a333|Laminar A330 (Aerogenesis)
 laminar-citx|Laminar Citation X
 c172|Laminar C172
-cis-seneca|CIS Seneca II
 sparky744|Sparky 744
+jar330|JarDesign A330
 "
 
 # Function to get display name

@@ -40,9 +40,15 @@
 		F60ABAE22FBDF352001C91EF /* xcrafts-erj-pap3-mcp-profile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F60ABAE02FBDF352001C91EF /* xcrafts-erj-pap3-mcp-profile.cpp */; };
 		F60ABAE52FBDF78D001C91EF /* xcrafts-erj-fcu-efis-profile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F60ABAE42FBDF78D001C91EF /* xcrafts-erj-fcu-efis-profile.cpp */; };
 		F60ABAE62FBDF78D001C91EF /* xcrafts-erj-fcu-efis-profile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F60ABAE42FBDF78D001C91EF /* xcrafts-erj-fcu-efis-profile.cpp */; };
+		F60ABAE92FBE134D001C91EF /* jar330-fmc-profile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F60ABAE82FBE134D001C91EF /* jar330-fmc-profile.cpp */; };
+		F60ABAEA2FBE134D001C91EF /* jar330-fmc-profile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F60ABAE82FBE134D001C91EF /* jar330-fmc-profile.cpp */; };
+		F60ABAED2FBE1355001C91EF /* jar330-fcu-efis-profile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F60ABAEC2FBE1355001C91EF /* jar330-fcu-efis-profile.cpp */; };
+		F60ABAEE2FBE1355001C91EF /* jar330-fcu-efis-profile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F60ABAEC2FBE1355001C91EF /* jar330-fcu-efis-profile.cpp */; };
 		F61F8B1E2D0456D700E63C3F /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F66F91662D0332F600F84283 /* main.cpp */; };
 		F621F80C2F1C264A00DDB31E /* jf146-fcu-efis-profile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F621F80B2F1C264A00DDB31E /* jf146-fcu-efis-profile.cpp */; };
 		F621F80D2F1C264A00DDB31E /* jf146-fcu-efis-profile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F621F80B2F1C264A00DDB31E /* jf146-fcu-efis-profile.cpp */; };
+		F633E3D92FBE25B100CBE019 /* zibo-fcu-efis-profile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F633E3D82FBE25B100CBE019 /* zibo-fcu-efis-profile.cpp */; };
+		F633E3DA2FBE25B100CBE019 /* zibo-fcu-efis-profile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F633E3D82FBE25B100CBE019 /* zibo-fcu-efis-profile.cpp */; };
 		F635AD422E05697B005D6CDC /* bridge.mm in Sources */ = {isa = PBXBuildFile; fileRef = F6827E102E05664C00382B28 /* bridge.mm */; };
 		F635AD462E0579E9005D6CDC /* usbcontroller_mac.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F635AD442E0579E9005D6CDC /* usbcontroller_mac.cpp */; };
 		F635AD472E0579E9005D6CDC /* usbcontroller_mac.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F635AD442E0579E9005D6CDC /* usbcontroller_mac.cpp */; };
@@ -206,6 +212,10 @@
 		F60ABAE02FBDF352001C91EF /* xcrafts-erj-pap3-mcp-profile.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "xcrafts-erj-pap3-mcp-profile.cpp"; sourceTree = "<group>"; };
 		F60ABAE32FBDF78D001C91EF /* xcrafts-erj-fcu-efis-profile.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "xcrafts-erj-fcu-efis-profile.h"; sourceTree = "<group>"; };
 		F60ABAE42FBDF78D001C91EF /* xcrafts-erj-fcu-efis-profile.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "xcrafts-erj-fcu-efis-profile.cpp"; sourceTree = "<group>"; };
+		F60ABAE72FBE134D001C91EF /* jar330-fmc-profile.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "jar330-fmc-profile.h"; sourceTree = "<group>"; };
+		F60ABAE82FBE134D001C91EF /* jar330-fmc-profile.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "jar330-fmc-profile.cpp"; sourceTree = "<group>"; };
+		F60ABAEB2FBE1355001C91EF /* jar330-fcu-efis-profile.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "jar330-fcu-efis-profile.h"; sourceTree = "<group>"; };
+		F60ABAEC2FBE1355001C91EF /* jar330-fcu-efis-profile.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "jar330-fcu-efis-profile.cpp"; sourceTree = "<group>"; };
 		F60BE7C62FA8CA0E00E5C542 /* xplane-version.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = "xplane-version.hpp"; sourceTree = "<group>"; };
 		F61F8B2D2D059ED500E63C3F /* config.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = config.h; sourceTree = "<group>"; };
 		F621F80A2F1C264A00DDB31E /* jf146-fcu-efis-profile.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "jf146-fcu-efis-profile.h"; sourceTree = "<group>"; };
@@ -214,6 +224,8 @@
 		F623042D2E5A230B00EE0089 /* font.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = font.h; sourceTree = "<group>"; };
 		F62D2DF52E55FA4C00D307A4 /* xcrafts.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = xcrafts.h; sourceTree = "<group>"; };
 		F62D2DF92E55FA9100D307A4 /* 737.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = 737.h; sourceTree = "<group>"; };
+		F633E3D72FBE25B100CBE019 /* zibo-fcu-efis-profile.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "zibo-fcu-efis-profile.h"; sourceTree = "<group>"; };
+		F633E3D82FBE25B100CBE019 /* zibo-fcu-efis-profile.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "zibo-fcu-efis-profile.cpp"; sourceTree = "<group>"; };
 		F635AD432E0579E9005D6CDC /* usbcontroller.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = usbcontroller.h; sourceTree = "<group>"; };
 		F635AD442E0579E9005D6CDC /* usbcontroller_mac.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = usbcontroller_mac.cpp; sourceTree = "<group>"; };
 		F635AD482E05819E005D6CDC /* usbdevice.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = usbdevice.h; sourceTree = "<group>"; };
@@ -516,6 +528,8 @@
 				F60ABAD82FBDF04F001C91EF /* xcrafts-ejets-fmc-profile.cpp */,
 				F60ABADB2FBDF33E001C91EF /* xcrafts-erj-fmc-profile.h */,
 				F60ABADC2FBDF33E001C91EF /* xcrafts-erj-fmc-profile.cpp */,
+				F60ABAE72FBE134D001C91EF /* jar330-fmc-profile.h */,
+				F60ABAE82FBE134D001C91EF /* jar330-fmc-profile.cpp */,
 			);
 			path = profiles;
 			sourceTree = "<group>";
@@ -627,6 +641,10 @@
 				F60ABACC2FBDF029001C91EF /* xcrafts-ejets-fcu-efis-profile.cpp */,
 				F60ABAE32FBDF78D001C91EF /* xcrafts-erj-fcu-efis-profile.h */,
 				F60ABAE42FBDF78D001C91EF /* xcrafts-erj-fcu-efis-profile.cpp */,
+				F60ABAEB2FBE1355001C91EF /* jar330-fcu-efis-profile.h */,
+				F60ABAEC2FBE1355001C91EF /* jar330-fcu-efis-profile.cpp */,
+				F633E3D72FBE25B100CBE019 /* zibo-fcu-efis-profile.h */,
+				F633E3D82FBE25B100CBE019 /* zibo-fcu-efis-profile.cpp */,
 			);
 			path = profiles;
 			sourceTree = "<group>";
@@ -865,8 +883,10 @@
 				838AA8B52EEF2918006444F6 /* ff350-fcu-efis-profile.cpp in Sources */,
 				F6C6E0342E8D5DAA00558F46 /* laminar-737-pap3-mcp-profile.cpp in Sources */,
 				F6C6E0352E8D5DAA00558F46 /* zibo-pap3-mcp-profile.cpp in Sources */,
+				F60ABAEA2FBE134D001C91EF /* jar330-fmc-profile.cpp in Sources */,
 				F60ABADA2FBDF04F001C91EF /* xcrafts-ejets-fmc-profile.cpp in Sources */,
 				F60ABAE62FBDF78D001C91EF /* xcrafts-erj-fcu-efis-profile.cpp in Sources */,
+				F633E3D92FBE25B100CBE019 /* zibo-fcu-efis-profile.cpp in Sources */,
 				F6B149522E4F04AE00FB8395 /* fps748-fmc-profile.cpp in Sources */,
 				E164E7F621BA6932F4BE9D64 /* sparky744-fmc-profile.cpp in Sources */,
 				F6A1493F2E4F04AE00FB8395 /* ff777-fmc-profile.cpp in Sources */,
@@ -877,6 +897,7 @@
 				F6BB757A2E32634700C2B21F /* product-fcu-efis.cpp in Sources */,
 				F6BB757B2E32634700C2B21F /* toliss-fcu-efis-profile.cpp in Sources */,
 				F68164E62E3161FD00319E9D /* usbcontroller.cpp in Sources */,
+				F60ABAEE2FBE1355001C91EF /* jar330-fcu-efis-profile.cpp in Sources */,
 				F61F8B1E2D0456D700E63C3F /* main.cpp in Sources */,
 				F6C248462EBE498500617E89 /* plugins-menu.cpp in Sources */,
 				F68428662EC63F070027756D /* zibo-ursa-minor-joystick-profile.cpp in Sources */,
@@ -955,6 +976,8 @@
 				F6EF56272F0AC43300AB61F1 /* product-pdc.cpp in Sources */,
 				F6A77E742ED3514600061D03 /* toliss-agp-profile.cpp in Sources */,
 				F6A77E752ED3514600061D03 /* product-agp.cpp in Sources */,
+				F60ABAED2FBE1355001C91EF /* jar330-fcu-efis-profile.cpp in Sources */,
+				F60ABAE92FBE134D001C91EF /* jar330-fmc-profile.cpp in Sources */,
 				F6CC2B4F2F0E5F4B00C0A4D8 /* ff777-pdc-profile.cpp in Sources */,
 				F6BB75792E32634700C2B21F /* toliss-fcu-efis-profile.cpp in Sources */,
 				F63BC99A2E30D73E00ACBBB0 /* appstate.cpp in Sources */,
@@ -1005,6 +1028,7 @@
 				F6C69C0F2EC0DAE300BFDA65 /* laminar-737-fcu-efis-profile.cpp in Sources */,
 				F60ABAD22FBDF034001C91EF /* xcrafts-ejets-pap3-mcp-profile.cpp in Sources */,
 				5DBA92312E6F4D71007328BC /* ff767-fmc-profile.cpp in Sources */,
+				F633E3DA2FBE25B100CBE019 /* zibo-fcu-efis-profile.cpp in Sources */,
 				F60ABACE2FBDF029001C91EF /* xcrafts-ejets-fcu-efis-profile.cpp in Sources */,
 				F67961962E31357E008031F1 /* usbdevice_lin.cpp in Sources */,
 				F635AD422E05697B005D6CDC /* bridge.mm in Sources */,

@@ -8,6 +8,7 @@
 #include "profiles/ff777-fmc-profile.h"
 #include "profiles/fps748-fmc-profile.h"
 #include "profiles/ixeg733-fmc-profile.h"
+#include "profiles/jar330-fmc-profile.h"
 #include "profiles/laminar-a333-fmc-profile.h"
 #include "profiles/laminar-citx-fmc-profile.h"
 #include "profiles/rotatemd11-fmc-profile.h"
@@ -63,7 +64,11 @@ ProductFMC::~ProductFMC() {
 }
 
 void ProductFMC::setProfileForCurrentAircraft() {
-    if (TolissFMCProfile::IsEligible()) {
+    if (JAR330FMCProfile::IsEligible()) {
+        clearDisplay();
+        profile = new JAR330FMCProfile(this);
+        profileReady = true;
+    } else if (TolissFMCProfile::IsEligible()) {
         clearDisplay();
         profile = new TolissFMCProfile(this);
         profileReady = true;

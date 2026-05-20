@@ -29,18 +29,21 @@ DEVICE_NAMES="
 AIRCRAFT_NAMES="
 toliss|ToLiss A3xx
 zibo|Zibo / LevelUp 737
-xcrafts|X-Crafts E-jets
+xcrafts-ejets|X-Crafts E-Jets
+xcrafts-erj|X-Crafts ERJ
 ff767|FlightFactor 767
 ff777|FlightFactor 777
 ff350|FlightFactor A350 V1
 rotatemd11|Rotate MD-11
 ixeg733|IXEG 737
-ssg748|SSG 747
+fps748|FPS 747-800i V2 (SSG) and V3
 jf146|JustFlight 146
 laminar-737|Laminar 737
 laminar-a333|Laminar A330 (Aerogenesis)
 laminar-citx|Laminar Citation X
 c172|Laminar C172
+cis-seneca|CIS Seneca II
+sparky744|Sparky 744
 "
 
 # Function to get display name

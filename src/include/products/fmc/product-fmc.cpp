@@ -14,6 +14,7 @@
 #include "profiles/sparky744-fmc-profile.h"
 #include "profiles/toliss-fmc-profile.h"
 #include "profiles/xcrafts-ejets-fmc-profile.h"
+#include "profiles/xcrafts-erj-fmc-profile.h"
 #include "profiles/zibo-fmc-profile.h"
 #include "usbcontroller.h"
 
@@ -77,6 +78,10 @@ void ProductFMC::setProfileForCurrentAircraft() {
     } else if (XCraftsEjetsFMCProfile::IsEligible()) {
         clearDisplay();
         profile = new XCraftsEjetsFMCProfile(this);
+        profileReady = true;
+    } else if (XCraftsErjFMCProfile::IsEligible()) {
+        clearDisplay();
+        profile = new XCraftsErjFMCProfile(this);
         profileReady = true;
     } else if (ZiboFMCProfile::IsEligible()) {
         clearDisplay();

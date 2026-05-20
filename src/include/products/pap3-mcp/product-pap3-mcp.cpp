@@ -11,6 +11,7 @@
 #include "profiles/rotatemd11-pap3-mcp-profile.h"
 #include "profiles/sparky744-pap3-mcp-profile.h"
 #include "profiles/xcrafts-ejets-pap3-mcp-profile.h"
+#include "profiles/xcrafts-erj-pap3-mcp-profile.h"
 #include "profiles/zibo-pap3-mcp-profile.h"
 
 #include <algorithm>
@@ -52,6 +53,9 @@ void ProductPAP3MCP::setProfileForCurrentAircraft() {
         profileReady = true;
     } else if (XCraftsEjetsPAP3MCPProfile::IsEligible()) {
         profile = new XCraftsEjetsPAP3MCPProfile(this);
+        profileReady = true;
+    } else if (XCraftsErjPAP3MCPProfile::IsEligible()) {
+        profile = new XCraftsErjPAP3MCPProfile(this);
         profileReady = true;
     } else if (FF777PAP3MCPProfile::IsEligible()) {
         profile = new FF777PAP3MCPProfile(this);

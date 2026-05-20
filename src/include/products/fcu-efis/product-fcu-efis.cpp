@@ -16,6 +16,7 @@
 #include "profiles/sparky744-fcu-efis-profile.h"
 #include "profiles/toliss-fcu-efis-profile.h"
 #include "profiles/xcrafts-ejets-fcu-efis-profile.h"
+#include "profiles/xcrafts-erj-fcu-efis-profile.h"
 #include "segment-display.h"
 
 #include <algorithm>
@@ -53,6 +54,9 @@ void ProductFCUEfis::setProfileForCurrentAircraft() {
         profileReady = true;
     } else if (XCraftsEjetsFCUEfisProfile::IsEligible()) {
         profile = new XCraftsEjetsFCUEfisProfile(this);
+        profileReady = true;
+    } else if (XCraftsErjFCUEfisProfile::IsEligible()) {
+        profile = new XCraftsErjFCUEfisProfile(this);
         profileReady = true;
     } else if (TolissFCUEfisProfile::IsEligible()) {
         profile = new TolissFCUEfisProfile(this);

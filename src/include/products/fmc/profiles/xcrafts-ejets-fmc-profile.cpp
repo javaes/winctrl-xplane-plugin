@@ -1,4 +1,4 @@
-#include "xcrafts-fmc-profile.h"
+#include "xcrafts-ejets-fmc-profile.h"
 
 #include "appstate.h"
 #include "dataref.h"
@@ -12,13 +12,15 @@
 #include <XPLMProcessing.h>
 #include <XPLMUtilities.h>
 
-XCraftsFMCProfile::XCraftsFMCProfile(ProductFMC *product) : FMCAircraftProfile(product) {
+XCraftsEjetsFMCProfile::XCraftsEjetsFMCProfile(ProductFMC *product) : FMCAircraftProfile(product) {
     datarefRegex = std::regex("XCrafts/FMS/CDU_[0-9]+_([0-9]{2}|ScratchPad)");
 
     product->setAllLedsEnabled(false);
     product->setFont(FontVariant::FontXCrafts);
 
     const std::string cdu = product->deviceVariant == FMCDeviceVariant::VARIANT_CAPTAIN ? "CDU_1" : "CDU_2";
+    //XCrafts/FMS/CDU1_brt
+    //XCrafts/FMS/power_stat > 0
     Dataref::getInstance()->monitorExistingDataref<int>(("XCrafts/FMS/WW_" + cdu + "_BACKLIGHT").c_str(), [this, product](int brightness) {
         product->setLedBrightness(FMCLed::BACKLIGHT, brightness);
     });
@@ -63,7 +65,7 @@ XCraftsFMCProfile::XCraftsFMCProfile(ProductFMC *product) : FMCAircraftProfile(p
     });
 }
 
-XCraftsFMCProfile::~XCraftsFMCProfile() {
+XCraftsEjetsFMCProfile::~XCraftsEjetsFMCProfile() {
     const std::string cdu = product->deviceVariant == FMCDeviceVariant::VARIANT_CAPTAIN ? "CDU_1" : "CDU_2";
     Dataref::getInstance()->unbind(("XCrafts/FMS/WW_" + cdu + "_BACKLIGHT").c_str());
     Dataref::getInstance()->unbind(("XCrafts/FMS/WW_" + cdu + "_SCREEN_BACKLIGHT").c_str());
@@ -76,11 +78,11 @@ XCraftsFMCProfile::~XCraftsFMCProfile() {
     Dataref::getInstance()->unbind("XCrafts/FMS/power_stat");
 }
 
-bool XCraftsFMCProfile::IsEligible() {
+bool XCraftsEjetsFMCProfile::IsEligible() {
     return Dataref::getInstance()->exists("XCrafts/FMS/CDU_1_01");
 }
 
-const std::vector<std::string> &XCraftsFMCProfile::displayDatarefs() const {
+const std::vector<std::string> &XCraftsEjetsFMCProfile::displayDatarefs() const {
     const std::string cduNumber = product->deviceVariant == FMCDeviceVariant::VARIANT_CAPTAIN ? "1" : "2";
     static std::unordered_map<FMCDeviceVariant, std::vector<std::string>> cache;
 
@@ -102,7 +104,7 @@ const std::vector<std::string> &XCraftsFMCProfile::displayDatarefs() const {
         .first->second;
 }
 
-const std::vector<FMCButtonDef> &XCraftsFMCProfile::buttonDefs() const {
+const std::vector<FMCButtonDef> &XCraftsEjetsFMCProfile::buttonDefs() const {
     const std::string cdu = product->deviceVariant == FMCDeviceVariant::VARIANT_CAPTAIN ? "CDU_1" : "CDU_2";
     static std::unordered_map<FMCDeviceVariant, std::vector<FMCButtonDef>> cache;
 
@@ -143,13 +145,13 @@ const std::vector<FMCButtonDef> &XCraftsFMCProfile::buttonDefs() const {
                         // {std::vector<FMCKey>{FMCKey::PFP4_NAV_RAD, FMCKey::PFP7_NAV_RAD}, "XCrafts/ERJ/" + cdu + "_WW_Key_NAV_RAD"},
                         // {FMCKey::PFP7_ALTN, "XCrafts/ERJ/" + cdu + "_WW_Key_ALTN"},
 
-                        {std::vector<FMCKey>{FMCKey::MCDU_SEC_FPLN, FMCKey::PFP_INIT_REF}, "XCrafts/ERJ/" + cdu + "/Key_NAV;XCrafts/ERJ/" + cdu + "/LSK4"}, // Nav IDENT
-                        {FMCKey::PFP3_CLB, "XCrafts/ERJ/" + cdu + "/Key_PERF;XCrafts/ERJ/" + cdu + "/RSK2"},                                                // Perf CLIMB
-                        {FMCKey::PFP3_CRZ, "XCrafts/ERJ/" + cdu + "/Key_PERF;XCrafts/ERJ/" + cdu + "/LSK2"},                                                // Perf CRUISE
-                        {std::vector<FMCKey>{FMCKey::MCDU_AIRPORT, FMCKey::PFP3_DES}, "XCrafts/ERJ/" + cdu + "/Key_PERF;XCrafts/ERJ/" + cdu + "/LSK3"},     // Perf DESCENT
-                                                                                                                                                            //        {std::vector<FMCKey>{FMCKey::PFP4_VNAV, FMCKey::PFP7_VNAV}, "XCrafts/ERJ/"+cdu+"/Key_NAV;XCrafts/ERJ/"+cdu+"/LSK3"}, // Nav TOD details
-                                                                                                                                                            //        {FMCKey::PFP_HOLD, "XCrafts/ERJ/"+cdu+"/Key_NAV;XCrafts/ERJ/"+cdu+"/LSK3"}, // Nav HOLD
-                                                                                                                                                            //        {FMCKey::PFP_FIX, "XCrafts/ERJ/"+cdu+"/Key_NAV;XCrafts/ERJ/"+cdu+"/LSK3"}, // Nav PILOT WAYPOINT
+                        {std::vector<FMCKey>{FMCKey::MCDU_SEC_FPLN, FMCKey::PFP_INIT_REF}, "XCrafts/ERJ/" + cdu + "/Key_NAV,XCrafts/ERJ/" + cdu + "/LSK4"}, // Nav IDENT
+                        {FMCKey::PFP3_CLB, "XCrafts/ERJ/" + cdu + "/Key_PERF,XCrafts/ERJ/" + cdu + "/RSK2"},                                                // Perf CLIMB
+                        {FMCKey::PFP3_CRZ, "XCrafts/ERJ/" + cdu + "/Key_PERF,XCrafts/ERJ/" + cdu + "/LSK2"},                                                // Perf CRUISE
+                        {std::vector<FMCKey>{FMCKey::MCDU_AIRPORT, FMCKey::PFP3_DES}, "XCrafts/ERJ/" + cdu + "/Key_PERF,XCrafts/ERJ/" + cdu + "/LSK3"},     // Perf DESCENT
+                                                                                                                                                            //        {std::vector<FMCKey>{FMCKey::PFP4_VNAV, FMCKey::PFP7_VNAV}, "XCrafts/ERJ/"+cdu+"/Key_NAV,XCrafts/ERJ/"+cdu+"/LSK3"}, // Nav TOD details
+                                                                                                                                                            //        {FMCKey::PFP_HOLD, "XCrafts/ERJ/"+cdu+"/Key_NAV,XCrafts/ERJ/"+cdu+"/LSK3"}, // Nav HOLD
+                                                                                                                                                            //        {FMCKey::PFP_FIX, "XCrafts/ERJ/"+cdu+"/Key_NAV,XCrafts/ERJ/"+cdu+"/LSK3"}, // Nav PILOT WAYPOINT
 
                         //        {FMCKey::PFP_EXEC, "custom_tbd"},
                         //        {FMCKey::PFP_DEP_ARR, "custom_tbd"},
@@ -219,7 +221,7 @@ const std::vector<FMCButtonDef> &XCraftsFMCProfile::buttonDefs() const {
         .first->second;
 }
 
-const std::unordered_map<FMCKey, const FMCButtonDef *> &XCraftsFMCProfile::buttonKeyMap() const {
+const std::unordered_map<FMCKey, const FMCButtonDef *> &XCraftsEjetsFMCProfile::buttonKeyMap() const {
     static std::unordered_map<FMCDeviceVariant, std::unordered_map<FMCKey, const FMCButtonDef *>> cache;
 
     auto it = cache.find(product->deviceVariant);
@@ -244,7 +246,7 @@ const std::unordered_map<FMCKey, const FMCButtonDef *> &XCraftsFMCProfile::butto
     return it->second;
 }
 
-const std::map<char, FMCTextColor> &XCraftsFMCProfile::colorMap() const {
+const std::map<char, FMCTextColor> &XCraftsEjetsFMCProfile::colorMap() const {
     static const std::map<char, FMCTextColor> colors = {
         {0x00, FMCTextColor::COLOR_WHITE},
         {0x01, FMCTextColor::COLOR_CYAN},
@@ -270,7 +272,7 @@ const std::map<char, FMCTextColor> &XCraftsFMCProfile::colorMap() const {
     return colors;
 }
 
-void XCraftsFMCProfile::mapCharacter(std::vector<uint8_t> *buffer, uint8_t character, bool isFontSmall) {
+void XCraftsEjetsFMCProfile::mapCharacter(std::vector<uint8_t> *buffer, uint8_t character, bool isFontSmall) {
     switch (character) {
         case 'a': // THIN ARRW RT - Rightwards arrow
             buffer->insert(buffer->end(), FMCSpecialCharacter::ARROW_RIGHT.begin(), FMCSpecialCharacter::ARROW_RIGHT.end());
@@ -349,7 +351,7 @@ void XCraftsFMCProfile::mapCharacter(std::vector<uint8_t> *buffer, uint8_t chara
     }
 }
 
-void XCraftsFMCProfile::updatePage(std::vector<std::vector<char>> &page) {
+void XCraftsEjetsFMCProfile::updatePage(std::vector<std::vector<char>> &page) {
     page = std::vector<std::vector<char>>(ProductFMC::PageLines, std::vector<char>(ProductFMC::PageCharsPerLine * ProductFMC::PageBytesPerChar, ' '));
 
     auto datarefManager = Dataref::getInstance();
@@ -447,42 +449,36 @@ void XCraftsFMCProfile::updatePage(std::vector<std::vector<char>> &page) {
     }
 }
 
-void XCraftsFMCProfile::buttonPressed(const FMCButtonDef *button, XPLMCommandPhase phase) {
-    if (std::fabs(button->value) > std::numeric_limits<double>::epsilon()) {
-        // Handle buttons with values (like brightness controls)
-        if (phase != xplm_CommandBegin) {
+void XCraftsEjetsFMCProfile::buttonPressed(const FMCButtonDef *button, XPLMCommandPhase phase) {
+    if (!button || button->dataref.empty() || phase == xplm_CommandContinue) {
+        return;
+    }
+
+    auto datarefManager = Dataref::getInstance();
+    if (button->datarefType == FMCDatarefType::SET_VALUE || button->datarefType == FMCDatarefType::SET_VALUE_PHASED) {
+        double value = std::fabs(button->value) < std::numeric_limits<double>::epsilon() ? 1.0 : button->value;
+        if (button->datarefType == FMCDatarefType::SET_VALUE && phase != xplm_CommandBegin) {
             return;
         }
 
-        std::string ref = button->dataref;
-        size_t start = ref.find('[');
-        if (start != std::string::npos) {
-            size_t end = ref.find(']', start);
-            int index = std::stoi(ref.substr(start + 1, end - start - 1));
-            std::string baseRef = ref.substr(0, start);
-
-            auto vec = Dataref::getInstance()->get<std::vector<float>>(baseRef.c_str());
-            if (index >= 0 && index < (int) vec.size()) {
-                vec[index] = std::clamp(vec[index] + button->value, 0.0, 1.0);
-                Dataref::getInstance()->set<std::vector<float>>(baseRef.c_str(), vec);
-            }
-        } else {
-            Dataref::getInstance()->set<float>(ref.c_str(), button->value);
+        datarefManager->set<double>(button->dataref.c_str(), phase == xplm_CommandBegin ? value : 0.0);
+    } else if (phase == xplm_CommandBegin && button->datarefType == FMCDatarefType::ADJUST_VALUE) {
+        double currentValue = datarefManager->get<double>(button->dataref.c_str());
+        datarefManager->set<double>(button->dataref.c_str(), currentValue + button->value);
+    } else if (phase == xplm_CommandBegin && button->datarefType == FMCDatarefType::EXECUTE_MULTIPLE_CMD_ONCE) {
+        std::stringstream ss(button->dataref);
+        std::string item;
+        std::vector<std::string> commands;
+        while (std::getline(ss, item, ',')) {
+            commands.push_back(item);
         }
+
+        for (const auto &cmd : commands) {
+            datarefManager->executeCommand(cmd.c_str());
+        }
+    } else if (phase == xplm_CommandBegin && button->datarefType == FMCDatarefType::EXECUTE_CMD_ONCE) {
+        datarefManager->executeCommand(button->dataref.c_str());
     } else {
-        // Handle command buttons, optionally handle multiple with ;
-        std::string ref = button->dataref;
-        std::stringstream ss(ref);
-        std::string cmd;
-        int milliseconds = 0;
-        while (std::getline(ss, cmd, ';')) {
-            if (!cmd.empty()) {
-                AppState::getInstance()->executeAfter(milliseconds, [cmd, phase]() {
-                    Dataref::getInstance()->executeCommand(cmd.c_str(), phase);
-                });
-
-                milliseconds += 200;
-            }
-        }
+        datarefManager->executeCommand(button->dataref.c_str(), phase);
     }
 }

@@ -1,4 +1,4 @@
-#include "xcrafts-fcu-efis-profile.h"
+#include "xcrafts-ejets-fcu-efis-profile.h"
 
 #include "dataref.h"
 #include "product-fcu-efis.h"
@@ -8,7 +8,7 @@
 #include <sstream>
 #include <XPLMUtilities.h>
 
-XCraftsFCUEfisProfile::XCraftsFCUEfisProfile(ProductFCUEfis *product) : FCUEfisAircraftProfile(product) {
+XCraftsEjetsFCUEfisProfile::XCraftsEjetsFCUEfisProfile(ProductFCUEfis *product) : FCUEfisAircraftProfile(product) {
     Dataref::getInstance()->monitorExistingDataref<float>("XCrafts/panel_brt_1", [product](float brightness) {
         uint8_t target = static_cast<uint8_t>(brightness * 255);
         product->setLedBrightness(FCUEfisLed::BACKLIGHT, target);
@@ -41,18 +41,18 @@ XCraftsFCUEfisProfile::XCraftsFCUEfisProfile(ProductFCUEfis *product) : FCUEfisA
     });
 }
 
-XCraftsFCUEfisProfile::~XCraftsFCUEfisProfile() {
+XCraftsEjetsFCUEfisProfile::~XCraftsEjetsFCUEfisProfile() {
     Dataref::getInstance()->unbind("XCrafts/panel_brt_1");
     Dataref::getInstance()->unbind("sim/cockpit/autopilot/autopilot_mode");
     Dataref::getInstance()->unbind("XCrafts/ERJ/autothrottle_armed");
     Dataref::getInstance()->unbind("XCrafts/ERJ/autopilot/autothrottle_system_active");
 }
 
-bool XCraftsFCUEfisProfile::IsEligible() {
+bool XCraftsEjetsFCUEfisProfile::IsEligible() {
     return Dataref::getInstance()->exists("XCrafts/FMS/CDU_1_01");
 }
 
-const std::vector<std::string> &XCraftsFCUEfisProfile::displayDatarefs() const {
+const std::vector<std::string> &XCraftsEjetsFCUEfisProfile::displayDatarefs() const {
     static const std::vector<std::string> datarefs = {
         "XCrafts/ERJ/autopilot/airspeed_dial_kts_mach",
         "sim/cockpit/autopilot/airspeed_is_mach",
@@ -77,7 +77,7 @@ const std::vector<std::string> &XCraftsFCUEfisProfile::displayDatarefs() const {
     return datarefs;
 }
 
-const std::unordered_map<uint16_t, FCUEfisButtonDef> &XCraftsFCUEfisProfile::buttonDefs() const {
+const std::unordered_map<uint16_t, FCUEfisButtonDef> &XCraftsEjetsFCUEfisProfile::buttonDefs() const {
     static const std::unordered_map<uint16_t, FCUEfisButtonDef> buttons = {
         {0, {"MACH", "XCrafts/ERJ/MACH_KIAS_toggle"}},
         {1, {"LOC", "XCrafts/ERJ/LNAV"}},
@@ -140,7 +140,7 @@ const std::unordered_map<uint16_t, FCUEfisButtonDef> &XCraftsFCUEfisProfile::but
     return buttons;
 }
 
-void XCraftsFCUEfisProfile::updateDisplayData(FCUDisplayData &data) {
+void XCraftsEjetsFCUEfisProfile::updateDisplayData(FCUDisplayData &data) {
     auto dr = Dataref::getInstance();
 
     data.displayEnabled = true;
@@ -236,7 +236,7 @@ void XCraftsFCUEfisProfile::updateDisplayData(FCUDisplayData &data) {
     data.efisRight = {.displayEnabled = false};
 }
 
-void XCraftsFCUEfisProfile::buttonPressed(const FCUEfisButtonDef *button, XPLMCommandPhase phase) {
+void XCraftsEjetsFCUEfisProfile::buttonPressed(const FCUEfisButtonDef *button, XPLMCommandPhase phase) {
     if (!button || button->dataref.empty() || phase == xplm_CommandContinue) {
         return;
     }

@@ -6,10 +6,10 @@
 #include <string>
 #include <vector>
 
-class XCraftsPAP3MCPProfile : public PAP3MCPAircraftProfile {
+class XCraftsEjetsPAP3MCPProfile : public PAP3MCPAircraftProfile {
     public:
-        XCraftsPAP3MCPProfile(ProductPAP3MCP *product);
-        ~XCraftsPAP3MCPProfile();
+        XCraftsEjetsPAP3MCPProfile(ProductPAP3MCP *product);
+        ~XCraftsEjetsPAP3MCPProfile();
 
         static bool IsEligible();
 

@@ -1,4 +1,4 @@
-#include "xcrafts-ursa-minor-throttle-profile.h"
+#include "xcrafts-ejets-ursa-minor-throttle-profile.h"
 
 #include "dataref.h"
 #include "product-ursa-minor-throttle.h"
@@ -10,7 +10,7 @@
 #include <sstream>
 #include <vector>
 
-XCraftsUrsaMinorThrottleProfile::XCraftsUrsaMinorThrottleProfile(ProductUrsaMinorThrottle *product) : UrsaMinorThrottleAircraftProfile(product) {
+XCraftsEjetsUrsaMinorThrottleProfile::XCraftsEjetsUrsaMinorThrottleProfile(ProductUrsaMinorThrottle *product) : UrsaMinorThrottleAircraftProfile(product) {
     Dataref::getInstance()->monitorExistingDataref<float>("XCrafts/panel_brt_1", [product](float brightness) {
         uint8_t target = static_cast<uint8_t>(brightness * 255);
         product->setLedBrightness(UrsaMinorThrottleLed::BACKLIGHT, target);
@@ -31,17 +31,17 @@ XCraftsUrsaMinorThrottleProfile::XCraftsUrsaMinorThrottleProfile(ProductUrsaMino
     });
 }
 
-XCraftsUrsaMinorThrottleProfile::~XCraftsUrsaMinorThrottleProfile() {
+XCraftsEjetsUrsaMinorThrottleProfile::~XCraftsEjetsUrsaMinorThrottleProfile() {
     Dataref::getInstance()->unbind("XCrafts/panel_brt_1");
     Dataref::getInstance()->unbind("sim/cockpit2/annunciators/engine_fires");
     Dataref::getInstance()->unbind("sim/flightmodel/controls/vstab2_rud1def");
 }
 
-bool XCraftsUrsaMinorThrottleProfile::IsEligible() {
+bool XCraftsEjetsUrsaMinorThrottleProfile::IsEligible() {
     return Dataref::getInstance()->exists("XCrafts/FMS/CDU_1_01");
 }
 
-const std::unordered_map<uint16_t, UrsaMinorThrottleButtonDef> &XCraftsUrsaMinorThrottleProfile::buttonDefs() const {
+const std::unordered_map<uint16_t, UrsaMinorThrottleButtonDef> &XCraftsEjetsUrsaMinorThrottleProfile::buttonDefs() const {
     static const std::unordered_map<uint16_t, UrsaMinorThrottleButtonDef> buttons = {
         // Engine master — SET_VALUE_USING_COMMANDS: "dataref,decCmd,incCmd", value = target position
         {0, {"ENG L master ON", "XCrafts/ERJ/engine1_starter_knob,XCrafts/Starter_Eng_1_down_CCW,XCrafts/Starter_Eng_1_up_CW", UrsaMinorThrottleDatarefType::SET_VALUE_USING_COMMANDS, 1}},
@@ -88,7 +88,7 @@ const std::unordered_map<uint16_t, UrsaMinorThrottleButtonDef> &XCraftsUrsaMinor
     return buttons;
 }
 
-void XCraftsUrsaMinorThrottleProfile::buttonPressed(const UrsaMinorThrottleButtonDef *button, XPLMCommandPhase phase) {
+void XCraftsEjetsUrsaMinorThrottleProfile::buttonPressed(const UrsaMinorThrottleButtonDef *button, XPLMCommandPhase phase) {
     if (!button || button->dataref.empty() || phase == xplm_CommandContinue) {
         return;
     }
@@ -168,7 +168,7 @@ void XCraftsUrsaMinorThrottleProfile::buttonPressed(const UrsaMinorThrottleButto
     }
 }
 
-void XCraftsUrsaMinorThrottleProfile::updateDisplays() {
+void XCraftsEjetsUrsaMinorThrottleProfile::updateDisplays() {
     if (!product) {
         return;
     }

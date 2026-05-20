@@ -1,5 +1,5 @@
-#ifndef XCRAFTS_FMC_PROFILE_H
-#define XCRAFTS_FMC_PROFILE_H
+#ifndef XCRAFTS_EJETS_FMC_PROFILE_H
+#define XCRAFTS_EJETS_FMC_PROFILE_H
 
 #include "fmc-aircraft-profile.h"
 
@@ -14,13 +14,13 @@ enum class XCraftsFMCFontStyle : unsigned char {
     SmallReverseVideoBoxed = 6
 };
 
-class XCraftsFMCProfile : public FMCAircraftProfile {
+class XCraftsEjetsFMCProfile : public FMCAircraftProfile {
     private:
         std::regex datarefRegex;
 
     public:
-        XCraftsFMCProfile(ProductFMC *product);
-        virtual ~XCraftsFMCProfile();
+        XCraftsEjetsFMCProfile(ProductFMC *product);
+        virtual ~XCraftsEjetsFMCProfile();
 
         static bool IsEligible();
 

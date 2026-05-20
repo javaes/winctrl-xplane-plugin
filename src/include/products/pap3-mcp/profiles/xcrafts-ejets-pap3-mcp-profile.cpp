@@ -1,4 +1,4 @@
-#include "xcrafts-pap3-mcp-profile.h"
+#include "xcrafts-ejets-pap3-mcp-profile.h"
 
 #include "dataref.h"
 #include "product-pap3-mcp.h"
@@ -7,7 +7,7 @@
 #include <cstring>
 #include <XPLMUtilities.h>
 
-XCraftsPAP3MCPProfile::XCraftsPAP3MCPProfile(ProductPAP3MCP *product) : PAP3MCPAircraftProfile(product) {
+XCraftsEjetsPAP3MCPProfile::XCraftsEjetsPAP3MCPProfile(ProductPAP3MCP *product) : PAP3MCPAircraftProfile(product) {
     Dataref::getInstance()->monitorExistingDataref<float>("XCrafts/panel_brt_1", [product](float brightness) {
         uint8_t target = static_cast<uint8_t>(brightness * 255);
         product->setLedBrightness(PAP3MCPLed::BACKLIGHT, target);
@@ -39,7 +39,7 @@ XCraftsPAP3MCPProfile::XCraftsPAP3MCPProfile(ProductPAP3MCP *product) : PAP3MCPA
     });
 }
 
-XCraftsPAP3MCPProfile::~XCraftsPAP3MCPProfile() {
+XCraftsEjetsPAP3MCPProfile::~XCraftsEjetsPAP3MCPProfile() {
     Dataref::getInstance()->unbind("XCrafts/panel_brt_1");
     Dataref::getInstance()->unbind("sim/cockpit/autopilot/autopilot_mode");
     Dataref::getInstance()->unbind("XCrafts/ERJ/autothrottle_armed");
@@ -48,13 +48,14 @@ XCraftsPAP3MCPProfile::~XCraftsPAP3MCPProfile() {
     Dataref::getInstance()->unbind("XCrafts/ERJ/VNAV_armed");
 }
 
-bool XCraftsPAP3MCPProfile::IsEligible() {
+bool XCraftsEjetsPAP3MCPProfile::IsEligible() {
     return Dataref::getInstance()->exists("XCrafts/FMS/CDU_1_01");
 }
 
-const std::vector<std::string> &XCraftsPAP3MCPProfile::displayDatarefs() const {
+const std::vector<std::string> &XCraftsEjetsPAP3MCPProfile::displayDatarefs() const {
     static const std::vector<std::string> datarefs = {
         "XCrafts/ERJ/autopilot/airspeed_dial_kts_mach",
+        "sim/cockpit/autopilot/airspeed_is_mach",
         "sim/cockpit/autopilot/heading_mag",
         "XCrafts/ERJ/autopilot/altitude",
         "XCrafts/ERJ/autopilot/vertical_velocity",
@@ -65,11 +66,12 @@ const std::vector<std::string> &XCraftsPAP3MCPProfile::displayDatarefs() const {
         "XCrafts/ERJ/autopilot/autothrottle_system_active",
         "XCrafts/ERJ/LNAV_armed",
         "XCrafts/ERJ/VNAV_armed",
+        "XCrafts/ERJ/cockpit/annunciators_test",
     };
     return datarefs;
 }
 
-const std::unordered_map<uint16_t, PAP3MCPButtonDef> &XCraftsPAP3MCPProfile::buttonDefs() const {
+const std::unordered_map<uint16_t, PAP3MCPButtonDef> &XCraftsEjetsPAP3MCPProfile::buttonDefs() const {
     static const std::unordered_map<uint16_t, PAP3MCPButtonDef> buttons = {
         // Mode buttons
         {2, {"VNAV", "XCrafts/ERJ/VNAV"}},
@@ -100,7 +102,7 @@ const std::unordered_map<uint16_t, PAP3MCPButtonDef> &XCraftsPAP3MCPProfile::but
     return buttons;
 }
 
-const std::vector<PAP3MCPEncoderDef> &XCraftsPAP3MCPProfile::encoderDefs() const {
+const std::vector<PAP3MCPEncoderDef> &XCraftsEjetsPAP3MCPProfile::encoderDefs() const {
     // For direct dataref adjustments, use "dataref:NAME:DELTA" convention parsed in encoderRotated.
     static const std::vector<PAP3MCPEncoderDef> encoders = {
         {0, "CRS CAPT", "sim/radios/obs1_up", "sim/radios/obs1_down"},
@@ -113,16 +115,26 @@ const std::vector<PAP3MCPEncoderDef> &XCraftsPAP3MCPProfile::encoderDefs() const
     return encoders;
 }
 
-void XCraftsPAP3MCPProfile::updateDisplayData(PAP3MCPDisplayData &data) {
+void XCraftsEjetsPAP3MCPProfile::updateDisplayData(PAP3MCPDisplayData &data) {
     auto dr = Dataref::getInstance();
 
     data.displayEnabled = true;
-    data.displayTest = false;
+    data.displayTest = dr->getCached<bool>("XCrafts/ERJ/cockpit/annunciators_test");
     data.showLabels = false;
     data.showCourse = true;
 
-    data.speed = dr->getCached<float>("XCrafts/ERJ/autopilot/airspeed_dial_kts_mach");
-    data.heading = static_cast<int>(dr->getCached<float>("sim/cockpit/autopilot/heading_mag")) % 360;
+    bool isMach = dr->getCached<bool>("sim/cockpit/autopilot/airspeed_is_mach");
+    float speedRaw = dr->getCached<float>("XCrafts/ERJ/autopilot/airspeed_dial_kts_mach");
+
+    if (isMach && speedRaw > 0) {
+        int machHundredths = static_cast<int>(std::round(speedRaw * 100));
+        data.speed = static_cast<float>(machHundredths) / 100.0f;
+    } else {
+        data.speed = speedRaw;
+    }
+
+    float headingRaw = dr->getCached<float>("sim/cockpit/autopilot/heading_mag");
+    data.heading = (static_cast<int>(headingRaw) % 360 + 360) % 360;
 
     float altRaw = dr->getCached<float>("XCrafts/ERJ/autopilot/altitude");
     data.altitude = (static_cast<int>(altRaw) / 100) * 100;
@@ -137,7 +149,6 @@ void XCraftsPAP3MCPProfile::updateDisplayData(PAP3MCPDisplayData &data) {
     data.headingVisible = true;
     data.verticalSpeedVisible = true;
 
-    // LED state for display data
     bool apEngaged = dr->getCached<int>("sim/cockpit/autopilot/autopilot_mode") == 2;
     data.ledCmdA = apEngaged;
     data.ledCmdB = apEngaged;
@@ -147,7 +158,7 @@ void XCraftsPAP3MCPProfile::updateDisplayData(PAP3MCPDisplayData &data) {
     data.ledVNAV = dr->getCached<int>("XCrafts/ERJ/VNAV_armed") == 1;
 }
 
-void XCraftsPAP3MCPProfile::buttonPressed(const PAP3MCPButtonDef *button, XPLMCommandPhase phase) {
+void XCraftsEjetsPAP3MCPProfile::buttonPressed(const PAP3MCPButtonDef *button, XPLMCommandPhase phase) {
     if (!button || button->dataref.empty() || phase == xplm_CommandContinue) {
         return;
     }
@@ -164,7 +175,7 @@ void XCraftsPAP3MCPProfile::buttonPressed(const PAP3MCPButtonDef *button, XPLMCo
     }
 }
 
-void XCraftsPAP3MCPProfile::encoderRotated(const PAP3MCPEncoderDef *encoder, int8_t delta) {
+void XCraftsEjetsPAP3MCPProfile::encoderRotated(const PAP3MCPEncoderDef *encoder, int8_t delta) {
     if (!encoder || delta == 0) {
         return;
     }

@@ -5,13 +5,13 @@
 
 #include <string>
 
-class XCraftsUrsaMinorThrottleProfile : public UrsaMinorThrottleAircraftProfile {
+class XCraftsEjetsUrsaMinorThrottleProfile : public UrsaMinorThrottleAircraftProfile {
     private:
         std::string trimText;
 
     public:
-        XCraftsUrsaMinorThrottleProfile(ProductUrsaMinorThrottle *product);
-        ~XCraftsUrsaMinorThrottleProfile();
+        XCraftsEjetsUrsaMinorThrottleProfile(ProductUrsaMinorThrottle *product);
+        ~XCraftsEjetsUrsaMinorThrottleProfile();
 
         static bool IsEligible();
 

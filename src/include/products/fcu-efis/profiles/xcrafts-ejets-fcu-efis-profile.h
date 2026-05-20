@@ -1,18 +1,18 @@
-#ifndef XCRAFTS_FCU_EFIS_PROFILE_H
-#define XCRAFTS_FCU_EFIS_PROFILE_H
+#ifndef XCRAFTS_EJETS_FCU_EFIS_PROFILE_H
+#define XCRAFTS_EJETS_FCU_EFIS_PROFILE_H
 
 #include "fcu-efis-aircraft-profile.h"
 
 #include <string>
 #include <vector>
 
-class XCraftsFCUEfisProfile : public FCUEfisAircraftProfile {
+class XCraftsEjetsFCUEfisProfile : public FCUEfisAircraftProfile {
     private:
         int altitudeIncrements = 0;
 
     public:
-        XCraftsFCUEfisProfile(ProductFCUEfis *product);
-        ~XCraftsFCUEfisProfile();
+        XCraftsEjetsFCUEfisProfile(ProductFCUEfis *product);
+        ~XCraftsEjetsFCUEfisProfile();
 
         static bool IsEligible();
 

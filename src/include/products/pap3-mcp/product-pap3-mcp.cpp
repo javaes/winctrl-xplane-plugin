@@ -48,8 +48,8 @@ void ProductPAP3MCP::setProfileForCurrentAircraft() {
     if (ZiboPAP3MCPProfile::IsEligible()) {
         profile = new ZiboPAP3MCPProfile(this);
         profileReady = true;
-    } else if (XCraftsPAP3MCPProfile::IsEligible()) {
-        profile = new XCraftsPAP3MCPProfile(this);
+    } else if (XCraftsEjetsPAP3MCPProfile::IsEligible()) {
+        profile = new XCraftsEjetsPAP3MCPProfile(this);
         profileReady = true;
     } else if (FF777PAP3MCPProfile::IsEligible()) {
         profile = new FF777PAP3MCPProfile(this);
@@ -628,9 +628,9 @@ void ProductPAP3MCP::didReceiveButton(uint16_t hardwareButtonIndex, bool pressed
     // pressedButtonIndices tracks the last known state so this is edge-triggered
     // on both macOS (IOHIDQueue) and Windows/Linux (raw report button loop).
     static const struct {
-        uint16_t idx;
-        uint8_t byteOffset;
-        uint8_t bitMask;
+            uint16_t idx;
+            uint8_t byteOffset;
+            uint8_t bitMask;
     } switchDefs[] = {
         {27, 0x04, 0x08}, // FD CAPT (OFF line)
         {29, 0x04, 0x20}, // FD FO (OFF line)

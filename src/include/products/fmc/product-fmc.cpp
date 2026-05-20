@@ -12,7 +12,7 @@
 #include "profiles/rotatemd11-fmc-profile.h"
 #include "profiles/ssg748-fmc-profile.h"
 #include "profiles/toliss-fmc-profile.h"
-#include "profiles/xcrafts-fmc-profile.h"
+#include "profiles/xcrafts-ejets-fmc-profile.h"
 #include "profiles/zibo-fmc-profile.h"
 #include "usbcontroller.h"
 
@@ -73,9 +73,9 @@ void ProductFMC::setProfileForCurrentAircraft() {
         clearDisplay();
         profile = new LaminarCitXFMCProfile(this);
         profileReady = true;
-    } else if (XCraftsFMCProfile::IsEligible()) {
+    } else if (XCraftsEjetsFMCProfile::IsEligible()) {
         clearDisplay();
-        profile = new XCraftsFMCProfile(this);
+        profile = new XCraftsEjetsFMCProfile(this);
         profileReady = true;
     } else if (ZiboFMCProfile::IsEligible()) {
         clearDisplay();

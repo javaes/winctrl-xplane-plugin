@@ -1,17 +1,19 @@
-#ifndef SSG748_FMC_PROFILE_H
-#define SSG748_FMC_PROFILE_H
+#ifndef FPS748_FMC_PROFILE_H
+#define FPS748_FMC_PROFILE_H
 
 #include "fmc-aircraft-profile.h"
 
 #include <regex>
 
-class SSG748FMCProfile : public FMCAircraftProfile {
+class FPS748FMCProfile : public FMCAircraftProfile {
     private:
         std::regex datarefRegex;
+        static bool IsSSGVersion();
+        static bool IsFPSVersion();
 
     public:
-        SSG748FMCProfile(ProductFMC *product);
-        virtual ~SSG748FMCProfile();
+        FPS748FMCProfile(ProductFMC *product);
+        virtual ~FPS748FMCProfile();
 
         static bool IsEligible();
 

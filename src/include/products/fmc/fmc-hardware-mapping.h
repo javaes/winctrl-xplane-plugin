@@ -123,9 +123,19 @@ enum class FMCKey : unsigned char {
     MCDU_OVERFLY,
 };
 
+enum class FMCDatarefType : unsigned char {
+    EXECUTE_CMD_ONCE = 1,
+    EXECUTE_MULTIPLE_CMD_ONCE,
+    EXECUTE_CMD_PHASED,
+    SET_VALUE,
+    SET_VALUE_PHASED,
+    ADJUST_VALUE
+};
+
 struct FMCButtonDef {
         std::variant<FMCKey, std::vector<FMCKey>> key;
         std::string dataref;
+        FMCDatarefType datarefType = FMCDatarefType::EXECUTE_CMD_PHASED;
         double value = 0.0;
 };
 

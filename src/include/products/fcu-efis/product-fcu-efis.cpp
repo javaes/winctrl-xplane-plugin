@@ -9,9 +9,11 @@
 #include "profiles/ff350-fcu-efis-profile.h"
 #include "profiles/ff767-fcu-efis-profile.h"
 #include "profiles/ff777-fcu-efis-profile.h"
+#include "profiles/fps748-fcu-efis-profile.h"
 #include "profiles/jf146-fcu-efis-profile.h"
 #include "profiles/laminar-737-fcu-efis-profile.h"
 #include "profiles/laminar-a333-fcu-efis-profile.h"
+#include "profiles/sparky744-fcu-efis-profile.h"
 #include "profiles/toliss-fcu-efis-profile.h"
 #include "profiles/xcrafts-ejets-fcu-efis-profile.h"
 #include "segment-display.h"
@@ -72,6 +74,12 @@ void ProductFCUEfis::setProfileForCurrentAircraft() {
         profileReady = true;
     } else if (FF767FCUEfisProfile::IsEligible()) {
         profile = new FF767FCUEfisProfile(this);
+        profileReady = true;
+    } else if (FPS748FCUEfisProfile::IsEligible()) {
+        profile = new FPS748FCUEfisProfile(this);
+        profileReady = true;
+    } else if (SparkyB744FCUEfisProfile::IsEligible()) {
+        profile = new SparkyB744FCUEfisProfile(this);
         profileReady = true;
     } else if (JF146FCUEfisProfile::IsEligible()) {
         profile = new JF146FCUEfisProfile(this);

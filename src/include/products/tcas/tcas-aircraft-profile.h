@@ -9,7 +9,8 @@ class ProductTCAS;
 
 enum class TCASDatarefType : unsigned char {
     EXECUTE_CMD_PHASED = 1,
-    SET_VALUE
+    SET_VALUE,
+    SET_VALUE_PHASED,
 };
 
 struct TCASButtonDef {

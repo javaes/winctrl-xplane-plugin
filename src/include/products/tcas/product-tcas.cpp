@@ -4,7 +4,10 @@
 #include "config.h"
 #include "dataref.h"
 #include "plugins-menu.h"
+#include "profiles/fps748-tcas-profile.h"
+#include "profiles/sparky744-tcas-profile.h"
 #include "profiles/toliss-tcas-profile.h"
+#include "profiles/zibo-tcas-profile.h"
 #include "segment-display.h"
 
 #include <algorithm>
@@ -40,7 +43,16 @@ const char *ProductTCAS::activeProfileName() const {
 }
 
 void ProductTCAS::setProfileForCurrentAircraft() {
-    if (TolissTCASProfile::IsEligible()) {
+    if (FPS748TCASProfile::IsEligible()) {
+        profile = new FPS748TCASProfile(this);
+        profileReady = true;
+    } else if (SparkyB744TCASProfile::IsEligible()) {
+        profile = new SparkyB744TCASProfile(this);
+        profileReady = true;
+    } else if (ZiboTCASProfile::IsEligible()) {
+        profile = new ZiboTCASProfile(this);
+        profileReady = true;
+    } else if (TolissTCASProfile::IsEligible()) {
         profile = new TolissTCASProfile(this);
         profileReady = true;
     } else {

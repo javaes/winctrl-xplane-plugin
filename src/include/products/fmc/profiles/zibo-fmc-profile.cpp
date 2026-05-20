@@ -157,8 +157,8 @@ const std::vector<FMCButtonDef> &ZiboFMCProfile::buttonDefs() const {
                         {FMCKey::PFP3_CLB, "laminar/B738/button/" + fmc + "_clb"},
                         {std::vector<FMCKey>{FMCKey::PFP3_CRZ, FMCKey::PFP4_ATC}, "laminar/B738/button/" + fmc + "_crz"},
                         {FMCKey::PFP3_DES, "laminar/B738/button/" + fmc + "_des"},
-                        {FMCKey::BRIGHTNESS_DOWN, "laminar/B738/electric/instrument_brightness[10]", -0.1},
-                        {FMCKey::BRIGHTNESS_UP, "laminar/B738/electric/instrument_brightness[10]", 0.1},
+                        {FMCKey::BRIGHTNESS_DOWN, "laminar/B738/electric/instrument_brightness[10]", FMCDatarefType::ADJUST_VALUE, -0.1},
+                        {FMCKey::BRIGHTNESS_UP, "laminar/B738/electric/instrument_brightness[10]", FMCDatarefType::ADJUST_VALUE, 0.1},
                         {FMCKey::MENU, "laminar/B738/button/" + fmc + "_menu"},
                         {std::vector<FMCKey>{FMCKey::PFP_LEGS, FMCKey::MCDU_FPLN, FMCKey::MCDU_DIR, FMCKey::PFP4_VNAV, FMCKey::PFP7_VNAV}, "laminar/B738/button/" + fmc + "_legs"},
                         {std::vector<FMCKey>{FMCKey::PFP_DEP_ARR, FMCKey::MCDU_AIRPORT}, "laminar/B738/button/" + fmc + "_dep_app"},
@@ -336,11 +336,15 @@ void ZiboFMCProfile::buttonPressed(const FMCButtonDef *button, XPLMCommandPhase 
         return;
     }
 
-    if (std::fabs(button->value) > std::numeric_limits<double>::epsilon()) {
-        if (phase != xplm_CommandBegin) {
+    auto datarefManager = Dataref::getInstance();
+    if (button->datarefType == FMCDatarefType::SET_VALUE || button->datarefType == FMCDatarefType::SET_VALUE_PHASED) {
+        double value = std::fabs(button->value) < std::numeric_limits<double>::epsilon() ? 1.0 : button->value;
+        if (button->datarefType == FMCDatarefType::SET_VALUE && phase != xplm_CommandBegin) {
             return;
         }
 
+        datarefManager->set<double>(button->dataref.c_str(), phase == xplm_CommandBegin ? value : 0.0);
+    } else if (phase == xplm_CommandBegin && button->datarefType == FMCDatarefType::ADJUST_VALUE) {
         std::string ref = button->dataref;
         size_t start = ref.find('[');
         if (start != std::string::npos) {
@@ -348,44 +352,64 @@ void ZiboFMCProfile::buttonPressed(const FMCButtonDef *button, XPLMCommandPhase 
             int index = std::stoi(ref.substr(start + 1, end - start - 1));
             std::string baseRef = ref.substr(0, start);
 
-            auto vec = Dataref::getInstance()->get<std::vector<float>>(baseRef.c_str());
+            auto vec = datarefManager->get<std::vector<float>>(baseRef.c_str());
             if (index >= 0 && index < (int) vec.size()) {
                 vec[index] = std::clamp(vec[index] + button->value, 0.0, 1.0);
-                Dataref::getInstance()->set<std::vector<float>>(baseRef.c_str(), vec);
+                datarefManager->set<std::vector<float>>(baseRef.c_str(), vec);
             }
         } else {
-            Dataref::getInstance()->set<float>(ref.c_str(), button->value);
+            double currentValue = datarefManager->get<double>(button->dataref.c_str());
+            datarefManager->set<double>(button->dataref.c_str(), currentValue + button->value);
         }
-    } else if (Dataref::getInstance()->get<int>("laminar/B738/fmc_type") == 1) {
-        std::vector<std::pair<FMCKey, FMCKey>> fansMapping = {
-            {FMCKey::PFP_DEP_ARR, FMCKey::PFP3_CLB},
-            {FMCKey::PFP4_ATC, FMCKey::PFP3_CRZ},
-            {FMCKey::PFP4_VNAV, FMCKey::PFP3_DES},
-            {FMCKey::PFP7_VNAV, FMCKey::PFP3_DES},
-            {FMCKey::PFP_FIX, FMCKey::MENU},
-            {FMCKey::PFP_HOLD, FMCKey::PFP_DEP_ARR},
-            {FMCKey::PFP4_FMC_COMM, FMCKey::PFP_HOLD},
-            {FMCKey::PFP7_FMC_COMM, FMCKey::PFP_HOLD},
-            {FMCKey::MENU, FMCKey::PFP3_N1_LIMIT},
-            {FMCKey::PFP3_N1_LIMIT, FMCKey::PFP_FIX},
-        };
+    } else if (phase == xplm_CommandBegin && button->datarefType == FMCDatarefType::EXECUTE_MULTIPLE_CMD_ONCE) {
+        std::stringstream ss(button->dataref);
+        std::string item;
+        std::vector<std::string> commands;
+        while (std::getline(ss, item, ',')) {
+            commands.push_back(item);
+        }
 
-        // We should read the pressed key, and then "convert" the key to the mapped one, if needed. After conversion, execute the button command dataref. Else, just execute
-        FMCKey pressedKey = button->key.index() == 0 ? std::get<FMCKey>(button->key) : std::get<std::vector<FMCKey>>(button->key)[0];
+        for (const auto &cmd : commands) {
+            datarefManager->executeCommand(cmd.c_str());
+        }
+    } else {
+        if (Dataref::getInstance()->get<int>("laminar/B738/fmc_type") == 1) {
+            std::vector<std::pair<FMCKey, FMCKey>> fansMapping = {
+                {FMCKey::PFP_DEP_ARR, FMCKey::PFP3_CLB},
+                {FMCKey::PFP4_ATC, FMCKey::PFP3_CRZ},
+                {FMCKey::PFP4_VNAV, FMCKey::PFP3_DES},
+                {FMCKey::PFP7_VNAV, FMCKey::PFP3_DES},
+                {FMCKey::PFP_FIX, FMCKey::MENU},
+                {FMCKey::PFP_HOLD, FMCKey::PFP_DEP_ARR},
+                {FMCKey::PFP4_FMC_COMM, FMCKey::PFP_HOLD},
+                {FMCKey::PFP7_FMC_COMM, FMCKey::PFP_HOLD},
+                {FMCKey::MENU, FMCKey::PFP3_N1_LIMIT},
+                {FMCKey::PFP3_N1_LIMIT, FMCKey::PFP_FIX},
+            };
 
-        for (const auto &mapping : fansMapping) {
-            if (pressedKey == mapping.first) {
-                // Find the mapped button
-                auto it = buttonKeyMap().find(mapping.second);
-                if (it != buttonKeyMap().end()) {
-                    Dataref::getInstance()->executeCommand(it->second->dataref.c_str(), phase);
-                    return;
+            // We should read the pressed key, and then "convert" the key to the mapped one, if needed. After conversion, execute the button command dataref. Else, just execute
+            FMCKey pressedKey = button->key.index() == 0 ? std::get<FMCKey>(button->key) : std::get<std::vector<FMCKey>>(button->key)[0];
+
+            for (const auto &mapping : fansMapping) {
+                if (pressedKey == mapping.first) {
+                    // Find the mapped button
+                    auto it = buttonKeyMap().find(mapping.second);
+                    if (it != buttonKeyMap().end()) {
+                        if (phase == xplm_CommandBegin && button->datarefType == FMCDatarefType::EXECUTE_CMD_ONCE) {
+                            datarefManager->executeCommand(it->second->dataref.c_str(), phase);
+                        } else if (button->datarefType == FMCDatarefType::EXECUTE_CMD_PHASED) {
+                            datarefManager->executeCommand(it->second->dataref.c_str(), phase);
+                        }
+                        return;
+                    }
                 }
             }
         }
 
-        Dataref::getInstance()->executeCommand(button->dataref.c_str(), phase);
-    } else {
-        Dataref::getInstance()->executeCommand(button->dataref.c_str(), phase);
+        if (phase == xplm_CommandBegin && button->datarefType == FMCDatarefType::EXECUTE_CMD_ONCE) {
+            datarefManager->executeCommand(button->dataref.c_str(), phase);
+        } else if (button->datarefType == FMCDatarefType::EXECUTE_CMD_PHASED) {
+            datarefManager->executeCommand(button->dataref.c_str(), phase);
+        }
     }
 }

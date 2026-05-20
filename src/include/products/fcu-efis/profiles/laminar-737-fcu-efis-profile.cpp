@@ -42,6 +42,8 @@ Laminar737FCUEfisProfile::Laminar737FCUEfisProfile(ProductFCUEfis *product) : FC
         Dataref::getInstance()->executeChangedCallbacksForDataref("sim/cockpit2/electrical/panel_brightness_ratio");
     });
 
+    Dataref::getInstance()->executeChangedCallbacksForDataref("sim/cockpit/electrical/battery_on");
+
     // Monitor autopilot engagement (CMD A and CMD B) - use 737-specific status datarefs
     Dataref::getInstance()->monitorExistingDataref<int>("laminar/B738/autopilot/cmd_a_status", [product](int status) {
         // Status 2 = engaged and active
@@ -104,7 +106,7 @@ Laminar737FCUEfisProfile::~Laminar737FCUEfisProfile() {
     Dataref::getInstance()->unbind("sim/cockpit/electrical/battery_on");
     Dataref::getInstance()->unbind("laminar/B738/autopilot/cmd_a_status");
     Dataref::getInstance()->unbind("laminar/B738/autopilot/cmd_b_status");
-    Dataref::getInstance()->unbind("sim/cockpit2/autopilot/autothrottle_enabled");
+    Dataref::getInstance()->unbind("sim/cockpit2/autopilot/autothrottle_arm");
     Dataref::getInstance()->unbind("sim/cockpit2/autopilot/approach_status");
     Dataref::getInstance()->unbind("sim/cockpit/autopilot/autopilot_state");
     Dataref::getInstance()->unbind("sim/cockpit2/EFIS/EFIS_weather_on_copilot");
@@ -284,6 +286,9 @@ void Laminar737FCUEfisProfile::updateDisplayData(FCUDisplayData &data) {
         data.efisLeft.baro = "";
         return;
     }
+
+    data.headingHdg = true;
+    data.headingLat = true;
 
     // Speed display
     bool isMach = Dataref::getInstance()->getCached<int>("sim/cockpit/autopilot/airspeed_is_mach");

@@ -218,6 +218,9 @@ void JF146FCUEfisProfile::updateDisplayData(FCUDisplayData &data) {
         return;
     }
 
+    data.headingHdg = true;
+    data.headingLat = true;
+
     // Speed display
     bool isMach = Dataref::getInstance()->getCached<int>("sim/cockpit/autopilot/airspeed_is_mach");
 

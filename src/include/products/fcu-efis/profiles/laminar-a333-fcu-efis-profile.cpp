@@ -353,7 +353,7 @@ void LaminarA333FCUEfisProfile::updateDisplayData(FCUDisplayData &data) {
     // HDG/TRK mode
     data.headingTrk = datarefManager->getCached<bool>("sim/cockpit2/autopilot/trk_fpa");
     data.headingHdg = !data.headingTrk;
-    
+
     data.vsMode = !data.headingTrk; // VS mode when HDG mode
     data.fpaMode = data.headingTrk; // FPA mode when TRK mode
 

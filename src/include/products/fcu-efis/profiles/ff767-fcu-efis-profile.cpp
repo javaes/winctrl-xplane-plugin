@@ -464,6 +464,8 @@ void FF767FCUEfisProfile::updateDisplayData(FCUDisplayData &data) {
         data.heading = "---";
     }
 
+    data.headingHdg = true;
+    data.headingLat = true;
     data.hdgManaged = false;
 
     // to be disabled on 767: no TRK mode!?
@@ -500,8 +502,6 @@ void FF767FCUEfisProfile::updateDisplayData(FCUDisplayData &data) {
     data.vsIndication = true;
     data.fpaIndication = false;
     data.vsVerticalLine = true;
-
-    data.headingLat = true;
 
     for (int i = 0; i < 2; i++) {
         bool isCaptain = i == 0;

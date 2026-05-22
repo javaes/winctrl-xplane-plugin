@@ -9,7 +9,7 @@
 
 SparkyB744FMCProfile::SparkyB744FMCProfile(ProductFMC *product) : FMCAircraftProfile(product) {
     product->setAllLedsEnabled(false);
-    product->setFont(FontVariant::FontVGA1);
+    product->setFont(FontVariant::Font737);
 
     Dataref::getInstance()->monitorExistingDataref<bool>("sim/cockpit/electrical/avionics_on", [product](bool powered) {
         uint8_t target = powered ? 200 : 0;
@@ -17,26 +17,44 @@ SparkyB744FMCProfile::SparkyB744FMCProfile(ProductFMC *product) : FMCAircraftPro
         product->setLedBrightness(FMCLed::SCREEN_BACKLIGHT, target);
     });
 
+    Dataref::getInstance()->monitorExistingDataref<bool>("sim/cockpit2/radios/indicators/fms_exec_light_pilot", [product](bool lit) {
+        if (product->deviceVariant == FMCDeviceVariant::VARIANT_CAPTAIN) {
+            uint8_t target = lit ? 200 : 0;
+            product->setLedBrightness(FMCLed::PFP_EXEC, target);
+            product->setLedBrightness(FMCLed::MCDU_STATUS, target);
+        }
+    });
+
+    Dataref::getInstance()->monitorExistingDataref<bool>("sim/cockpit2/radios/indicators/fms_exec_light_copilot", [product](bool lit) {
+        if (product->deviceVariant == FMCDeviceVariant::VARIANT_FIRSTOFFICER) {
+            uint8_t target = lit ? 200 : 0;
+            product->setLedBrightness(FMCLed::PFP_EXEC, target);
+            product->setLedBrightness(FMCLed::MCDU_STATUS, target);
+        }
+    });
+
     Dataref::getInstance()->executeChangedCallbacksForDataref("sim/cockpit/electrical/avionics_on");
+    Dataref::getInstance()->executeChangedCallbacksForDataref("sim/cockpit2/radios/indicators/fms_exec_light_pilot");
+    Dataref::getInstance()->executeChangedCallbacksForDataref("sim/cockpit2/radios/indicators/fms_exec_light_copilot");
 }
 
 SparkyB744FMCProfile::~SparkyB744FMCProfile() {
     Dataref::getInstance()->unbind("sim/cockpit/electrical/avionics_on");
+    Dataref::getInstance()->unbind("sim/cockpit2/radios/indicators/fms_exec_light_pilot");
+    Dataref::getInstance()->unbind("sim/cockpit2/radios/indicators/fms_exec_light_copilot");
 }
 
 bool SparkyB744FMCProfile::IsEligible() {
     auto dr = Dataref::getInstance();
-    return dr->exists("laminar/B747/fms1/Line01_L")
-        && !dr->exists("FPS/748/simtime")
-        && !dr->exists("SSG/748/simtime");
+    return dr->exists("laminar/B747/fms1/Line01_L") && !dr->exists("FPS/748/simtime") && !dr->exists("SSG/748/simtime");
 }
 
 const std::vector<std::string> &SparkyB744FMCProfile::displayDatarefs() const {
     static std::unordered_map<FMCDeviceVariant, std::vector<std::string>> cache;
     // B747 quirk: captain CDU keys use fms1 but display lines come from fms3 (observer FMS). FO uses fms2 for both. Observer uses fms1 display lines.
-    const std::string fms = product->deviceVariant == FMCDeviceVariant::VARIANT_CAPTAIN ? "fms3"
+    const std::string fms = product->deviceVariant == FMCDeviceVariant::VARIANT_CAPTAIN  ? "fms3"
                           : product->deviceVariant == FMCDeviceVariant::VARIANT_OBSERVER ? "fms1"
-                          : "fms2";
+                                                                                         : "fms2";
 
     std::vector<std::string> refs;
     refs.reserve(28);
@@ -51,10 +69,12 @@ const std::vector<std::string> &SparkyB744FMCProfile::displayDatarefs() const {
 
 const std::vector<FMCButtonDef> &SparkyB744FMCProfile::buttonDefs() const {
     static std::unordered_map<FMCDeviceVariant, std::vector<FMCButtonDef>> cache;
-    // Keys: captain=fms1, FO=fms2, observer=fms3
-    const std::string fms = product->deviceVariant == FMCDeviceVariant::VARIANT_CAPTAIN ? "fms1"
+    // LSK keys: captain=fms1, FO=fms2, observer=fms3
+    const std::string fms = product->deviceVariant == FMCDeviceVariant::VARIANT_CAPTAIN  ? "fms1"
                           : product->deviceVariant == FMCDeviceVariant::VARIANT_OBSERVER ? "fms3"
-                          : "fms2";
+                                                                                         : "fms2";
+    // FMS function keys: use standard X-Plane commands (sim/FMS for captain, sim/FMS2 for FO)
+    const std::string fms_cmd = product->deviceVariant == FMCDeviceVariant::VARIANT_FIRSTOFFICER ? "sim/FMS2" : "sim/FMS";
 
     return cache.try_emplace(product->deviceVariant,
                     std::vector<FMCButtonDef>{
@@ -70,18 +90,18 @@ const std::vector<FMCButtonDef> &SparkyB744FMCProfile::buttonDefs() const {
                         {FMCKey::LSK4R, "laminar/B747/" + fms + "/ls_key/R4"},
                         {FMCKey::LSK5R, "laminar/B747/" + fms + "/ls_key/R5"},
                         {FMCKey::LSK6R, "laminar/B747/" + fms + "/ls_key/R6"},
-                        {std::vector<FMCKey>{FMCKey::PFP_INIT_REF, FMCKey::MCDU_INIT}, "laminar/B747/" + fms + "/func_key/index"},
-                        {std::vector<FMCKey>{FMCKey::PFP_ROUTE, FMCKey::MCDU_SEC_FPLN}, "laminar/B747/" + fms + "/func_key/fpln"},
-                        {std::vector<FMCKey>{FMCKey::PFP4_NAV_RAD, FMCKey::MCDU_RAD_NAV, FMCKey::PFP7_NAV_RAD}, "laminar/B747/" + fms + "/func_key/navrad"},
-                        {std::vector<FMCKey>{FMCKey::PFP4_VNAV, FMCKey::MCDU_DATA, FMCKey::PFP7_VNAV}, "laminar/B747/" + fms + "/func_key/clb"},
-                        {std::vector<FMCKey>{FMCKey::PFP_FIX, FMCKey::MCDU_EMPTY_BOTTOM_LEFT}, "laminar/B747/" + fms + "/func_key/fix"},
-                        {std::vector<FMCKey>{FMCKey::PFP_LEGS, FMCKey::MCDU_FPLN, FMCKey::MCDU_DIR}, "laminar/B747/" + fms + "/func_key/legs"},
-                        {std::vector<FMCKey>{FMCKey::PFP_DEP_ARR, FMCKey::MCDU_AIRPORT}, "laminar/B747/" + fms + "/func_key/dep_arr"},
-                        {FMCKey::PFP_HOLD, "laminar/B747/" + fms + "/func_key/hold"},
-                        {FMCKey::PROG, "laminar/B747/" + fms + "/func_key/prog"},
-                        {std::vector<FMCKey>{FMCKey::PFP_EXEC, FMCKey::MCDU_EMPTY_TOP_RIGHT}, "laminar/B747/" + fms + "/key/execute"},
-                        {FMCKey::PAGE_PREV, "laminar/B747/" + fms + "/func_key/prev_pg"},
-                        {FMCKey::PAGE_NEXT, "laminar/B747/" + fms + "/func_key/next_pg"},
+                        {std::vector<FMCKey>{FMCKey::PFP_INIT_REF, FMCKey::MCDU_INIT}, fms_cmd + "/index"},
+                        {std::vector<FMCKey>{FMCKey::PFP_ROUTE, FMCKey::MCDU_SEC_FPLN}, fms_cmd + "/sec_fpln"},
+                        {std::vector<FMCKey>{FMCKey::PFP4_NAV_RAD, FMCKey::MCDU_RAD_NAV, FMCKey::PFP7_NAV_RAD}, fms_cmd + "/navrad"},
+                        {std::vector<FMCKey>{FMCKey::PFP4_VNAV, FMCKey::MCDU_DATA, FMCKey::PFP7_VNAV}, fms_cmd + "/clb"},
+                        {std::vector<FMCKey>{FMCKey::PFP_FIX, FMCKey::MCDU_EMPTY_BOTTOM_LEFT}, fms_cmd + "/fix"},
+                        {std::vector<FMCKey>{FMCKey::PFP_LEGS, FMCKey::MCDU_FPLN, FMCKey::MCDU_DIR}, fms_cmd + "/legs"},
+                        {std::vector<FMCKey>{FMCKey::PFP_DEP_ARR, FMCKey::MCDU_AIRPORT}, fms_cmd + "/dep_arr"},
+                        {FMCKey::PFP_HOLD, fms_cmd + "/hold"},
+                        {FMCKey::PROG, fms_cmd + "/prog"},
+                        {std::vector<FMCKey>{FMCKey::PFP_EXEC, FMCKey::MCDU_EMPTY_TOP_RIGHT}, fms_cmd + "/exec"},
+                        {FMCKey::PAGE_PREV, fms_cmd + "/prev"},
+                        {FMCKey::PAGE_NEXT, fms_cmd + "/next"},
                         {FMCKey::KEY1, "laminar/B747/" + fms + "/alphanum_key/1"},
                         {FMCKey::KEY2, "laminar/B747/" + fms + "/alphanum_key/2"},
                         {FMCKey::KEY3, "laminar/B747/" + fms + "/alphanum_key/3"},
@@ -160,7 +180,19 @@ const std::map<char, FMCTextColor> &SparkyB744FMCProfile::colorMap() const {
 }
 
 void SparkyB744FMCProfile::mapCharacter(std::vector<uint8_t> *buffer, uint8_t character, bool isFontSmall) {
-    buffer->push_back(character);
+    switch (character) {
+        case '*':
+            buffer->insert(buffer->end(), FMCSpecialCharacter::OUTLINED_SQUARE.begin(), FMCSpecialCharacter::OUTLINED_SQUARE.end());
+            break;
+
+        case '`':
+            buffer->insert(buffer->end(), FMCSpecialCharacter::DEGREES.begin(), FMCSpecialCharacter::DEGREES.end());
+            break;
+
+        default:
+            buffer->push_back(character);
+            break;
+    }
 }
 
 void SparkyB744FMCProfile::updatePage(std::vector<std::vector<char>> &page) {
@@ -168,9 +200,9 @@ void SparkyB744FMCProfile::updatePage(std::vector<std::vector<char>> &page) {
 
     auto dm = Dataref::getInstance();
     // Display lines: captain=fms3 (observer FMS), FO=fms2, observer=fms1 — B747 quirk
-    const std::string fms = product->deviceVariant == FMCDeviceVariant::VARIANT_CAPTAIN ? "fms3"
+    const std::string fms = product->deviceVariant == FMCDeviceVariant::VARIANT_CAPTAIN  ? "fms3"
                           : product->deviceVariant == FMCDeviceVariant::VARIANT_OBSERVER ? "fms1"
-                          : "fms2";
+                                                                                         : "fms2";
     const std::string base = "laminar/B747/" + fms + "/Line";
 
     for (int lineNum = 1; lineNum <= (int) ProductFMC::PageLines; ++lineNum) {
@@ -181,11 +213,15 @@ void SparkyB744FMCProfile::updatePage(std::vector<std::vector<char>> &page) {
         for (bool fontSmall : {false, true}) {
             const std::string ref = base + buf + (fontSmall ? "_S" : "_L");
             std::string text = dm->getCached<std::string>(ref.c_str());
-            if (text.empty()) continue;
+            if (text.empty()) {
+                continue;
+            }
 
             for (int i = 0; i < (int) text.size() && i < (int) ProductFMC::PageCharsPerLine; ++i) {
                 unsigned char c = text[i];
-                if (c == 0x00) break;
+                if (c == 0x00) {
+                    break;
+                }
                 if (c != 0x20) {
                     product->writeLineToPage(page, lineIndex, i, std::string(1, toupper(c)), 'g', fontSmall);
                 }

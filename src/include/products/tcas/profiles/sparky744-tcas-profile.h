@@ -4,8 +4,12 @@
 #include "tcas-aircraft-profile.h"
 
 #include <string>
+#include <XPLMUtilities.h>
 
 class SparkyB744TCASProfile : public TCASAircraftProfile {
+    private:
+        std::string squawkInput;
+
     public:
         SparkyB744TCASProfile(ProductTCAS *product);
         ~SparkyB744TCASProfile();

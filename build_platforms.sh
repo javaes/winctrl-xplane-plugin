@@ -105,7 +105,7 @@ if [ "$DEV_MODE" = true ]; then
     fi
     CLEAN_BUILD="n"
 elif [ -z "$PLATFORMS" ]; then
-    echo "Building $PROJECT_NAME.xpl version $VERSION. Is this correct? (y/n):"
+    echo "Building $PROJECT_NAME.xpl version $VERSION. Is this correct? (y/n) [default: y]:"
     read CONFIRM
 
     if [ -z "$CONFIRM" ]; then
@@ -144,12 +144,21 @@ SDK_VERSION=$(grep "#define kXPLM_Version" SDK/CHeaders/XPLM/XPLMDefs.h | awk '{
 echo "Building with SDK version $SDK_VERSION\n"
 
 if [ "$DEV_MODE" = false ]; then
-    echo "Clean build directory? (y/n):"
+    echo "Clean build directory? (y/n) [default: n]:"
     read CLEAN_BUILD
 
     if [ -z "$CLEAN_BUILD" ]; then
         CLEAN_BUILD="n"
     fi
+
+    echo "Upload to Google Drive after build? (y/n) [default: y]:"
+    read UPLOAD_TO_DRIVE
+
+    if [ -z "$UPLOAD_TO_DRIVE" ]; then
+        UPLOAD_TO_DRIVE="y"
+    fi
+else
+    UPLOAD_TO_DRIVE="n"
 fi
 
 if [ "$CLEAN_BUILD" = "y" ]; then
@@ -240,5 +249,24 @@ mv $PROJECT_NAME dist
 cd ..
 
 echo "Bundle created. Distribution: build/dist/$PROJECT_NAME-$VERSION.zip"
+
+# Upload to Google Drive if requested and gdrive is available
+if [ "$UPLOAD_TO_DRIVE" = "y" ] && command -v gdrive &> /dev/null; then
+    echo "Uploading to Google Drive..."
+    FOLDER="1NtjQGUKH9Y8hrfOscwMPC99bVMnh7C0x"
+
+    # Delete old file with same name if it exists
+    OLD_FILE_ID=$(gdrive files list --parent $FOLDER | grep "$PROJECT_NAME-$VERSION.zip" | awk '{print $1}')
+    if [ ! -z "$OLD_FILE_ID" ]; then
+        echo "Removing old version..."
+        gdrive files delete $OLD_FILE_ID
+    fi
+
+    FILE_ID=$(gdrive files upload --parent $FOLDER --print-only-id "build/$PROJECT_NAME-$VERSION.zip")
+    if [ ! -z "$FILE_ID" ]; then
+        echo "\033[1;36mFile was uploaded to Google Drive:\033[0m"
+        echo "\033[1;36mhttps://drive.google.com/file/d/$FILE_ID/view\033[0m"
+    fi
+fi
 
 ./update_readme.sh

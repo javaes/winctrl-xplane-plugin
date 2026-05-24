@@ -190,8 +190,37 @@ void SparkyB744FMCProfile::mapCharacter(std::vector<uint8_t> *buffer, uint8_t ch
             buffer->insert(buffer->end(), FMCSpecialCharacter::DEGREES.begin(), FMCSpecialCharacter::DEGREES.end());
             break;
 
+        case 24: // Up arrow
+            buffer->insert(buffer->end(), FMCSpecialCharacter::ARROW_UP.begin(), FMCSpecialCharacter::ARROW_UP.end());
+            break;
+
+        case 25: // Down arrow
+            buffer->insert(buffer->end(), FMCSpecialCharacter::ARROW_DOWN.begin(), FMCSpecialCharacter::ARROW_DOWN.end());
+            break;
+
+        case 26: // Right arrow
+            buffer->insert(buffer->end(), FMCSpecialCharacter::ARROW_RIGHT.begin(), FMCSpecialCharacter::ARROW_RIGHT.end());
+            break;
+
+        case 27: // Left arrow
+            buffer->insert(buffer->end(), FMCSpecialCharacter::ARROW_LEFT.begin(), FMCSpecialCharacter::ARROW_LEFT.end());
+            break;
+
+        case 30: // Up arrow (alternate code)
+            buffer->insert(buffer->end(), FMCSpecialCharacter::ARROW_UP.begin(), FMCSpecialCharacter::ARROW_UP.end());
+            break;
+
+        case 31: // Down arrow (alternate code)
+            buffer->insert(buffer->end(), FMCSpecialCharacter::ARROW_DOWN.begin(), FMCSpecialCharacter::ARROW_DOWN.end());
+            break;
+
         default:
-            buffer->push_back(character);
+            // Replace unrecognized characters with spaces to avoid corrupting device output
+            if (character < 32 || character > 126) {
+                buffer->push_back(' ');
+            } else {
+                buffer->push_back(character);
+            }
             break;
     }
 }
@@ -216,6 +245,24 @@ void SparkyB744FMCProfile::updatePage(std::vector<std::vector<char>> &page) {
             std::string text = dm->getCached<std::string>(ref.c_str());
             if (text.empty()) {
                 continue;
+            }
+
+            // Decode UTF-8 arrow sequences
+            size_t pos = 0;
+            while ((pos = text.find("\xE2\x86\x91", pos)) != std::string::npos) {
+                text.replace(pos, 3, "\x1E"); // Up arrow
+            }
+            pos = 0;
+            while ((pos = text.find("\xE2\x86\x93", pos)) != std::string::npos) {
+                text.replace(pos, 3, "\x1F"); // Down arrow
+            }
+            pos = 0;
+            while ((pos = text.find("\xE2\x86\x90", pos)) != std::string::npos) {
+                text.replace(pos, 3, "\x1B"); // Left arrow
+            }
+            pos = 0;
+            while ((pos = text.find("\xE2\x86\x92", pos)) != std::string::npos) {
+                text.replace(pos, 3, "\x1A"); // Right arrow
             }
 
             for (int i = 0; i < (int) text.size() && i < (int) ProductFMC::PageCharsPerLine; ++i) {

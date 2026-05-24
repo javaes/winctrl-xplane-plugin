@@ -13,6 +13,7 @@
 #include <algorithm>
 #include <cmath>
 #include <unordered_map>
+#include <XPLMProcessing.h>
 #include <XPLMUtilities.h>
 
 ProductTCAS::ProductTCAS(HIDDeviceHandle hidDevice, uint16_t vendorId, uint16_t productId, std::string vendorName, std::string productName) : USBDevice(hidDevice, vendorId, productId, vendorName, productName) {

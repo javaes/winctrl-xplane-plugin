@@ -138,6 +138,10 @@ USBDevice *USBDevice::Device(HIDDeviceHandle hidDevice, uint16_t vendorId, uint1
         case 0xB930: // URSA MINOR 32 Throttle Metal R
             return new ProductUrsaMinorThrottle(hidDevice, vendorId, productId, vendorName, productName);
 
+            // Not yet implemented devices:
+            // 0xBD64 = Orion Throttle Base II + F15EX HANDLE L + F15EX HANDLE R
+            // 0xB980 = WINCTRL Orion 32 Rudder Pedals Metal
+
         default:
             Logger::getInstance()->info("Unknown WINCTRL device - vendorId: 0x%04X, productId: 0x%04X (%s)\n", vendorId, productId, productName.c_str());
             return nullptr;

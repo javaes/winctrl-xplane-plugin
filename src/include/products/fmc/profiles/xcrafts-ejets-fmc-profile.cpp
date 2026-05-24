@@ -19,18 +19,19 @@ XCraftsEjetsFMCProfile::XCraftsEjetsFMCProfile(ProductFMC *product) : FMCAircraf
     product->setFont(FontVariant::FontXCrafts);
 
     const std::string cdu = product->deviceVariant == FMCDeviceVariant::VARIANT_CAPTAIN ? "CDU_1" : "CDU_2";
-    //XCrafts/FMS/CDU1_brt
-    //XCrafts/FMS/power_stat > 0
     Dataref::getInstance()->monitorExistingDataref<int>(("XCrafts/FMS/WW_" + cdu + "_BACKLIGHT").c_str(), [this, product](int brightness) {
-        product->setLedBrightness(FMCLed::BACKLIGHT, brightness);
+        bool powered = Dataref::getInstance()->getCached<bool>("XCrafts/FMS/power_stat");
+        product->setLedBrightness(FMCLed::BACKLIGHT, powered ? brightness : 0);
     });
 
     Dataref::getInstance()->monitorExistingDataref<int>(("XCrafts/FMS/WW_" + cdu + "_SCREEN_BACKLIGHT").c_str(), [this, product](int brightness) {
-        product->setLedBrightness(FMCLed::SCREEN_BACKLIGHT, brightness);
+        bool powered = Dataref::getInstance()->getCached<bool>("XCrafts/FMS/power_stat");
+        product->setLedBrightness(FMCLed::SCREEN_BACKLIGHT, powered ? brightness : 0);
     });
 
     Dataref::getInstance()->monitorExistingDataref<int>(("XCrafts/FMS/WW_" + cdu + "_OVERALL_LEDS_BRIGHTNESS").c_str(), [this, product](int brightness) {
-        product->setLedBrightness(FMCLed::OVERALL_LEDS_BRIGHTNESS, brightness);
+        bool powered = Dataref::getInstance()->getCached<bool>("XCrafts/FMS/power_stat");
+        product->setLedBrightness(FMCLed::OVERALL_LEDS_BRIGHTNESS, powered ? brightness : 0);
     });
 
     Dataref::getInstance()->monitorExistingDataref<bool>("XCrafts/FMS/power_stat", [this, cdu](bool poweredOn) {

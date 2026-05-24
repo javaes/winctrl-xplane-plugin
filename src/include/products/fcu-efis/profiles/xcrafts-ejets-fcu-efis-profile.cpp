@@ -87,8 +87,8 @@ const std::unordered_map<uint16_t, FCUEfisButtonDef> &XCraftsEjetsFCUEfisProfile
         {5, {"A/THR", "XCrafts/ERJ/AutoThrottle"}},
         {7, {"METRIC", "XCrafts/ERJ/PFD/altitude_meters"}},
         {8, {"APPR", "XCrafts/ERJ/APPCH"}},
-        {9, {"SPD DEC", "XCrafts/ERJ/autopilot/airspeed_dial_kts_mach", FCUEfisDatarefType::ADJUST_VALUE, -1.0}},
-        {10, {"SPD INC", "XCrafts/ERJ/autopilot/airspeed_dial_kts_mach", FCUEfisDatarefType::ADJUST_VALUE, 1.0}},
+        {9, {"SPD DEC", "custom_airspeed", FCUEfisDatarefType::ADJUST_VALUE, -1.0}},
+        {10, {"SPD INC", "custom_airspeed", FCUEfisDatarefType::ADJUST_VALUE, 1.0}},
         {11, {"SPD PUSH", "XCrafts/ERJ/PFD/AT_speed_source"}}, // or set XCrafts/speed_knob_fms_man to 0
         {12, {"SPD PULL", "XCrafts/ERJ/PFD/AT_speed_source"}}, // or set XCrafts/speed_knob_fms_man to 1
         {13, {"HDG DEC", "sim/autopilot/heading_down"}},
@@ -248,6 +248,11 @@ void XCraftsEjetsFCUEfisProfile::buttonPressed(const FCUEfisButtonDef *button, X
         bool directionUp = button->value > 0.0f;
         float current = datarefManager->get<float>("XCrafts/ERJ/autopilot/altitude");
         datarefManager->set<float>("XCrafts/ERJ/autopilot/altitude", current + (directionUp ? altitudeIncrements : -altitudeIncrements));
+    } else if (phase == xplm_CommandBegin && button->dataref == "custom_airspeed") {
+        bool isMach = datarefManager->getCached<bool>("sim/cockpit/autopilot/airspeed_is_mach");
+        float increment = isMach ? 0.01f : 1.0f;
+        float current = datarefManager->get<float>("XCrafts/ERJ/autopilot/airspeed_dial_kts_mach");
+        datarefManager->set<float>("XCrafts/ERJ/autopilot/airspeed_dial_kts_mach", current + (increment * button->value));
     } else if (phase == xplm_CommandBegin && button->datarefType == FCUEfisDatarefType::ADJUST_VALUE) {
         float current = datarefManager->get<float>(button->dataref.c_str());
         datarefManager->set<float>(button->dataref.c_str(), current + static_cast<float>(button->value));

@@ -3,6 +3,7 @@
 
 #include <string>
 #include <unordered_map>
+#include <vector>
 #include <XPLMUtilities.h>
 
 class ProductTCAS;
@@ -28,6 +29,7 @@ class TCASAircraftProfile {
         TCASAircraftProfile(ProductTCAS *product) : product(product) {};
         virtual ~TCASAircraftProfile() = default;
 
+        virtual const std::vector<std::string> &displayDatarefs() const = 0;
         virtual const std::unordered_map<uint16_t, TCASButtonDef> &buttonDefs() const = 0;
         virtual void buttonPressed(const TCASButtonDef *button, XPLMCommandPhase phase) = 0;
 

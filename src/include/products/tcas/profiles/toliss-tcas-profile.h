@@ -14,6 +14,7 @@ class TolissTCASProfile : public TCASAircraftProfile {
         ~TolissTCASProfile();
 
         static bool IsEligible();
+        const std::vector<std::string> &displayDatarefs() const override;
         const std::unordered_map<uint16_t, TCASButtonDef> &buttonDefs() const override;
 
         void buttonPressed(const TCASButtonDef *button, XPLMCommandPhase phase) override;

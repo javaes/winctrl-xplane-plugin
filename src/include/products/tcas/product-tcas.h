@@ -25,6 +25,7 @@ class ProductTCAS : public USBDevice {
         uint32_t lastButtonStateHi;
         std::set<int> pressedButtonIndices;
         uint8_t packetNumber = 1;
+        uint64_t lastUpdateCycle = 0;
 
         void setProfileForCurrentAircraft();
 
@@ -45,6 +46,7 @@ class ProductTCAS : public USBDevice {
         void setAllLedsEnabled(bool enabled);
         void setLedBrightness(TCASLed led, uint8_t brightness);
         void setLCDText(const std::string &squawkCode);
+        void updateDisplays(bool force = false);
 };
 
 #endif

@@ -38,6 +38,18 @@ bool FPS748TCASProfile::IsEligible() {
     return Dataref::getInstance()->exists("FPS/748/simtime") || Dataref::getInstance()->exists("SSG/748/simtime");
 }
 
+const std::vector<std::string> &FPS748TCASProfile::displayDatarefs() const {
+    static const std::vector<std::string> datarefs = {
+        "FPS/Radio/transp_da",
+        "FPS/Radio/transp_C1",
+        "FPS/Radio/transp_C2",
+        "FPS/Radio/transp_C3",
+        "FPS/Radio/transp_C4",
+    };
+
+    return datarefs;
+}
+
 const std::unordered_map<uint16_t, TCASButtonDef> &FPS748TCASProfile::buttonDefs() const {
     static const std::unordered_map<uint16_t, TCASButtonDef> buttons = {
         // Keypad digits (transponder codes use octal digits 0-7)

@@ -32,6 +32,14 @@ bool ZiboTCASProfile::IsEligible() {
     return Dataref::getInstance()->exists("laminar/B738/knob/transponder_stby");
 }
 
+const std::vector<std::string> &ZiboTCASProfile::displayDatarefs() const {
+    static const std::vector<std::string> datarefs = {
+        "sim/cockpit2/radios/actuators/transponder_code",
+    };
+
+    return datarefs;
+}
+
 const std::unordered_map<uint16_t, TCASButtonDef> &ZiboTCASProfile::buttonDefs() const {
     static const std::unordered_map<uint16_t, TCASButtonDef> buttons = {
         // Keypad

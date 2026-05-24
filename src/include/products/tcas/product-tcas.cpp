@@ -108,11 +108,30 @@ void ProductTCAS::update() {
 
     if (++displayUpdateFrameCounter >= getDisplayUpdateFrameInterval(12)) {
         displayUpdateFrameCounter = 0;
+        updateDisplays();
+    }
+}
 
-        if (profile) {
-            profile->updateDisplays();
+void ProductTCAS::updateDisplays(bool force) {
+    if (!connected || !profile) {
+        return;
+    }
+
+    bool shouldUpdate = force;
+    auto datarefManager = Dataref::getInstance();
+    for (const std::string &dataref : profile->displayDatarefs()) {
+        if (!lastUpdateCycle || datarefManager->getCachedLastUpdate(dataref.c_str()) > lastUpdateCycle) {
+            shouldUpdate = true;
+            break;
         }
     }
+
+    if (!shouldUpdate) {
+        return;
+    }
+
+    profile->updateDisplays();
+    lastUpdateCycle = XPLMGetCycleNumber();
 }
 
 void ProductTCAS::setAllLedsEnabled(bool enable) {

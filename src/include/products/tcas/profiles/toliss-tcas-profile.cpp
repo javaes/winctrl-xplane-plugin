@@ -55,6 +55,16 @@ bool TolissTCASProfile::IsEligible() {
     return Dataref::getInstance()->exists("AirbusFBW/PanelBrightnessLevel");
 }
 
+const std::vector<std::string> &TolissTCASProfile::displayDatarefs() const {
+    static const std::vector<std::string> datarefs = {
+        "AirbusFBW/XPDRString",
+        "AirbusFBW/AnnunMode",
+        "sim/cockpit/electrical/avionics_on",
+    };
+
+    return datarefs;
+}
+
 const std::unordered_map<uint16_t, TCASButtonDef> &TolissTCASProfile::buttonDefs() const {
     static const std::unordered_map<uint16_t, TCASButtonDef> buttons = {
         {0, {"Keypad 1", "AirbusFBW/ATCCodeKey1", TCASDatarefType::EXECUTE_CMD_PHASED}},
@@ -108,11 +118,7 @@ void TolissTCASProfile::updateDisplays() {
         return;
     }
 
-    std::string squawkCode = "1234";
-    if (isAnnunTest()) {
-        squawkCode = "8888";
-    }
-
+    std::string squawkCode = isAnnunTest() ? "8888" : Dataref::getInstance()->get<std::string>("AirbusFBW/XPDRString");
     product->setLCDText(squawkCode);
 }
 

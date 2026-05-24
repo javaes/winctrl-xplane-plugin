@@ -28,6 +28,14 @@ bool SparkyB744TCASProfile::IsEligible() {
         && !dr->exists("SSG/748/simtime");
 }
 
+const std::vector<std::string> &SparkyB744TCASProfile::displayDatarefs() const {
+    static const std::vector<std::string> datarefs = {
+        "sim/cockpit/radios/transponder_code",
+    };
+
+    return datarefs;
+}
+
 const std::unordered_map<uint16_t, TCASButtonDef> &SparkyB744TCASProfile::buttonDefs() const {
     static const std::unordered_map<uint16_t, TCASButtonDef> buttons = {
         // Keypad

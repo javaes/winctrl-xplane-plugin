@@ -102,7 +102,7 @@ void ZiboTCASProfile::updateDisplays() {
 
     std::string code;
     if (squawkInput.empty()) {
-        int transpCode = Dataref::getInstance()->get<int>("sim/cockpit2/radios/actuators/transponder_code");
+        int transpCode = Dataref::getInstance()->getCached<int>("sim/cockpit2/radios/actuators/transponder_code");
         char buf[5];
         snprintf(buf, sizeof(buf), "%04d", transpCode);
         code = std::string(buf);

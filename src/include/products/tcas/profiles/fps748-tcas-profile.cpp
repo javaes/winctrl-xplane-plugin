@@ -98,7 +98,7 @@ void FPS748TCASProfile::updateDisplays() {
     }
 
     auto dm = Dataref::getInstance();
-    int da = dm->get<int>("FPS/Radio/transp_da");
+    int da = dm->getCached<int>("FPS/Radio/transp_da");
 
     if (da == 0) {
         product->setLCDText("0");
@@ -109,10 +109,10 @@ void FPS748TCASProfile::updateDisplays() {
     code.reserve(4);
 
     int digits[4] = {
-        static_cast<int>(dm->get<float>("FPS/Radio/transp_C1")) / 1000,
-        static_cast<int>(dm->get<float>("FPS/Radio/transp_C2")) / 100,
-        static_cast<int>(dm->get<float>("FPS/Radio/transp_C3")) / 10,
-        static_cast<int>(dm->get<float>("FPS/Radio/transp_C4")),
+        static_cast<int>(dm->getCached<float>("FPS/Radio/transp_C1")) / 1000,
+        static_cast<int>(dm->getCached<float>("FPS/Radio/transp_C2")) / 100,
+        static_cast<int>(dm->getCached<float>("FPS/Radio/transp_C3")) / 10,
+        static_cast<int>(dm->getCached<float>("FPS/Radio/transp_C4")),
     };
 
     int count = da < 4 ? da : 4;

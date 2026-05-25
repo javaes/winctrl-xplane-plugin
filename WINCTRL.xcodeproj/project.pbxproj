@@ -49,6 +49,8 @@
 		F621F80D2F1C264A00DDB31E /* jf146-fcu-efis-profile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F621F80B2F1C264A00DDB31E /* jf146-fcu-efis-profile.cpp */; };
 		F633E3D92FBE25B100CBE019 /* zibo-fcu-efis-profile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F633E3D82FBE25B100CBE019 /* zibo-fcu-efis-profile.cpp */; };
 		F633E3DA2FBE25B100CBE019 /* zibo-fcu-efis-profile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F633E3D82FBE25B100CBE019 /* zibo-fcu-efis-profile.cpp */; };
+		F6354FB92FC457B200D67444 /* xcrafts-erj-tcas-profile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F6354FB82FC457B200D67444 /* xcrafts-erj-tcas-profile.cpp */; };
+		F6354FBA2FC457B200D67444 /* xcrafts-erj-tcas-profile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F6354FB82FC457B200D67444 /* xcrafts-erj-tcas-profile.cpp */; };
 		F635AD422E05697B005D6CDC /* bridge.mm in Sources */ = {isa = PBXBuildFile; fileRef = F6827E102E05664C00382B28 /* bridge.mm */; };
 		F635AD462E0579E9005D6CDC /* usbcontroller_mac.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F635AD442E0579E9005D6CDC /* usbcontroller_mac.cpp */; };
 		F635AD472E0579E9005D6CDC /* usbcontroller_mac.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F635AD442E0579E9005D6CDC /* usbcontroller_mac.cpp */; };
@@ -226,6 +228,8 @@
 		F62D2DF92E55FA9100D307A4 /* 737.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = 737.h; sourceTree = "<group>"; };
 		F633E3D72FBE25B100CBE019 /* zibo-fcu-efis-profile.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "zibo-fcu-efis-profile.h"; sourceTree = "<group>"; };
 		F633E3D82FBE25B100CBE019 /* zibo-fcu-efis-profile.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "zibo-fcu-efis-profile.cpp"; sourceTree = "<group>"; };
+		F6354FB72FC457B200D67444 /* xcrafts-erj-tcas-profile.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "xcrafts-erj-tcas-profile.h"; sourceTree = "<group>"; };
+		F6354FB82FC457B200D67444 /* xcrafts-erj-tcas-profile.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "xcrafts-erj-tcas-profile.cpp"; sourceTree = "<group>"; };
 		F635AD432E0579E9005D6CDC /* usbcontroller.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = usbcontroller.h; sourceTree = "<group>"; };
 		F635AD442E0579E9005D6CDC /* usbcontroller_mac.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = usbcontroller_mac.cpp; sourceTree = "<group>"; };
 		F635AD482E05819E005D6CDC /* usbdevice.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = usbdevice.h; sourceTree = "<group>"; };
@@ -597,6 +601,8 @@
 				DC211E08776D68F8FD61EC52 /* sparky744-tcas-profile.cpp */,
 				F60ABAC72FBDA72B001C91EF /* zibo-tcas-profile.h */,
 				F60ABAC82FBDA72B001C91EF /* zibo-tcas-profile.cpp */,
+				F6354FB72FC457B200D67444 /* xcrafts-erj-tcas-profile.h */,
+				F6354FB82FC457B200D67444 /* xcrafts-erj-tcas-profile.cpp */,
 			);
 			path = profiles;
 			sourceTree = "<group>";
@@ -950,6 +956,7 @@
 				F6A149312E4F03A400FB8395 /* laminar-a333-fmc-profile.cpp in Sources */,
 				F60ABAC22FBDA042001C91EF /* fps748-pap3-mcp-profile.cpp in Sources */,
 				F09E1F4D94AF546216806480 /* sparky744-pap3-mcp-profile.cpp in Sources */,
+				F6354FB92FC457B200D67444 /* xcrafts-erj-tcas-profile.cpp in Sources */,
 				F67961952E31357E008031F1 /* usbdevice_lin.cpp in Sources */,
 				F635AD472E0579E9005D6CDC /* usbcontroller_mac.cpp in Sources */,
 				F6AF9EC12D06F84900530297 /* dataref.cpp in Sources */,
@@ -1028,6 +1035,7 @@
 				F6C69C0F2EC0DAE300BFDA65 /* laminar-737-fcu-efis-profile.cpp in Sources */,
 				F60ABAD22FBDF034001C91EF /* xcrafts-ejets-pap3-mcp-profile.cpp in Sources */,
 				5DBA92312E6F4D71007328BC /* ff767-fmc-profile.cpp in Sources */,
+				F6354FBA2FC457B200D67444 /* xcrafts-erj-tcas-profile.cpp in Sources */,
 				F633E3DA2FBE25B100CBE019 /* zibo-fcu-efis-profile.cpp in Sources */,
 				F60ABACE2FBDF029001C91EF /* xcrafts-ejets-fcu-efis-profile.cpp in Sources */,
 				F67961962E31357E008031F1 /* usbdevice_lin.cpp in Sources */,

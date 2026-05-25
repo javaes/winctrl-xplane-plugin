@@ -111,7 +111,7 @@ void SparkyB744TCASProfile::updateDisplays() {
     std::string code;
     if (squawkInput.empty()) {
         auto dm = Dataref::getInstance();
-        int transpCode = dm->get<int>("sim/cockpit/radios/transponder_code");
+        int transpCode = dm->getCached<int>("sim/cockpit/radios/transponder_code");
 
         code.reserve(4);
         code += static_cast<char>('0' + ((transpCode / 1000) % 10));

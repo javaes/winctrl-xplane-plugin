@@ -123,5 +123,5 @@ void TolissTCASProfile::updateDisplays() {
 }
 
 bool TolissTCASProfile::isAnnunTest() {
-    return Dataref::getInstance()->get<int>("AirbusFBW/AnnunMode") == 2 && Dataref::getInstance()->get<bool>("sim/cockpit/electrical/avionics_on");
+    return Dataref::getInstance()->getCached<int>("AirbusFBW/AnnunMode") == 2 && Dataref::getInstance()->getCached<bool>("sim/cockpit/electrical/avionics_on");
 }

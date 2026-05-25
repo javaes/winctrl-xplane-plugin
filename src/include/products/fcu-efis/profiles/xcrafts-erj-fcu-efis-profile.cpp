@@ -71,12 +71,15 @@ const std::vector<std::string> &XCraftsErjFCUEfisProfile::displayDatarefs() cons
         "sim/cockpit/autopilot/vertical_velocity",
         "sim/cockpit2/gauges/actuators/barometer_setting_is_std_pilot",
         "sim/cockpit2/gauges/actuators/barometer_setting_in_hg_pilot",
+        "sim/cockpit2/gauges/actuators/barometer_setting_is_std_copilot",
+        "sim/cockpit2/gauges/actuators/barometer_setting_in_hg_copilot",
         "sim/physics/metric_press",
         "sim/cockpit2/autopilot/flight_director_mode",
         "sim/cockpit2/autopilot/flight_director2_mode",
         "sim/cockpit2/EFIS/map_range",
         "sim/cockpit2/EFIS/map_range_copilot",
         "XCrafts/ERJ/MFD1/map_plan_status",
+        "XCrafts/ERJ/MFD2/map_plan_status",
     };
 
     return datarefs;
@@ -132,6 +135,17 @@ const std::unordered_map<uint16_t, FCUEfisButtonDef> &XCraftsErjFCUEfisProfile::
         {72, {"R_STD PULL", "sim/instruments/barometer_set_std"}},
         {73, {"R_PRESS DEC", "custom", FCUEfisDatarefType::BAROMETER_FO, -1.0}},
         {74, {"R_PRESS INC", "custom", FCUEfisDatarefType::BAROMETER_FO, 1.0}},
+        {77, {"R_MODE LS", "map_plan_mode_copilot", FCUEfisDatarefType::EXECUTE_CMD_ONCE, 0.0}},
+        {78, {"R_MODE VOR", "map_plan_mode_copilot", FCUEfisDatarefType::EXECUTE_CMD_ONCE, 0.0}},
+        {79, {"R_MODE NAV", "map_plan_mode_copilot"}},
+        {80, {"R_MODE ARC", "map_plan_mode_copilot", FCUEfisDatarefType::EXECUTE_CMD_ONCE, 0.0}},
+        {81, {"R_MODE PLAN", "map_plan_mode_copilot", FCUEfisDatarefType::EXECUTE_CMD_ONCE, 1.0}},
+        {82, {"R_RANGE 10", "sim/cockpit2/EFIS/map_range_copilot", FCUEfisDatarefType::SET_VALUE, 0.0}},
+        {83, {"R_RANGE 20", "sim/cockpit2/EFIS/map_range_copilot", FCUEfisDatarefType::SET_VALUE, 1.0}},
+        {84, {"R_RANGE 40", "sim/cockpit2/EFIS/map_range_copilot", FCUEfisDatarefType::SET_VALUE, 2.0}},
+        {85, {"R_RANGE 80", "sim/cockpit2/EFIS/map_range_copilot", FCUEfisDatarefType::SET_VALUE, 3.0}},
+        {86, {"R_RANGE 160", "sim/cockpit2/EFIS/map_range_copilot", FCUEfisDatarefType::SET_VALUE, 4.0}},
+        {87, {"R_RANGE 320", "sim/cockpit2/EFIS/map_range_copilot", FCUEfisDatarefType::SET_VALUE, 5.0}},
     };
     return buttons;
 }
@@ -193,22 +207,32 @@ void XCraftsErjFCUEfisProfile::updateDisplayData(FCUDisplayData &data) {
 
     data.headingLat = true;
 
-    bool isStd = datarefManager->getCached<bool>("sim/cockpit2/gauges/actuators/barometer_setting_is_std_pilot");
-    float baroValue = datarefManager->getCached<float>("sim/cockpit2/gauges/actuators/barometer_setting_in_hg_pilot");
     bool metricPress = datarefManager->getCached<bool>("sim/physics/metric_press");
 
-    EfisDisplayValue value = {
+    bool isStdPilot = datarefManager->getCached<bool>("sim/cockpit2/gauges/actuators/barometer_setting_is_std_pilot");
+    float baroValuePilot = datarefManager->getCached<float>("sim/cockpit2/gauges/actuators/barometer_setting_in_hg_pilot");
+    EfisDisplayValue pilotValue = {
         .baro = "",
         .unitIsInHg = false,
-        .isStd = isStd,
+        .isStd = isStdPilot,
     };
-
-    if (!isStd && baroValue > 0) {
-        value.setBaro(baroValue, !metricPress);
+    if (!isStdPilot && baroValuePilot > 0) {
+        pilotValue.setBaro(baroValuePilot, !metricPress);
     }
 
-    data.efisLeft = value;
-    data.efisRight = value;
+    bool isStdCopilot = datarefManager->getCached<bool>("sim/cockpit2/gauges/actuators/barometer_setting_is_std_copilot");
+    float baroValueCopilot = datarefManager->getCached<float>("sim/cockpit2/gauges/actuators/barometer_setting_in_hg_copilot");
+    EfisDisplayValue copilotValue = {
+        .baro = "",
+        .unitIsInHg = false,
+        .isStd = isStdCopilot,
+    };
+    if (!isStdCopilot && baroValueCopilot > 0) {
+        copilotValue.setBaro(baroValueCopilot, !metricPress);
+    }
+
+    data.efisLeft = pilotValue;
+    data.efisRight = copilotValue;
 
 }
 
@@ -220,29 +244,49 @@ void XCraftsErjFCUEfisProfile::buttonPressed(const FCUEfisButtonDef *button, XPL
     auto datarefManager = Dataref::getInstance();
 
     if (phase == xplm_CommandBegin && (button->datarefType == FCUEfisDatarefType::BAROMETER_PILOT || button->datarefType == FCUEfisDatarefType::BAROMETER_FO)) {
-        bool isStd = datarefManager->getCached<bool>("sim/cockpit2/gauges/actuators/barometer_setting_is_std_pilot");
-        if (isStd) {
-            return;
-        }
-
         bool metricPress = datarefManager->getCached<bool>("sim/physics/metric_press");
-        float baroValue = datarefManager->getCached<float>("sim/cockpit2/gauges/actuators/barometer_setting_in_hg_pilot");
         bool increase = button->value > 0;
 
-        if (metricPress) {
-            float hpaValue = baroValue * 33.8639f;
-            hpaValue += increase ? 1.0f : -1.0f;
-            baroValue = hpaValue / 33.8639f;
+        if (button->datarefType == FCUEfisDatarefType::BAROMETER_PILOT) {
+            bool isStd = datarefManager->getCached<bool>("sim/cockpit2/gauges/actuators/barometer_setting_is_std_pilot");
+            if (isStd) {
+                return;
+            }
+            float baroValue = datarefManager->getCached<float>("sim/cockpit2/gauges/actuators/barometer_setting_in_hg_pilot");
+            if (metricPress) {
+                float hpaValue = baroValue * 33.8639f;
+                hpaValue += increase ? 1.0f : -1.0f;
+                baroValue = hpaValue / 33.8639f;
+            } else {
+                baroValue += increase ? 0.01f : -0.01f;
+            }
+            datarefManager->set<float>("sim/cockpit2/gauges/actuators/barometer_setting_in_hg_pilot", baroValue);
         } else {
-            baroValue += increase ? 0.01f : -0.01f;
+            bool isStd = datarefManager->getCached<bool>("sim/cockpit2/gauges/actuators/barometer_setting_is_std_copilot");
+            if (isStd) {
+                return;
+            }
+            float baroValue = datarefManager->getCached<float>("sim/cockpit2/gauges/actuators/barometer_setting_in_hg_copilot");
+            if (metricPress) {
+                float hpaValue = baroValue * 33.8639f;
+                hpaValue += increase ? 1.0f : -1.0f;
+                baroValue = hpaValue / 33.8639f;
+            } else {
+                baroValue += increase ? 0.01f : -0.01f;
+            }
+            datarefManager->set<float>("sim/cockpit2/gauges/actuators/barometer_setting_in_hg_copilot", baroValue);
         }
-
-        datarefManager->set<float>("sim/cockpit2/gauges/actuators/barometer_setting_in_hg_pilot", baroValue);
     } else if (phase == xplm_CommandBegin && button->dataref == "map_plan_mode") {
         int currentStatus = datarefManager->getCached<int>("XCrafts/ERJ/MFD1/map_plan_status");
         int targetStatus = static_cast<int>(button->value);
         if (currentStatus != targetStatus) {
             datarefManager->executeCommand("XCrafts/ERJ/MFD1/butt_6_cmnd");
+        }
+    } else if (phase == xplm_CommandBegin && button->dataref == "map_plan_mode_copilot") {
+        int currentStatus = datarefManager->getCached<int>("XCrafts/ERJ/MFD2/map_plan_status");
+        int targetStatus = static_cast<int>(button->value);
+        if (currentStatus != targetStatus) {
+            datarefManager->executeCommand("XCrafts/ERJ/MFD2/butt_6_cmnd");
         }
     } else if (phase == xplm_CommandBegin && button->datarefType == FCUEfisDatarefType::SET_VALUE) {
         datarefManager->set<float>(button->dataref.c_str(), button->value);

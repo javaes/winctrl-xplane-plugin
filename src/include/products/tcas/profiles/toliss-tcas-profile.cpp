@@ -118,7 +118,7 @@ void TolissTCASProfile::updateDisplays() {
         return;
     }
 
-    std::string squawkCode = isAnnunTest() ? "8888" : Dataref::getInstance()->get<std::string>("AirbusFBW/XPDRString");
+    std::string squawkCode = isAnnunTest() ? "8888" : Dataref::getInstance()->getCached<std::string>("AirbusFBW/XPDRString");
     product->setLCDText(squawkCode);
 }
 

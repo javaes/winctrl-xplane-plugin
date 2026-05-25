@@ -63,6 +63,10 @@ PLUGIN_API int XPluginStart(char *name, char *sig, char *desc) {
         if (debugLoggingEnabled) {
             Logger::getInstance()->info("Debug logging was enabled for plugin version %s. Currently connected devices (%lu):\n", VERSION, USBController::getInstance()->devices.size());
 
+            if (USBController::getInstance()->devices.empty()) {
+                Logger::getInstance()->info("- No connected devices.\n");
+            }
+
             for (auto &device : USBController::getInstance()->devices) {
                 Logger::getInstance()->info("- (vendorId: 0x%04X, productId: 0x%04X, handler: %s) %s\n", device->vendorId, device->productId, device->classIdentifier(), device->productName.c_str());
             }
@@ -87,9 +91,13 @@ PLUGIN_API int XPluginStart(char *name, char *sig, char *desc) {
                 char timeBuffer[9];
                 strftime(timeBuffer, sizeof(timeBuffer), "%H:%M:%S", &localTime);
 
-                Logger::getInstance()->info("[%s.%03lld] Write queue sizes:\n", timeBuffer, nowMs.count());
-                for (auto &device : USBController::getInstance()->devices) {
-                    Logger::getInstance()->info("[%s.%03lld] - %s (%s): %zu pending packets\n", timeBuffer, nowMs.count(), device->classIdentifier(), device->activeProfileName(), device->getWriteQueueSize());
+                if (USBController::getInstance()->devices.empty()) {
+                    Logger::getInstance()->info("[%s.%03lld] No connected devices.\n", timeBuffer, nowMs.count());
+                } else {
+                    Logger::getInstance()->info("[%s.%03lld] Write queue sizes:\n", timeBuffer, nowMs.count());
+                    for (auto &device : USBController::getInstance()->devices) {
+                        Logger::getInstance()->info("[%s.%03lld] - %s (%s): %zu pending packets\n", timeBuffer, nowMs.count(), device->classIdentifier(), device->activeProfileName(), device->getWriteQueueSize());
+                    }
                 }
 
                 AppState::getInstance()->executeAfter(5000, *action);

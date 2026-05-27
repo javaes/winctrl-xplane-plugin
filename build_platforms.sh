@@ -266,6 +266,8 @@ if [ "$UPLOAD_TO_DRIVE" = "y" ] && command -v gdrive &> /dev/null; then
     if [ ! -z "$FILE_ID" ]; then
         echo "\033[1;36mFile was uploaded to Google Drive:\033[0m"
         echo "\033[1;36mhttps://drive.google.com/file/d/$FILE_ID/view\033[0m"
+        echo "\n\033[1;36mFolder link:\033[0m"
+        echo "\033[1;36mhttps://drive.google.com/drive/folders/$FOLDER\033[0m"
     fi
 fi
 

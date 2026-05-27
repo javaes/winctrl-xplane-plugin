@@ -29,7 +29,7 @@ ZiboTCASProfile::~ZiboTCASProfile() {
 }
 
 bool ZiboTCASProfile::IsEligible() {
-    return Dataref::getInstance()->exists("laminar/B738/knob/transponder_stby");
+    return Dataref::getInstance()->exists("zibomod/Aircraft_Path");
 }
 
 const std::vector<std::string> &ZiboTCASProfile::displayDatarefs() const {

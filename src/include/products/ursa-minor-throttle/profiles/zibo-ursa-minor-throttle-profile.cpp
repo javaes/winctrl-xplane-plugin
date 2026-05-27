@@ -66,7 +66,7 @@ ZiboUrsaMinorThrottleProfile::~ZiboUrsaMinorThrottleProfile() {
 }
 
 bool ZiboUrsaMinorThrottleProfile::IsEligible() {
-    return Dataref::getInstance()->exists("laminar/B738/autopilot/mcp_speed_dial_kts_mach");
+    return Dataref::getInstance()->exists("zibomod/Aircraft_Path");
 }
 
 const std::unordered_map<uint16_t, UrsaMinorThrottleButtonDef> &ZiboUrsaMinorThrottleProfile::buttonDefs() const {

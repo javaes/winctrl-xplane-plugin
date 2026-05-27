@@ -164,7 +164,7 @@ ZiboPAP3MCPProfile::~ZiboPAP3MCPProfile() {
 }
 
 bool ZiboPAP3MCPProfile::IsEligible() {
-    return Dataref::getInstance()->exists("laminar/B738/autopilot/mcp_speed_dial_kts_mach");
+    return Dataref::getInstance()->exists("zibomod/Aircraft_Path");
 }
 
 const std::vector<std::string> &ZiboPAP3MCPProfile::displayDatarefs() const {

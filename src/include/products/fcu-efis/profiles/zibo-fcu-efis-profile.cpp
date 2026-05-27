@@ -121,15 +121,7 @@ ZiboFCUEfisProfile::~ZiboFCUEfisProfile() {
 }
 
 bool ZiboFCUEfisProfile::IsEligible() {
-    // Check if it's a Zibo 737-800
-    std::string icao = Dataref::getInstance()->get<std::string>("sim/aircraft/view/acf_ICAO");
-
-    // Zibo aircraft ICAO code
-    if (icao == "B738") {
-        return true;
-    }
-
-    return false;
+    return Dataref::getInstance()->exists("zibomod/Aircraft_Path");
 }
 
 const std::vector<std::string> &ZiboFCUEfisProfile::displayDatarefs() const {
@@ -235,12 +227,12 @@ const std::unordered_map<uint16_t, FCUEfisButtonDef> &ZiboFCUEfisProfile::button
         {55, {"L_RANGE 320", "laminar/B738/EFIS/capt/map_range", FCUEfisDatarefType::SET_VALUE, 6.0}},
 
         // Nav source selector (Left)
-        {57, {"L_1 ADF", "sim/cockpit2/EFIS/EFIS_1_selection_pilot", FCUEfisDatarefType::SET_VALUE, 0.0}},
-        {58, {"L_1 OFF", "sim/cockpit2/EFIS/EFIS_1_selection_pilot", FCUEfisDatarefType::SET_VALUE, 1.0}},
-        {59, {"L_1 VOR", "sim/cockpit2/EFIS/EFIS_1_selection_pilot", FCUEfisDatarefType::SET_VALUE, 2.0}},
-        {60, {"L_2 ADF", "sim/cockpit2/EFIS/EFIS_2_selection_pilot", FCUEfisDatarefType::SET_VALUE, 0.0}},
-        {61, {"L_2 OFF", "sim/cockpit2/EFIS/EFIS_2_selection_pilot", FCUEfisDatarefType::SET_VALUE, 1.0}},
-        {62, {"L_2 VOR", "sim/cockpit2/EFIS/EFIS_2_selection_pilot", FCUEfisDatarefType::SET_VALUE, 2.0}},
+        {56, {"L_1 ADF", "laminar/B738/EFIS_control/capt/vor1_off_pos,laminar/B738/EFIS_control/capt/vor1_off_dn,laminar/B738/EFIS_control/capt/vor1_off_up", FCUEfisDatarefType::SET_VALUE_USING_COMMANDS, -1.0}},
+        {57, {"L_1 OFF", "laminar/B738/EFIS_control/capt/vor1_off_pos,laminar/B738/EFIS_control/capt/vor1_off_dn,laminar/B738/EFIS_control/capt/vor1_off_up", FCUEfisDatarefType::SET_VALUE_USING_COMMANDS, 0.0}},
+        {58, {"L_1 VOR", "laminar/B738/EFIS_control/capt/vor1_off_pos,laminar/B738/EFIS_control/capt/vor1_off_dn,laminar/B738/EFIS_control/capt/vor1_off_up", FCUEfisDatarefType::SET_VALUE_USING_COMMANDS, 1.0}},
+        {59, {"L_2 ADF", "laminar/B738/EFIS_control/capt/vor2_off_pos,laminar/B738/EFIS_control/capt/vor2_off_dn,laminar/B738/EFIS_control/capt/vor2_off_up", FCUEfisDatarefType::SET_VALUE_USING_COMMANDS, -1.0}},
+        {60, {"L_2 OFF", "laminar/B738/EFIS_control/capt/vor2_off_pos,laminar/B738/EFIS_control/capt/vor2_off_dn,laminar/B738/EFIS_control/capt/vor2_off_up", FCUEfisDatarefType::SET_VALUE_USING_COMMANDS, 0.0}},
+        {61, {"L_2 VOR", "laminar/B738/EFIS_control/capt/vor2_off_pos,laminar/B738/EFIS_control/capt/vor2_off_dn,laminar/B738/EFIS_control/capt/vor2_off_up", FCUEfisDatarefType::SET_VALUE_USING_COMMANDS, 1.0}},
 
         // EFIS Right (FO) buttons (64-95)
         {64, {"R_FD", "laminar/B738/autopilot/flight_director_fo_pos,laminar/B738/autopilot/flight_director_fo_toggle,laminar/B738/autopilot/flight_director_fo_toggle", FCUEfisDatarefType::SET_VALUE_USING_COMMANDS, 1.0}},
@@ -273,12 +265,12 @@ const std::unordered_map<uint16_t, FCUEfisButtonDef> &ZiboFCUEfisProfile::button
         {87, {"R_RANGE 320", "laminar/B738/EFIS/fo/map_range", FCUEfisDatarefType::SET_VALUE, 6.0}},
 
         // Nav source selector (Right)
-        {88, {"R_1 ADF", "sim/cockpit2/EFIS/EFIS_1_selection_copilot", FCUEfisDatarefType::SET_VALUE, 0.0}},
-        {89, {"R_1 OFF", "sim/cockpit2/EFIS/EFIS_1_selection_copilot", FCUEfisDatarefType::SET_VALUE, 1.0}},
-        {90, {"R_1 VOR", "sim/cockpit2/EFIS/EFIS_1_selection_copilot", FCUEfisDatarefType::SET_VALUE, 2.0}},
-        {91, {"R_2 ADF", "sim/cockpit2/EFIS/EFIS_2_selection_copilot", FCUEfisDatarefType::SET_VALUE, 0.0}},
-        {92, {"R_2 OFF", "sim/cockpit2/EFIS/EFIS_2_selection_copilot", FCUEfisDatarefType::SET_VALUE, 1.0}},
-        {93, {"R_2 VOR", "sim/cockpit2/EFIS/EFIS_2_selection_copilot", FCUEfisDatarefType::SET_VALUE, 2.0}},
+        {88, {"R_1 VOR", "laminar/B738/EFIS_control/fo/vor1_off_pos,laminar/B738/EFIS_control/fo/vor1_off_dn,laminar/B738/EFIS_control/fo/vor1_off_up", FCUEfisDatarefType::SET_VALUE_USING_COMMANDS, 1.0}},
+        {89, {"R_1 OFF", "laminar/B738/EFIS_control/fo/vor1_off_pos,laminar/B738/EFIS_control/fo/vor1_off_dn,laminar/B738/EFIS_control/fo/vor1_off_up", FCUEfisDatarefType::SET_VALUE_USING_COMMANDS, 0.0}},
+        {90, {"R_1 ADF", "laminar/B738/EFIS_control/fo/vor1_off_pos,laminar/B738/EFIS_control/fo/vor1_off_dn,laminar/B738/EFIS_control/fo/vor1_off_up", FCUEfisDatarefType::SET_VALUE_USING_COMMANDS, -1.0}},
+        {91, {"R_2 VOR", "laminar/B738/EFIS_control/fo/vor2_off_pos,laminar/B738/EFIS_control/fo/vor2_off_dn,laminar/B738/EFIS_control/fo/vor2_off_up", FCUEfisDatarefType::SET_VALUE_USING_COMMANDS, 1.0}},
+        {92, {"R_2 OFF", "laminar/B738/EFIS_control/fo/vor2_off_pos,laminar/B738/EFIS_control/fo/vor2_off_dn,laminar/B738/EFIS_control/fo/vor2_off_up", FCUEfisDatarefType::SET_VALUE_USING_COMMANDS, 0.0}},
+        {93, {"R_2 ADF", "laminar/B738/EFIS_control/fo/vor2_off_pos,laminar/B738/EFIS_control/fo/vor2_off_dn,laminar/B738/EFIS_control/fo/vor2_off_up", FCUEfisDatarefType::SET_VALUE_USING_COMMANDS, -1.0}},
     };
 
     return buttons;

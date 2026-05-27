@@ -58,7 +58,7 @@ ZiboFMCProfile::~ZiboFMCProfile() {
 }
 
 bool ZiboFMCProfile::IsEligible() {
-    return Dataref::getInstance()->exists("laminar/B738/electric/instrument_brightness");
+    return Dataref::getInstance()->exists("zibomod/Aircraft_Path");
 }
 
 const std::vector<std::string> &ZiboFMCProfile::displayDatarefs() const {

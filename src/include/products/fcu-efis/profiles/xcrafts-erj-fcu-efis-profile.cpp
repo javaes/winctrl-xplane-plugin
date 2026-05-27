@@ -59,7 +59,7 @@ XCraftsErjFCUEfisProfile::~XCraftsErjFCUEfisProfile() {
 }
 
 bool XCraftsErjFCUEfisProfile::IsEligible() {
-    return Dataref::getInstance()->exists("XCrafts/ERJ/timer_seconds");
+    return Dataref::getInstance()->exists("XCrafts/ERJ/MFD1/WX_TERR_status");
 }
 
 const std::vector<std::string> &XCraftsErjFCUEfisProfile::displayDatarefs() const {
@@ -233,7 +233,6 @@ void XCraftsErjFCUEfisProfile::updateDisplayData(FCUDisplayData &data) {
 
     data.efisLeft = pilotValue;
     data.efisRight = copilotValue;
-
 }
 
 void XCraftsErjFCUEfisProfile::buttonPressed(const FCUEfisButtonDef *button, XPLMCommandPhase phase) {

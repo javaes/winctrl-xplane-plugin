@@ -44,7 +44,7 @@ ZiboPDCProfile::~ZiboPDCProfile() {
 }
 
 bool ZiboPDCProfile::IsEligible() {
-    return Dataref::getInstance()->exists("laminar/B738/autopilot/mcp_speed_dial_kts_mach");
+    return Dataref::getInstance()->exists("zibomod/Aircraft_Path");
 }
 
 const std::unordered_map<PDCButtonIndex3N3M, PDCButtonDef> &ZiboPDCProfile::buttonDefs() const {

@@ -24,7 +24,7 @@ XCraftsErjPDCProfile::~XCraftsErjPDCProfile() {
 }
 
 bool XCraftsErjPDCProfile::IsEligible() {
-    return Dataref::getInstance()->exists("XCrafts/ERJ/timer_seconds");
+    return Dataref::getInstance()->exists("XCrafts/ERJ/MFD1/WX_TERR_status");
 }
 
 const std::unordered_map<PDCButtonIndex3N3M, PDCButtonDef> &XCraftsErjPDCProfile::buttonDefs() const {

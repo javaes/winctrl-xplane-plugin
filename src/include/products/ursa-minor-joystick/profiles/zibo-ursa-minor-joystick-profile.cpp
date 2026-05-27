@@ -34,5 +34,5 @@ ZiboUrsaMinorJoystickProfile::~ZiboUrsaMinorJoystickProfile() {
 }
 
 bool ZiboUrsaMinorJoystickProfile::IsEligible() {
-    return Dataref::getInstance()->exists("laminar/B738/electric/panel_brightness");
+    return Dataref::getInstance()->exists("zibomod/Aircraft_Path");
 }

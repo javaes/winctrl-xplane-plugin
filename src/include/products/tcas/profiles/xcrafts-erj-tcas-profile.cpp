@@ -29,7 +29,7 @@ XCraftsERJTCASProfile::~XCraftsERJTCASProfile() {
 }
 
 bool XCraftsERJTCASProfile::IsEligible() {
-    return Dataref::getInstance()->exists("XCrafts/ERJ/timer_seconds");
+    return Dataref::getInstance()->exists("XCrafts/ERJ/MFD1/WX_TERR_status");
 }
 
 const std::vector<std::string> &XCraftsERJTCASProfile::displayDatarefs() const {

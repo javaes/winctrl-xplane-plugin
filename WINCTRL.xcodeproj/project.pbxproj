@@ -128,6 +128,8 @@
 		F6B0007D2F8FE329001FE040 /* toliss-tcas-profile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F6B000742F8FE329001FE040 /* toliss-tcas-profile.cpp */; };
 		F6B149522E4F04AE00FB8395 /* fps748-fmc-profile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F6B149512E4F04AE00FB8395 /* fps748-fmc-profile.cpp */; };
 		F6B149532E4F04AE00FB8395 /* fps748-fmc-profile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F6B149512E4F04AE00FB8395 /* fps748-fmc-profile.cpp */; };
+		F6B520E82FC7676F00A04562 /* xcrafts-erj-ursa-minor-throttle-profile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F6B520E72FC7676F00A04562 /* xcrafts-erj-ursa-minor-throttle-profile.cpp */; };
+		F6B520E92FC7676F00A04562 /* xcrafts-erj-ursa-minor-throttle-profile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F6B520E72FC7676F00A04562 /* xcrafts-erj-ursa-minor-throttle-profile.cpp */; };
 		F6BB75782E32634700C2B21F /* product-fcu-efis.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F6BB75762E32634700C2B21F /* product-fcu-efis.cpp */; };
 		F6BB75792E32634700C2B21F /* toliss-fcu-efis-profile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F6BB75722E32634700C2B21F /* toliss-fcu-efis-profile.cpp */; };
 		F6BB757A2E32634700C2B21F /* product-fcu-efis.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F6BB75762E32634700C2B21F /* product-fcu-efis.cpp */; };
@@ -324,6 +326,8 @@
 		F6B000782F8FE329001FE040 /* tcas-aircraft-profile.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "tcas-aircraft-profile.h"; sourceTree = "<group>"; };
 		F6B149502E4F04AE00FB8395 /* fps748-fmc-profile.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "fps748-fmc-profile.h"; sourceTree = "<group>"; };
 		F6B149512E4F04AE00FB8395 /* fps748-fmc-profile.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "fps748-fmc-profile.cpp"; sourceTree = "<group>"; };
+		F6B520E62FC7676F00A04562 /* xcrafts-erj-ursa-minor-throttle-profile.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "xcrafts-erj-ursa-minor-throttle-profile.h"; sourceTree = "<group>"; };
+		F6B520E72FC7676F00A04562 /* xcrafts-erj-ursa-minor-throttle-profile.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "xcrafts-erj-ursa-minor-throttle-profile.cpp"; sourceTree = "<group>"; };
 		F6B79CFC2F4A5BFD00517E6A /* logger.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = logger.hpp; sourceTree = "<group>"; };
 		F6BB75712E32634700C2B21F /* toliss-fcu-efis-profile.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "toliss-fcu-efis-profile.h"; sourceTree = "<group>"; };
 		F6BB75722E32634700C2B21F /* toliss-fcu-efis-profile.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "toliss-fcu-efis-profile.cpp"; sourceTree = "<group>"; };
@@ -746,6 +750,8 @@
 				F6E73EDB2ED9CCA7000A8B6A /* toliss-ursa-minor-throttle-profile.cpp */,
 				F60ABAD32FBDF03F001C91EF /* xcrafts-ejets-ursa-minor-throttle-profile.h */,
 				F60ABAD42FBDF03F001C91EF /* xcrafts-ejets-ursa-minor-throttle-profile.cpp */,
+				F6B520E62FC7676F00A04562 /* xcrafts-erj-ursa-minor-throttle-profile.h */,
+				F6B520E72FC7676F00A04562 /* xcrafts-erj-ursa-minor-throttle-profile.cpp */,
 			);
 			path = profiles;
 			sourceTree = "<group>";
@@ -958,6 +964,7 @@
 				F6BBFF0B2ED741B900FE9D7F /* ff777-pap3-mcp-profile.cpp in Sources */,
 				F64BE3E72E1BF625003C1B73 /* usbdevice_win.cpp in Sources */,
 				F6E73EE32ED9CCA7000A8B6A /* product-ursa-minor-throttle.cpp in Sources */,
+				F6B520E92FC7676F00A04562 /* xcrafts-erj-ursa-minor-throttle-profile.cpp in Sources */,
 				F6EBDC142FC6CFD1005AFCBD /* zibo-agp-profile.cpp in Sources */,
 				F621F80C2F1C264A00DDB31E /* jf146-fcu-efis-profile.cpp in Sources */,
 				F6E73EE42ED9CCA7000A8B6A /* toliss-ursa-minor-throttle-profile.cpp in Sources */,
@@ -1022,6 +1029,7 @@
 				F6A77E752ED3514600061D03 /* product-agp.cpp in Sources */,
 				F60ABAED2FBE1355001C91EF /* jar330-fcu-efis-profile.cpp in Sources */,
 				F60ABAE92FBE134D001C91EF /* jar330-fmc-profile.cpp in Sources */,
+				F6B520E82FC7676F00A04562 /* xcrafts-erj-ursa-minor-throttle-profile.cpp in Sources */,
 				F6CC2B4F2F0E5F4B00C0A4D8 /* ff777-pdc-profile.cpp in Sources */,
 				F6BB75792E32634700C2B21F /* toliss-fcu-efis-profile.cpp in Sources */,
 				F63BC99A2E30D73E00ACBBB0 /* appstate.cpp in Sources */,

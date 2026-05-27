@@ -13,7 +13,8 @@ enum class PDCDatarefType : unsigned char {
     SET_VALUE,
     SET_VALUE_USING_COMMANDS,
     ADD_MINIMUMS_REPEATING,
-    ADD_BARO_REPEATING
+    ADD_BARO_REPEATING,
+    ADD_RANGE_REPEATING
 };
 
 struct PDCButtonDef {

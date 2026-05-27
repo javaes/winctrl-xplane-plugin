@@ -5,6 +5,8 @@
 #include "plugins-menu.h"
 #include "profiles/ff777-pdc-profile.h"
 #include "profiles/zibo-pdc-profile.h"
+#include "profiles/xcrafts-erj-pdc-profile.h"
+#include "profiles/xcrafts-ejets-pdc-profile.h"
 
 #include <algorithm>
 #include <cmath>
@@ -37,7 +39,13 @@ const char *ProductPDC::activeProfileName() const {
 }
 
 void ProductPDC::setProfileForCurrentAircraft() {
-    if (ZiboPDCProfile::IsEligible()) {
+    if (XCraftsErjPDCProfile::IsEligible()) {
+        profile = new XCraftsErjPDCProfile(this);
+        profileReady = true;
+    } else if (XCraftsEjetsPDCProfile::IsEligible()) {
+        profile = new XCraftsEjetsPDCProfile(this);
+        profileReady = true;
+    } else if (ZiboPDCProfile::IsEligible()) {
         profile = new ZiboPDCProfile(this);
         profileReady = true;
     } else if (FF777PDCProfile::IsEligible()) {

@@ -323,7 +323,7 @@ const std::unordered_map<uint16_t, FCUEfisButtonDef> &FF767FCUEfisProfile::butto
         {17, {"ALT DEC", "1-sim/comm/AP/altDN"}},
         {18, {"ALT INC", "1-sim/comm/AP/altUP"}},
         // {19, {"ALT PUSH", "1-sim/command/mcpAltRotary_push"}},       // does not exist on B767
-        {20, {"ALT HOLD", "1-sim/comm/AP/altHoldButton"}},
+        {20, {"ALT PULL", "1-sim/comm/AP/altHoldButton"}},
 
         // Rotary encoders - Vertical Speed
         {21, {"VS DEC", "1-sim/comm/AP/vviDN"}},
@@ -341,15 +341,15 @@ const std::unordered_map<uint16_t, FCUEfisButtonDef> &FF767FCUEfisProfile::butto
         {33, {"AP DISC", "1-sim/command/AP/desengageLever_button"}},
 
         // ND Options
-        {34, {"L_DATA", "1-sim/ckpt/cptHsiDataButton/anim", FCUEfisDatarefType::PUSH_BUTTON, 0}},
-        {35, {"L_WPT", "1-sim/ckpt/cptHsiWptButton/anim", FCUEfisDatarefType::PUSH_BUTTON, 0}},
-        {36, {"L_STA", "1-sim/ckpt/cptHsiStaButton/anim", FCUEfisDatarefType::PUSH_BUTTON, 0}},
+        {34, {"L_DATA", "1-sim/ckpt/cptHsiDataButton/anim", FCUEfisDatarefType::TOGGLE_VALUE, 0}},
+        {35, {"L_WPT", "1-sim/ckpt/cptHsiWptButton/anim", FCUEfisDatarefType::TOGGLE_VALUE, 0}},
+        {36, {"L_STA", "1-sim/ckpt/cptHsiStaButton/anim", FCUEfisDatarefType::TOGGLE_VALUE, 0}},
         //{37, },
-        {38, {"L_ARPT", "1-sim/ckpt/cptHsiArptButton/anim", FCUEfisDatarefType::PUSH_BUTTON, 0}},
+        {38, {"L_ARPT", "1-sim/ckpt/cptHsiArptButton/anim", FCUEfisDatarefType::TOGGLE_VALUE, 0}},
 
         // BARO
-        {39, {"L_BARO PUSH", "1-sim/ckpt/cptHsiStdButton/anim", FCUEfisDatarefType::PUSH_BUTTON, 0}},
-        {40, {"L_BARO PULL", "1-sim/ckpt/cptHsiStdButton/anim", FCUEfisDatarefType::PUSH_BUTTON, 0}},
+        {39, {"L_BARO PUSH", "1-sim/ckpt/cptHsiStdButton/anim", FCUEfisDatarefType::TOGGLE_VALUE, 0}},
+        {40, {"L_BARO PULL", "1-sim/ckpt/cptHsiStdButton/anim", FCUEfisDatarefType::TOGGLE_VALUE, 0}},
         {41, {"L_BARO DEC", "custom", FCUEfisDatarefType::BAROMETER_PILOT, -1.0}}, // ← "custom" cf. ButtonPressed
         {42, {"L_BARO INC", "custom", FCUEfisDatarefType::BAROMETER_PILOT, 1.0}},  // ← value > 0 = increase
 
@@ -386,15 +386,15 @@ const std::unordered_map<uint16_t, FCUEfisButtonDef> &FF767FCUEfisProfile::butto
         {65, {"AP DISC", "1-sim/command/AP/desengageLever_button"}},
 
         // ND Options Buttons
-        {66, {"R_DATA", "1-sim/ckpt/foHsiDataButton/anim", FCUEfisDatarefType::PUSH_BUTTON, 0}},
-        {67, {"R_WPT", "1-sim/ckpt/foHsiWptButton/anim", FCUEfisDatarefType::PUSH_BUTTON, 0}},
-        {68, {"R_STA", "1-sim/ckpt/foHsiStaButton/anim", FCUEfisDatarefType::PUSH_BUTTON, 0}},
+        {66, {"R_DATA", "1-sim/ckpt/foHsiDataButton/anim", FCUEfisDatarefType::TOGGLE_VALUE, 0}},
+        {67, {"R_WPT", "1-sim/ckpt/foHsiWptButton/anim", FCUEfisDatarefType::TOGGLE_VALUE, 0}},
+        {68, {"R_STA", "1-sim/ckpt/foHsiStaButton/anim", FCUEfisDatarefType::TOGGLE_VALUE, 0}},
         //{69, },
-        {70, {"R_ARPT", "1-sim/ckpt/foHsiArptButton/anim", FCUEfisDatarefType::PUSH_BUTTON, 0}},
+        {70, {"R_ARPT", "1-sim/ckpt/foHsiArptButton/anim", FCUEfisDatarefType::TOGGLE_VALUE, 0}},
 
         // BARO
-        {71, {"L_BARO PUSH", "1-sim/ckpt/foHsiStdButton/anim", FCUEfisDatarefType::PUSH_BUTTON, 0}},
-        {72, {"L_BARO PULL", "1-sim/ckpt/foHsiStdButton/anim", FCUEfisDatarefType::PUSH_BUTTON, 0}},
+        {71, {"L_BARO PUSH", "1-sim/ckpt/foHsiStdButton/anim", FCUEfisDatarefType::TOGGLE_VALUE, 0}},
+        {72, {"L_BARO PULL", "1-sim/ckpt/foHsiStdButton/anim", FCUEfisDatarefType::TOGGLE_VALUE, 0}},
         {73, {"R_BARO DEC", "custom", FCUEfisDatarefType::BAROMETER_FO, -1.0}},
         {74, {"R_BARO INC", "custom", FCUEfisDatarefType::BAROMETER_FO, 1.0}},
 
@@ -548,7 +548,7 @@ void FF767FCUEfisProfile::buttonPressed(const FCUEfisButtonDef *button, XPLMComm
 
     auto datarefManager = Dataref::getInstance();
 
-    if (button->datarefType == FCUEfisDatarefType::PUSH_BUTTON) {
+    if (button->datarefType == FCUEfisDatarefType::TOGGLE_VALUE) {
         datarefManager->set<float>(button->dataref.c_str(), phase == xplm_CommandBegin ? 1.0f : 0.0f);
     } else if (phase == xplm_CommandBegin && (button->datarefType == FCUEfisDatarefType::BAROMETER_PILOT || button->datarefType == FCUEfisDatarefType::BAROMETER_FO)) {
         bool isCaptain = button->datarefType == FCUEfisDatarefType::BAROMETER_PILOT;

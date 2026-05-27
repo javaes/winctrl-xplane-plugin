@@ -140,24 +140,24 @@ const std::vector<std::string> &FPS748FCUEfisProfile::displayDatarefs() const {
     static std::unordered_map<bool, std::vector<std::string>> cache;
 
     return cache.try_emplace(isSSG, std::vector<std::string>{
-                    altPrefix + "/Elec/bus_1_powered",
-                    prefix + "/B748/MCP/mcp_ias_mach_act",
-                    prefix + "/B748/systems/athr/MCPSPD_spdmach",
-                    prefix + "/B748/mcp/speed_is_blank",
-                    prefix + "/B748/MCP/mcp_heading_bug_act",
-                    prefix + "/B748/ND/tk_hdg_pfd",
-                    prefix + "/B748/MCP/mcp_alt_target_act",
-                    prefix + "/B748/MCP/mcp_vs_target_act",
-                    prefix + "/B748/mcp/vs_is_blank",
-                    "FPS/PFD/baro_now",
-                    "FPS/PFD/baro_now2",
-                    "FPS/PFD/baro_standard",
-                    "FPS/PFD/baro_standard2",
-                    "FPS/PFD/baro_type_sw",
-                    prefix + "/B748/ND/mode_pilot",
-                    prefix + "/B748/ND/mode_copilot",
-                    prefix + "/B748/ND/range_pilot",
-                    prefix + "/B748/ND/range_copilot"})
+                                        altPrefix + "/Elec/bus_1_powered",
+                                        prefix + "/B748/MCP/mcp_ias_mach_act",
+                                        prefix + "/B748/systems/athr/MCPSPD_spdmach",
+                                        prefix + "/B748/mcp/speed_is_blank",
+                                        prefix + "/B748/MCP/mcp_heading_bug_act",
+                                        prefix + "/B748/ND/tk_hdg_pfd",
+                                        prefix + "/B748/MCP/mcp_alt_target_act",
+                                        prefix + "/B748/MCP/mcp_vs_target_act",
+                                        prefix + "/B748/mcp/vs_is_blank",
+                                        "FPS/PFD/baro_now",
+                                        "FPS/PFD/baro_now2",
+                                        "FPS/PFD/baro_standard",
+                                        "FPS/PFD/baro_standard2",
+                                        "FPS/PFD/baro_type_sw",
+                                        prefix + "/B748/ND/mode_pilot",
+                                        prefix + "/B748/ND/mode_copilot",
+                                        prefix + "/B748/ND/range_pilot",
+                                        prefix + "/B748/ND/range_copilot"})
         .first->second;
 }
 
@@ -168,121 +168,121 @@ const std::unordered_map<uint16_t, FCUEfisButtonDef> &FPS748FCUEfisProfile::butt
 
     return cache.try_emplace(isSSG, std::unordered_map<uint16_t, FCUEfisButtonDef>{
 
-                    // MCP --------------------------------------------------------------------------
-                    // Buttons
-                    {0, {"SPD", prefix + "/UFMC/AP_SPD_Button"}},
-                    {1, {"LOC", prefix + "/UFMC/AP_VORLOC_Button"}},
-                    // {2, HDG/TRK — not on the 747-8 MCP},
-                    {3, {"AP1", prefix + "/UFMC/AP_CMDA_Button"}},
-                    {4, {"AP2", prefix + "/UFMC/AP_CMDB_Button"}},
-                    {5, {"A/THR", prefix + "/UFMC/AP_ARM_AT_Switch"}},
-                    {6, {"LNAV", prefix + "/UFMC/AP_LNAV_Button"}},
-                    {7, {"V/S", prefix + "/UFMC/AP_VS_Button"}},
-                    {8, {"APP", prefix + "/UFMC/AP_APP_Button"}},
+                                        // MCP --------------------------------------------------------------------------
+                                        // Buttons
+                                        {0, {"SPD", prefix + "/UFMC/AP_SPD_Button"}},
+                                        {1, {"LOC", prefix + "/UFMC/AP_VORLOC_Button"}},
+                                        // {2, HDG/TRK — not on the 747-8 MCP},
+                                        {3, {"AP1", prefix + "/UFMC/AP_CMDA_Button"}},
+                                        {4, {"AP2", prefix + "/UFMC/AP_CMDB_Button"}},
+                                        {5, {"A/THR", prefix + "/UFMC/AP_ARM_AT_Switch"}},
+                                        {6, {"LNAV", prefix + "/UFMC/AP_LNAV_Button"}},
+                                        {7, {"V/S", prefix + "/UFMC/AP_VS_Button"}},
+                                        {8, {"APP", prefix + "/UFMC/AP_APP_Button"}},
 
-                    // Rotary encoders - Speed
-                    {9, {"SPD DEC", prefix + "/UFMC/Speed_Down"}},
-                    {10, {"SPD INC", prefix + "/UFMC/Speed_UP"}},
-                    {11, {"SPD INTV", prefix + "/UFMC/AP_SPD_Intervention_Button"}},
+                                        // Rotary encoders - Speed
+                                        {9, {"SPD DEC", prefix + "/UFMC/Speed_Down"}},
+                                        {10, {"SPD INC", prefix + "/UFMC/Speed_UP"}},
+                                        {11, {"SPD INTV", prefix + "/UFMC/AP_SPD_Intervention_Button"}},
 
-                    // Rotary encoders - Heading
-                    {13, {"HDG DEC", prefix + "/UFMC/HDG_Down"}},
-                    {14, {"HDG INC", prefix + "/UFMC/HDG_UP"}},
-                    {15, {"HDG SEL", prefix + "/UFMC/AP_HDG_Button"}},
-                    {16, {"HDG HOLD", prefix + "/UFMC/AP_HDGHOLD_Button"}},
+                                        // Rotary encoders - Heading
+                                        {13, {"HDG DEC", prefix + "/UFMC/HDG_Down"}},
+                                        {14, {"HDG INC", prefix + "/UFMC/HDG_UP"}},
+                                        {15, {"HDG SEL", prefix + "/UFMC/AP_HDG_Button"}},
+                                        {16, {"HDG HOLD", prefix + "/UFMC/AP_HDGHOLD_Button"}},
 
-                    // Rotary encoders - Altitude
-                    {17, {"ALT DEC", prefix + "/UFMC/Alt_Down"}},
-                    {18, {"ALT INC", prefix + "/UFMC/Alt_UP"}},
-                    {19, {"ALT INTV", prefix + "/UFMC/AP_Altitude_Intervention_Button"}},
-                    {20, {"ALT HOLD", prefix + "/UFMC/AP_ALTHOLD_Button"}},
+                                        // Rotary encoders - Altitude
+                                        {17, {"ALT DEC", prefix + "/UFMC/Alt_Down"}},
+                                        {18, {"ALT INC", prefix + "/UFMC/Alt_UP"}},
+                                        {19, {"ALT INTV", prefix + "/UFMC/AP_Altitude_Intervention_Button"}},
+                                        {20, {"ALT PULL", prefix + "/UFMC/AP_ALTHOLD_Button"}},
 
-                    // Rotary encoders - Vertical Speed
-                    {21, {"VS DEC", prefix + "/UFMC/VS_Down"}},
-                    {22, {"VS INC", prefix + "/UFMC/VS_UP"}},
-                    {23, {"V/S", prefix + "/UFMC/AP_VS_Button"}},
+                                        // Rotary encoders - Vertical Speed
+                                        {21, {"VS DEC", prefix + "/UFMC/VS_Down"}},
+                                        {22, {"VS INC", prefix + "/UFMC/VS_UP"}},
+                                        {23, {"V/S", prefix + "/UFMC/AP_VS_Button"}},
 
-                    // EFIS CAPT --------------------------------------------------------------------
-                    // Buttons
-                    {32, {"L_FD", prefix + "/UFMC/FD_Pilot_SW"}},
-                    {33, {"AP DISC", prefix + "/UFMC/AP_Discon"}},
+                                        // EFIS CAPT --------------------------------------------------------------------
+                                        // Buttons
+                                        {32, {"L_FD", prefix + "/UFMC/FD_Pilot_SW"}},
+                                        {33, {"AP DISC", prefix + "/UFMC/AP_Discon"}},
 
-                    // ND overlay options
-                    {35, {"L_WPT", prefix + "/B748/ND/show_waypoint_pilot_sw", FCUEfisDatarefType::TOGGLE_VALUE}},
-                    {36, {"L_STA", prefix + "/B748/ND/show_VOR_pilot_sw", FCUEfisDatarefType::TOGGLE_VALUE}},
-                    {37, {"L_NDB", prefix + "/B748/ND/show_NDB_pilot_sw", FCUEfisDatarefType::TOGGLE_VALUE}},
-                    {38, {"L_ARPT", prefix + "/B748/ND/show_airport_pilot_sw", FCUEfisDatarefType::TOGGLE_VALUE}},
+                                        // ND overlay options
+                                        {35, {"L_WPT", prefix + "/B748/ND/show_waypoint_pilot_sw", FCUEfisDatarefType::TOGGLE_VALUE}},
+                                        {36, {"L_STA", prefix + "/B748/ND/show_VOR_pilot_sw", FCUEfisDatarefType::TOGGLE_VALUE}},
+                                        {37, {"L_NDB", prefix + "/B748/ND/show_NDB_pilot_sw", FCUEfisDatarefType::TOGGLE_VALUE}},
+                                        {38, {"L_ARPT", prefix + "/B748/ND/show_airport_pilot_sw", FCUEfisDatarefType::TOGGLE_VALUE}},
 
-                    // BARO
-                    {39, {"L_BARO PUSH", "FPS/PFD/baro_standard", FCUEfisDatarefType::SET_VALUE, 1}},
-                    {40, {"L_BARO PULL", "FPS/PFD/baro_standard", FCUEfisDatarefType::SET_VALUE, 0}},
-                    {41, {"L_BARO DEC", "custom", FCUEfisDatarefType::BAROMETER_PILOT, -1.0}},
-                    {42, {"L_BARO INC", "custom", FCUEfisDatarefType::BAROMETER_PILOT, 1.0}},
-                    {43, {"L_inHg", "FPS/PFD/baro_type_sw", FCUEfisDatarefType::SET_VALUE, 0}},
-                    {44, {"L_hPa", "FPS/PFD/baro_type_sw", FCUEfisDatarefType::SET_VALUE, 1}},
+                                        // BARO
+                                        {39, {"L_BARO PUSH", "FPS/PFD/baro_standard", FCUEfisDatarefType::SET_VALUE, 1}},
+                                        {40, {"L_BARO PULL", "FPS/PFD/baro_standard", FCUEfisDatarefType::SET_VALUE, 0}},
+                                        {41, {"L_BARO DEC", "custom", FCUEfisDatarefType::BAROMETER_PILOT, -1.0}},
+                                        {42, {"L_BARO INC", "custom", FCUEfisDatarefType::BAROMETER_PILOT, 1.0}},
+                                        {43, {"L_inHg", "FPS/PFD/baro_type_sw", FCUEfisDatarefType::SET_VALUE, 0}},
+                                        {44, {"L_hPa", "FPS/PFD/baro_type_sw", FCUEfisDatarefType::SET_VALUE, 1}},
 
-                    // ND Mode selector (0=APP/LS, 1=VOR, 2=MAP/ARC, 3=PLN/PLAN)
-                    {45, {"L_MODE APP", prefix + "/B748/ND/mode_pilot", FCUEfisDatarefType::SET_VALUE, 0}},
-                    {46, {"L_MODE VOR", prefix + "/B748/ND/mode_pilot", FCUEfisDatarefType::SET_VALUE, 1}},
-                    {48, {"L_MODE MAP", prefix + "/B748/ND/mode_pilot", FCUEfisDatarefType::SET_VALUE, 2}},
-                    {49, {"L_MODE PLAN", prefix + "/B748/ND/mode_pilot", FCUEfisDatarefType::SET_VALUE, 3}},
+                                        // ND Mode selector (0=APP/LS, 1=VOR, 2=MAP/ARC, 3=PLN/PLAN)
+                                        {45, {"L_MODE APP", prefix + "/B748/ND/mode_pilot", FCUEfisDatarefType::SET_VALUE, 0}},
+                                        {46, {"L_MODE VOR", prefix + "/B748/ND/mode_pilot", FCUEfisDatarefType::SET_VALUE, 1}},
+                                        {48, {"L_MODE MAP", prefix + "/B748/ND/mode_pilot", FCUEfisDatarefType::SET_VALUE, 2}},
+                                        {49, {"L_MODE PLAN", prefix + "/B748/ND/mode_pilot", FCUEfisDatarefType::SET_VALUE, 3}},
 
-                    // ND Range selector (-3=0.5nm, 1=10nm, 2=20nm, 3=40nm ... 7=640nm)
-                    {50, {"L_RANGE 10", prefix + "/B748/ND/range_pilot", FCUEfisDatarefType::SET_VALUE, 1}},
-                    {51, {"L_RANGE 20", prefix + "/B748/ND/range_pilot", FCUEfisDatarefType::SET_VALUE, 2}},
-                    {52, {"L_RANGE 40", prefix + "/B748/ND/range_pilot", FCUEfisDatarefType::SET_VALUE, 3}},
-                    {53, {"L_RANGE 80", prefix + "/B748/ND/range_pilot", FCUEfisDatarefType::SET_VALUE, 4}},
-                    {54, {"L_RANGE 160", prefix + "/B748/ND/range_pilot", FCUEfisDatarefType::SET_VALUE, 5}},
-                    {55, {"L_RANGE 320", prefix + "/B748/ND/range_pilot", FCUEfisDatarefType::SET_VALUE, 6}},
+                                        // ND Range selector (-3=0.5nm, 1=10nm, 2=20nm, 3=40nm ... 7=640nm)
+                                        {50, {"L_RANGE 10", prefix + "/B748/ND/range_pilot", FCUEfisDatarefType::SET_VALUE, 1}},
+                                        {51, {"L_RANGE 20", prefix + "/B748/ND/range_pilot", FCUEfisDatarefType::SET_VALUE, 2}},
+                                        {52, {"L_RANGE 40", prefix + "/B748/ND/range_pilot", FCUEfisDatarefType::SET_VALUE, 3}},
+                                        {53, {"L_RANGE 80", prefix + "/B748/ND/range_pilot", FCUEfisDatarefType::SET_VALUE, 4}},
+                                        {54, {"L_RANGE 160", prefix + "/B748/ND/range_pilot", FCUEfisDatarefType::SET_VALUE, 5}},
+                                        {55, {"L_RANGE 320", prefix + "/B748/ND/range_pilot", FCUEfisDatarefType::SET_VALUE, 6}},
 
-                    // VOR/ADF selectors (0=VOR, -1=OFF, 1=ADF)
-                    {56, {"L_VORL VOR", prefix + "/B748/MCP/ap_vor_adf1", FCUEfisDatarefType::SET_VALUE, 0.0}},
-                    {57, {"L_VORL OFF", prefix + "/B748/MCP/ap_vor_adf1", FCUEfisDatarefType::SET_VALUE, -1.0}},
-                    {58, {"L_VORL ADF", prefix + "/B748/MCP/ap_vor_adf1", FCUEfisDatarefType::SET_VALUE, 1.0}},
-                    {59, {"L_VORR VOR", prefix + "/B748/MCP/ap_vor_adf2", FCUEfisDatarefType::SET_VALUE, 0.0}},
-                    {60, {"L_VORR OFF", prefix + "/B748/MCP/ap_vor_adf2", FCUEfisDatarefType::SET_VALUE, -1.0}},
-                    {61, {"L_VORR ADF", prefix + "/B748/MCP/ap_vor_adf2", FCUEfisDatarefType::SET_VALUE, 1.0}},
+                                        // VOR/ADF selectors (0=VOR, -1=OFF, 1=ADF)
+                                        {56, {"L_VORL VOR", prefix + "/B748/MCP/ap_vor_adf1", FCUEfisDatarefType::SET_VALUE, 0.0}},
+                                        {57, {"L_VORL OFF", prefix + "/B748/MCP/ap_vor_adf1", FCUEfisDatarefType::SET_VALUE, -1.0}},
+                                        {58, {"L_VORL ADF", prefix + "/B748/MCP/ap_vor_adf1", FCUEfisDatarefType::SET_VALUE, 1.0}},
+                                        {59, {"L_VORR VOR", prefix + "/B748/MCP/ap_vor_adf2", FCUEfisDatarefType::SET_VALUE, 0.0}},
+                                        {60, {"L_VORR OFF", prefix + "/B748/MCP/ap_vor_adf2", FCUEfisDatarefType::SET_VALUE, -1.0}},
+                                        {61, {"L_VORR ADF", prefix + "/B748/MCP/ap_vor_adf2", FCUEfisDatarefType::SET_VALUE, 1.0}},
 
-                    // EFIS FO ----------------------------------------------------------------------
-                    // Buttons
-                    {64, {"R_FD", prefix + "/UFMC/FD_Copilot_SW"}},
-                    {65, {"AP DISC", prefix + "/UFMC/AP_Discon"}},
+                                        // EFIS FO ----------------------------------------------------------------------
+                                        // Buttons
+                                        {64, {"R_FD", prefix + "/UFMC/FD_Copilot_SW"}},
+                                        {65, {"AP DISC", prefix + "/UFMC/AP_Discon"}},
 
-                    // ND overlay options
-                    {67, {"R_WPT", prefix + "/B748/ND/show_waypoint_copilot_sw", FCUEfisDatarefType::TOGGLE_VALUE}},
-                    {68, {"R_STA", prefix + "/B748/ND/show_VOR_copilot_sw", FCUEfisDatarefType::TOGGLE_VALUE}},
-                    {69, {"R_NDB", prefix + "/B748/ND/show_NDB_copilot_sw", FCUEfisDatarefType::TOGGLE_VALUE}},
-                    {70, {"R_ARPT", prefix + "/B748/ND/show_airport_copilot_sw", FCUEfisDatarefType::TOGGLE_VALUE}},
+                                        // ND overlay options
+                                        {67, {"R_WPT", prefix + "/B748/ND/show_waypoint_copilot_sw", FCUEfisDatarefType::TOGGLE_VALUE}},
+                                        {68, {"R_STA", prefix + "/B748/ND/show_VOR_copilot_sw", FCUEfisDatarefType::TOGGLE_VALUE}},
+                                        {69, {"R_NDB", prefix + "/B748/ND/show_NDB_copilot_sw", FCUEfisDatarefType::TOGGLE_VALUE}},
+                                        {70, {"R_ARPT", prefix + "/B748/ND/show_airport_copilot_sw", FCUEfisDatarefType::TOGGLE_VALUE}},
 
-                    // BARO
-                    {71, {"R_BARO PUSH", "FPS/PFD/baro_standard2", FCUEfisDatarefType::SET_VALUE, 1}},
-                    {72, {"R_BARO PULL", "FPS/PFD/baro_standard2", FCUEfisDatarefType::SET_VALUE, 0}},
-                    {73, {"R_BARO DEC", "custom", FCUEfisDatarefType::BAROMETER_FO, -1.0}},
-                    {74, {"R_BARO INC", "custom", FCUEfisDatarefType::BAROMETER_FO, 1.0}},
-                    {75, {"R_inHg", "FPS/PFD/baro_type_sw", FCUEfisDatarefType::SET_VALUE, 0}},
-                    {76, {"R_hPa", "FPS/PFD/baro_type_sw", FCUEfisDatarefType::SET_VALUE, 1}},
+                                        // BARO
+                                        {71, {"R_BARO PUSH", "FPS/PFD/baro_standard2", FCUEfisDatarefType::SET_VALUE, 1}},
+                                        {72, {"R_BARO PULL", "FPS/PFD/baro_standard2", FCUEfisDatarefType::SET_VALUE, 0}},
+                                        {73, {"R_BARO DEC", "custom", FCUEfisDatarefType::BAROMETER_FO, -1.0}},
+                                        {74, {"R_BARO INC", "custom", FCUEfisDatarefType::BAROMETER_FO, 1.0}},
+                                        {75, {"R_inHg", "FPS/PFD/baro_type_sw", FCUEfisDatarefType::SET_VALUE, 0}},
+                                        {76, {"R_hPa", "FPS/PFD/baro_type_sw", FCUEfisDatarefType::SET_VALUE, 1}},
 
-                    // ND Mode selector (0=APP/LS, 1=VOR, 2=MAP/ARC, 3=PLN/PLAN)
-                    {77, {"R_MODE APP", prefix + "/B748/ND/mode_copilot", FCUEfisDatarefType::SET_VALUE, 0}},
-                    {78, {"R_MODE VOR", prefix + "/B748/ND/mode_copilot", FCUEfisDatarefType::SET_VALUE, 1}},
-                    {80, {"R_MODE MAP", prefix + "/B748/ND/mode_copilot", FCUEfisDatarefType::SET_VALUE, 2}},
-                    {81, {"R_MODE PLAN", prefix + "/B748/ND/mode_copilot", FCUEfisDatarefType::SET_VALUE, 3}},
+                                        // ND Mode selector (0=APP/LS, 1=VOR, 2=MAP/ARC, 3=PLN/PLAN)
+                                        {77, {"R_MODE APP", prefix + "/B748/ND/mode_copilot", FCUEfisDatarefType::SET_VALUE, 0}},
+                                        {78, {"R_MODE VOR", prefix + "/B748/ND/mode_copilot", FCUEfisDatarefType::SET_VALUE, 1}},
+                                        {80, {"R_MODE MAP", prefix + "/B748/ND/mode_copilot", FCUEfisDatarefType::SET_VALUE, 2}},
+                                        {81, {"R_MODE PLAN", prefix + "/B748/ND/mode_copilot", FCUEfisDatarefType::SET_VALUE, 3}},
 
-                    // ND Range selector (-3=0.5nm, 1=10nm, 2=20nm, 3=40nm ... 7=640nm)
-                    {82, {"R_RANGE 10", prefix + "/B748/ND/range_copilot", FCUEfisDatarefType::SET_VALUE, 1}},
-                    {83, {"R_RANGE 20", prefix + "/B748/ND/range_copilot", FCUEfisDatarefType::SET_VALUE, 2}},
-                    {84, {"R_RANGE 40", prefix + "/B748/ND/range_copilot", FCUEfisDatarefType::SET_VALUE, 3}},
-                    {85, {"R_RANGE 80", prefix + "/B748/ND/range_copilot", FCUEfisDatarefType::SET_VALUE, 4}},
-                    {86, {"R_RANGE 160", prefix + "/B748/ND/range_copilot", FCUEfisDatarefType::SET_VALUE, 5}},
-                    {87, {"R_RANGE 320", prefix + "/B748/ND/range_copilot", FCUEfisDatarefType::SET_VALUE, 6}},
+                                        // ND Range selector (-3=0.5nm, 1=10nm, 2=20nm, 3=40nm ... 7=640nm)
+                                        {82, {"R_RANGE 10", prefix + "/B748/ND/range_copilot", FCUEfisDatarefType::SET_VALUE, 1}},
+                                        {83, {"R_RANGE 20", prefix + "/B748/ND/range_copilot", FCUEfisDatarefType::SET_VALUE, 2}},
+                                        {84, {"R_RANGE 40", prefix + "/B748/ND/range_copilot", FCUEfisDatarefType::SET_VALUE, 3}},
+                                        {85, {"R_RANGE 80", prefix + "/B748/ND/range_copilot", FCUEfisDatarefType::SET_VALUE, 4}},
+                                        {86, {"R_RANGE 160", prefix + "/B748/ND/range_copilot", FCUEfisDatarefType::SET_VALUE, 5}},
+                                        {87, {"R_RANGE 320", prefix + "/B748/ND/range_copilot", FCUEfisDatarefType::SET_VALUE, 6}},
 
-                    // VOR/ADF selectors (0=VOR, -1=OFF, 1=ADF)
-                    {88, {"R_VORL VOR", prefix + "/B748/MCP/ap_CP_vor_adf1", FCUEfisDatarefType::SET_VALUE, 0.0}},
-                    {89, {"R_VORL OFF", prefix + "/B748/MCP/ap_CP_vor_adf1", FCUEfisDatarefType::SET_VALUE, -1.0}},
-                    {90, {"R_VORL ADF", prefix + "/B748/MCP/ap_CP_vor_adf1", FCUEfisDatarefType::SET_VALUE, 1.0}},
-                    {91, {"R_VORR VOR", prefix + "/B748/MCP/ap_CP_vor_adf2", FCUEfisDatarefType::SET_VALUE, 0.0}},
-                    {92, {"R_VORR OFF", prefix + "/B748/MCP/ap_CP_vor_adf2", FCUEfisDatarefType::SET_VALUE, -1.0}},
-                    {93, {"R_VORR ADF", prefix + "/B748/MCP/ap_CP_vor_adf2", FCUEfisDatarefType::SET_VALUE, 1.0}}})
+                                        // VOR/ADF selectors (0=VOR, -1=OFF, 1=ADF)
+                                        {88, {"R_VORL VOR", prefix + "/B748/MCP/ap_CP_vor_adf1", FCUEfisDatarefType::SET_VALUE, 0.0}},
+                                        {89, {"R_VORL OFF", prefix + "/B748/MCP/ap_CP_vor_adf1", FCUEfisDatarefType::SET_VALUE, -1.0}},
+                                        {90, {"R_VORL ADF", prefix + "/B748/MCP/ap_CP_vor_adf1", FCUEfisDatarefType::SET_VALUE, 1.0}},
+                                        {91, {"R_VORR VOR", prefix + "/B748/MCP/ap_CP_vor_adf2", FCUEfisDatarefType::SET_VALUE, 0.0}},
+                                        {92, {"R_VORR OFF", prefix + "/B748/MCP/ap_CP_vor_adf2", FCUEfisDatarefType::SET_VALUE, -1.0}},
+                                        {93, {"R_VORR ADF", prefix + "/B748/MCP/ap_CP_vor_adf2", FCUEfisDatarefType::SET_VALUE, 1.0}}})
         .first->second;
 }
 

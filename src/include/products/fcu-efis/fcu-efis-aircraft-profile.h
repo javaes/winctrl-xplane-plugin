@@ -47,12 +47,11 @@ struct DisplayFlag {
 
 enum class FCUEfisDatarefType : unsigned char {
     SET_VALUE = 1,
-    SET_VALUE_USING_COMMANDS,
+    SET_VALUE_USING_COMMANDS, // Format: "dataref_to_set,lower_value_cmd,raise_value_cmd"
     TOGGLE_VALUE,
     EXECUTE_CMD_ONCE,
     BAROMETER_PILOT,
     BAROMETER_FO,
-    PUSH_BUTTON,
     ADJUST_VALUE,
 };
 

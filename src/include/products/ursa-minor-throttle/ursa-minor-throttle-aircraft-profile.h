@@ -13,7 +13,7 @@ enum class UrsaMinorThrottleDatarefType : unsigned char {
     EXECUTE_MULTIPLE_CMD_ONCE,
     EXECUTE_CMD_PHASED,
     SET_VALUE,
-    SET_VALUE_USING_COMMANDS,
+    SET_VALUE_USING_COMMANDS, // Format: "dataref_to_set,lower_value_cmd,raise_value_cmd"
     TOLISS_SPEEDBRAKE
 };
 

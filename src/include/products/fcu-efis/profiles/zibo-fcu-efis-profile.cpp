@@ -290,7 +290,7 @@ void ZiboFCUEfisProfile::updateDisplayData(FCUDisplayData &data) {
         return;
     }
 
-    // remove level change LevelChangeHeader
+    data.displayEnabledWindowsFlag = FCUDisplayData::Window::All;
     data.displayEnabledWindowsFlag &= ~FCUDisplayData::LevelChangeHeader;
     data.headingHdg = true;
     data.headingLat = true;

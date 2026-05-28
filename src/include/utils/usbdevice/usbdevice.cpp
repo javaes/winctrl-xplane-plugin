@@ -39,7 +39,7 @@ USBDevice *USBDevice::Device(HIDDeviceHandle hidDevice, uint16_t vendorId, uint1
             constexpr uint8_t identifierByte = 0x09;
             return new ProductUrsaMinorJoystick(hidDevice, vendorId, productId, vendorName, productName, identifierByte);
         }
-        case 0xBEB8: { // WINWING Orion Joystick Base 2 + JGRIP-F16
+        case 0xBEA8: { // Orion Joystick Base 2 + JGRIP-F16
             constexpr uint8_t identifierByte = 0x08;
             return new ProductUrsaMinorJoystick(hidDevice, vendorId, productId, vendorName, productName, identifierByte);
         }

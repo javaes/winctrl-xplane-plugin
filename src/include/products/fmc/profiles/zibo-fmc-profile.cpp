@@ -155,18 +155,22 @@ const std::vector<FMCButtonDef> &ZiboFMCProfile::buttonDefs() const {
                         {std::vector<FMCKey>{FMCKey::PFP_INIT_REF, FMCKey::MCDU_INIT}, "laminar/B738/button/" + fmc + "_init_ref"},
                         {std::vector<FMCKey>{FMCKey::PFP_ROUTE, FMCKey::MCDU_SEC_FPLN}, "laminar/B738/button/" + fmc + "_rte"},
                         {FMCKey::PFP3_CLB, "laminar/B738/button/" + fmc + "_clb"},
-                        {std::vector<FMCKey>{FMCKey::PFP3_CRZ, FMCKey::PFP4_ATC}, "laminar/B738/button/" + fmc + "_crz"},
+                        {std::vector<FMCKey>{FMCKey::PFP3_CRZ, FMCKey::PFP4_ATC, FMCKey::PFP7_ALTN}, "laminar/B738/button/" + fmc + "_crz"},
                         {FMCKey::PFP3_DES, "laminar/B738/button/" + fmc + "_des"},
                         {FMCKey::BRIGHTNESS_DOWN, "laminar/B738/electric/instrument_brightness[10]", FMCDatarefType::ADJUST_VALUE, -0.1},
                         {FMCKey::BRIGHTNESS_UP, "laminar/B738/electric/instrument_brightness[10]", FMCDatarefType::ADJUST_VALUE, 0.1},
                         {FMCKey::MENU, "laminar/B738/button/" + fmc + "_menu"},
-                        {std::vector<FMCKey>{FMCKey::PFP_LEGS, FMCKey::MCDU_FPLN, FMCKey::MCDU_DIR, FMCKey::PFP4_VNAV, FMCKey::PFP7_VNAV}, "laminar/B738/button/" + fmc + "_legs"},
+                        {std::vector<FMCKey>{FMCKey::PFP_LEGS, FMCKey::MCDU_FPLN, FMCKey::MCDU_DIR}, "laminar/B738/button/" + fmc + "_legs"},
+                        {FMCKey::PFP4_VNAV, "laminar/B738/button/" + fmc + "_legs"},
+                        {FMCKey::PFP7_VNAV, "laminar/B738/button/" + fmc + "_legs"},
                         {std::vector<FMCKey>{FMCKey::PFP_DEP_ARR, FMCKey::MCDU_AIRPORT}, "laminar/B738/button/" + fmc + "_dep_app"},
-                        {std::vector<FMCKey>{FMCKey::PFP_HOLD, FMCKey::PFP4_FMC_COMM, FMCKey::PFP7_FMC_COMM}, "laminar/B738/button/" + fmc + "_hold"},
+                        {FMCKey::PFP_HOLD, "laminar/B738/button/" + fmc + "_hold"},
+                        {FMCKey::PFP4_FMC_COMM, "laminar/B738/button/" + fmc + "_hold"},
+                        {FMCKey::PFP7_FMC_COMM, "laminar/B738/button/" + fmc + "_hold"},
                         {FMCKey::PROG, "laminar/B738/button/" + fmc + "_prog"},
                         {std::vector<FMCKey>{FMCKey::PFP_EXEC, FMCKey::MCDU_EMPTY_TOP_RIGHT}, "laminar/B738/button/" + fmc + "_exec"},
                         {std::vector<FMCKey>{FMCKey::PFP3_N1_LIMIT, FMCKey::MCDU_PERF}, "laminar/B738/button/" + fmc + "_n1_lim"},
-                        {std::vector<FMCKey>{FMCKey::PFP_FIX, FMCKey::MCDU_EMPTY_BOTTOM_LEFT}, "laminar/B738/button/" + fmc + "_fix"},
+                        {std::vector<FMCKey>{FMCKey::PFP_FIX, FMCKey::MCDU_EMPTY_BOTTOM_LEFT, FMCKey::PFP4_NAV_RAD, FMCKey::PFP7_NAV_RAD}, "laminar/B738/button/" + fmc + "_fix"},
                         {FMCKey::PAGE_PREV, "laminar/B738/button/" + fmc + "_prev_page"},
                         {FMCKey::PAGE_NEXT, "laminar/B738/button/" + fmc + "_next_page"},
                         {FMCKey::KEY1, "laminar/B738/button/" + fmc + "_1"},
@@ -387,8 +391,19 @@ void ZiboFMCProfile::buttonPressed(const FMCButtonDef *button, XPLMCommandPhase 
                 {FMCKey::PFP3_N1_LIMIT, FMCKey::PFP_FIX},
             };
 
-            // We should read the pressed key, and then "convert" the key to the mapped one, if needed. After conversion, execute the button command dataref. Else, just execute
-            FMCKey pressedKey = button->key.index() == 0 ? std::get<FMCKey>(button->key) : std::get<std::vector<FMCKey>>(button->key)[0];
+            FMCKey pressedKey = FMCKey::INVALID_UNKNOWN;
+            if (button->key.index() == 0) {
+                pressedKey = std::get<FMCKey>(button->key);
+            } else {
+                const auto &keys = std::get<std::vector<FMCKey>>(button->key);
+                for (const auto &k : keys) {
+                    for (const auto &m : fansMapping) {
+                        if (k == m.first) { pressedKey = k; break; }
+                    }
+                    if (pressedKey != FMCKey::INVALID_UNKNOWN) break;
+                }
+                if (pressedKey == FMCKey::INVALID_UNKNOWN) pressedKey = keys[0];
+            }
 
             for (const auto &mapping : fansMapping) {
                 if (pressedKey == mapping.first) {

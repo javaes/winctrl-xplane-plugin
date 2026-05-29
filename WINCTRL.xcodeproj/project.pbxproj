@@ -44,6 +44,12 @@
 		F60ABAEA2FBE134D001C91EF /* jar330-fmc-profile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F60ABAE82FBE134D001C91EF /* jar330-fmc-profile.cpp */; };
 		F60ABAED2FBE1355001C91EF /* jar330-fcu-efis-profile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F60ABAEC2FBE1355001C91EF /* jar330-fcu-efis-profile.cpp */; };
 		F60ABAEE2FBE1355001C91EF /* jar330-fcu-efis-profile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F60ABAEC2FBE1355001C91EF /* jar330-fcu-efis-profile.cpp */; };
+		F60F7FD92FC9B67B000EA4E2 /* rotatemd11-tcas-profile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F60F7FD82FC9B67B000EA4E2 /* rotatemd11-tcas-profile.cpp */; };
+		F60F7FDA2FC9B67B000EA4E2 /* rotatemd11-tcas-profile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F60F7FD82FC9B67B000EA4E2 /* rotatemd11-tcas-profile.cpp */; };
+		F60F7FDD2FC9B681000EA4E2 /* rotatemd11-agp-profile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F60F7FDC2FC9B681000EA4E2 /* rotatemd11-agp-profile.cpp */; };
+		F60F7FDE2FC9B681000EA4E2 /* rotatemd11-agp-profile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F60F7FDC2FC9B681000EA4E2 /* rotatemd11-agp-profile.cpp */; };
+		F60F7FE12FC9B694000EA4E2 /* rotatemd11-ursa-minor-throttle-profile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F60F7FE02FC9B694000EA4E2 /* rotatemd11-ursa-minor-throttle-profile.cpp */; };
+		F60F7FE22FC9B694000EA4E2 /* rotatemd11-ursa-minor-throttle-profile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F60F7FE02FC9B694000EA4E2 /* rotatemd11-ursa-minor-throttle-profile.cpp */; };
 		F61F8B1E2D0456D700E63C3F /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F66F91662D0332F600F84283 /* main.cpp */; };
 		F621F80C2F1C264A00DDB31E /* jf146-fcu-efis-profile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F621F80B2F1C264A00DDB31E /* jf146-fcu-efis-profile.cpp */; };
 		F621F80D2F1C264A00DDB31E /* jf146-fcu-efis-profile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F621F80B2F1C264A00DDB31E /* jf146-fcu-efis-profile.cpp */; };
@@ -138,6 +144,8 @@
 		F6BBFF092ED741B900FE9D7F /* ff777-pap3-mcp-profile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F6BBFF052ED741B900FE9D7F /* ff777-pap3-mcp-profile.cpp */; };
 		F6BBFF0A2ED741B900FE9D7F /* rotatemd11-pap3-mcp-profile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F6BBFF072ED741B900FE9D7F /* rotatemd11-pap3-mcp-profile.cpp */; };
 		F6BBFF0B2ED741B900FE9D7F /* ff777-pap3-mcp-profile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F6BBFF052ED741B900FE9D7F /* ff777-pap3-mcp-profile.cpp */; };
+		F6C2086A2FC9702A006973EE /* rotatemd11-fcu-efis-profile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F6C208692FC9702A006973EE /* rotatemd11-fcu-efis-profile.cpp */; };
+		F6C2086B2FC9702A006973EE /* rotatemd11-fcu-efis-profile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F6C208692FC9702A006973EE /* rotatemd11-fcu-efis-profile.cpp */; };
 		F6C248462EBE498500617E89 /* plugins-menu.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F6C248452EBE498500617E89 /* plugins-menu.cpp */; };
 		F6C248472EBE498500617E89 /* plugins-menu.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F6C248452EBE498500617E89 /* plugins-menu.cpp */; };
 		F6C345512E18797400D7C987 /* dataref.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F6AF9EBC2D06F84900530297 /* dataref.cpp */; };
@@ -231,6 +239,12 @@
 		F60ABAEB2FBE1355001C91EF /* jar330-fcu-efis-profile.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "jar330-fcu-efis-profile.h"; sourceTree = "<group>"; };
 		F60ABAEC2FBE1355001C91EF /* jar330-fcu-efis-profile.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "jar330-fcu-efis-profile.cpp"; sourceTree = "<group>"; };
 		F60BE7C62FA8CA0E00E5C542 /* xplane-version.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = "xplane-version.hpp"; sourceTree = "<group>"; };
+		F60F7FD72FC9B67B000EA4E2 /* rotatemd11-tcas-profile.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "rotatemd11-tcas-profile.h"; sourceTree = "<group>"; };
+		F60F7FD82FC9B67B000EA4E2 /* rotatemd11-tcas-profile.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "rotatemd11-tcas-profile.cpp"; sourceTree = "<group>"; };
+		F60F7FDB2FC9B681000EA4E2 /* rotatemd11-agp-profile.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "rotatemd11-agp-profile.h"; sourceTree = "<group>"; };
+		F60F7FDC2FC9B681000EA4E2 /* rotatemd11-agp-profile.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "rotatemd11-agp-profile.cpp"; sourceTree = "<group>"; };
+		F60F7FDF2FC9B694000EA4E2 /* rotatemd11-ursa-minor-throttle-profile.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "rotatemd11-ursa-minor-throttle-profile.h"; sourceTree = "<group>"; };
+		F60F7FE02FC9B694000EA4E2 /* rotatemd11-ursa-minor-throttle-profile.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "rotatemd11-ursa-minor-throttle-profile.cpp"; sourceTree = "<group>"; };
 		F61F8B2D2D059ED500E63C3F /* config.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = config.h; sourceTree = "<group>"; };
 		F621F80A2F1C264A00DDB31E /* jf146-fcu-efis-profile.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "jf146-fcu-efis-profile.h"; sourceTree = "<group>"; };
 		F621F80B2F1C264A00DDB31E /* jf146-fcu-efis-profile.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "jf146-fcu-efis-profile.cpp"; sourceTree = "<group>"; };
@@ -338,6 +352,8 @@
 		F6BBFF052ED741B900FE9D7F /* ff777-pap3-mcp-profile.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "ff777-pap3-mcp-profile.cpp"; sourceTree = "<group>"; };
 		F6BBFF062ED741B900FE9D7F /* rotatemd11-pap3-mcp-profile.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "rotatemd11-pap3-mcp-profile.h"; sourceTree = "<group>"; };
 		F6BBFF072ED741B900FE9D7F /* rotatemd11-pap3-mcp-profile.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "rotatemd11-pap3-mcp-profile.cpp"; sourceTree = "<group>"; };
+		F6C208682FC9702A006973EE /* rotatemd11-fcu-efis-profile.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "rotatemd11-fcu-efis-profile.h"; sourceTree = "<group>"; };
+		F6C208692FC9702A006973EE /* rotatemd11-fcu-efis-profile.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "rotatemd11-fcu-efis-profile.cpp"; sourceTree = "<group>"; };
 		F6C248442EBE498500617E89 /* plugins-menu.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "plugins-menu.h"; sourceTree = "<group>"; };
 		F6C248452EBE498500617E89 /* plugins-menu.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "plugins-menu.cpp"; sourceTree = "<group>"; };
 		F6C3455E2E187AAF00D7C987 /* xplane-sdk-mock.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "xplane-sdk-mock.cpp"; sourceTree = "<group>"; };
@@ -586,6 +602,8 @@
 				F6EBDC0F2FC6CA45005AFCBD /* xcrafts-ejets-agp-profile.cpp */,
 				F6EBDC122FC6CFD1005AFCBD /* zibo-agp-profile.h */,
 				F6EBDC132FC6CFD1005AFCBD /* zibo-agp-profile.cpp */,
+				F60F7FDB2FC9B681000EA4E2 /* rotatemd11-agp-profile.h */,
+				F60F7FDC2FC9B681000EA4E2 /* rotatemd11-agp-profile.cpp */,
 			);
 			path = profiles;
 			sourceTree = "<group>";
@@ -633,6 +651,8 @@
 				F60ABAC82FBDA72B001C91EF /* zibo-tcas-profile.cpp */,
 				F6354FB72FC457B200D67444 /* xcrafts-erj-tcas-profile.h */,
 				F6354FB82FC457B200D67444 /* xcrafts-erj-tcas-profile.cpp */,
+				F60F7FD72FC9B67B000EA4E2 /* rotatemd11-tcas-profile.h */,
+				F60F7FD82FC9B67B000EA4E2 /* rotatemd11-tcas-profile.cpp */,
 			);
 			path = profiles;
 			sourceTree = "<group>";
@@ -681,6 +701,8 @@
 				F60ABAEC2FBE1355001C91EF /* jar330-fcu-efis-profile.cpp */,
 				F633E3D72FBE25B100CBE019 /* zibo-fcu-efis-profile.h */,
 				F633E3D82FBE25B100CBE019 /* zibo-fcu-efis-profile.cpp */,
+				F6C208682FC9702A006973EE /* rotatemd11-fcu-efis-profile.h */,
+				F6C208692FC9702A006973EE /* rotatemd11-fcu-efis-profile.cpp */,
 			);
 			path = profiles;
 			sourceTree = "<group>";
@@ -752,6 +774,8 @@
 				F60ABAD42FBDF03F001C91EF /* xcrafts-ejets-ursa-minor-throttle-profile.cpp */,
 				F6B520E62FC7676F00A04562 /* xcrafts-erj-ursa-minor-throttle-profile.h */,
 				F6B520E72FC7676F00A04562 /* xcrafts-erj-ursa-minor-throttle-profile.cpp */,
+				F60F7FDF2FC9B694000EA4E2 /* rotatemd11-ursa-minor-throttle-profile.h */,
+				F60F7FE02FC9B694000EA4E2 /* rotatemd11-ursa-minor-throttle-profile.cpp */,
 			);
 			path = profiles;
 			sourceTree = "<group>";
@@ -927,6 +951,7 @@
 				F6C6E0352E8D5DAA00558F46 /* zibo-pap3-mcp-profile.cpp in Sources */,
 				F60ABAEA2FBE134D001C91EF /* jar330-fmc-profile.cpp in Sources */,
 				F60ABADA2FBDF04F001C91EF /* xcrafts-ejets-fmc-profile.cpp in Sources */,
+				F60F7FDE2FC9B681000EA4E2 /* rotatemd11-agp-profile.cpp in Sources */,
 				F60ABAE62FBDF78D001C91EF /* xcrafts-erj-fcu-efis-profile.cpp in Sources */,
 				F633E3D92FBE25B100CBE019 /* zibo-fcu-efis-profile.cpp in Sources */,
 				F6B149522E4F04AE00FB8395 /* fps748-fmc-profile.cpp in Sources */,
@@ -941,6 +966,7 @@
 				F68164E62E3161FD00319E9D /* usbcontroller.cpp in Sources */,
 				F60ABAEE2FBE1355001C91EF /* jar330-fcu-efis-profile.cpp in Sources */,
 				F6EBDC0D2FC6C740005AFCBD /* xcrafts-erj-agp-profile.cpp in Sources */,
+				F60F7FE12FC9B694000EA4E2 /* rotatemd11-ursa-minor-throttle-profile.cpp in Sources */,
 				F61F8B1E2D0456D700E63C3F /* main.cpp in Sources */,
 				F6C248462EBE498500617E89 /* plugins-menu.cpp in Sources */,
 				F68428662EC63F070027756D /* zibo-ursa-minor-joystick-profile.cpp in Sources */,
@@ -953,12 +979,14 @@
 				F6D8E6CA2ED059390041C4FB /* toliss-ecam-profile.cpp in Sources */,
 				F67FE8142E895BAC00C4243C /* laminar-a333-fcu-efis-profile.cpp in Sources */,
 				F635AD4A2E05819E005D6CDC /* usbdevice_mac.cpp in Sources */,
+				F6C2086A2FC9702A006973EE /* rotatemd11-fcu-efis-profile.cpp in Sources */,
 				F67B29CC2FB71A19004849B1 /* c172-fcu-efis-profile.cpp in Sources */,
 				F67B29CD2FB71A19004849B1 /* cis-seneca-fcu-efis-profile.cpp in Sources */,
 				F647201F2E16CF6D00C9976B /* usbdevice.cpp in Sources */,
 				F67110DE2E5AF429008D493B /* font.cpp in Sources */,
 				F6C69C0E2EC0DAE300BFDA65 /* laminar-737-fcu-efis-profile.cpp in Sources */,
 				F6BBFF0A2ED741B900FE9D7F /* rotatemd11-pap3-mcp-profile.cpp in Sources */,
+				F60F7FDA2FC9B67B000EA4E2 /* rotatemd11-tcas-profile.cpp in Sources */,
 				F6EF56242F0AC43300AB61F1 /* zibo-pdc-profile.cpp in Sources */,
 				F6EF56252F0AC43300AB61F1 /* product-pdc.cpp in Sources */,
 				F6BBFF0B2ED741B900FE9D7F /* ff777-pap3-mcp-profile.cpp in Sources */,
@@ -1017,6 +1045,7 @@
 				F67B29CE2FB71A19004849B1 /* c172-fcu-efis-profile.cpp in Sources */,
 				F67B29CF2FB71A19004849B1 /* cis-seneca-fcu-efis-profile.cpp in Sources */,
 				F6B0007C2F8FE329001FE040 /* product-tcas.cpp in Sources */,
+				F60F7FD92FC9B67B000EA4E2 /* rotatemd11-tcas-profile.cpp in Sources */,
 				F6B0007D2F8FE329001FE040 /* toliss-tcas-profile.cpp in Sources */,
 				F64BE3EB2E1BF625003C1B73 /* usbdevice_win.cpp in Sources */,
 				F6CC2B492F0E4E5100C0A4D8 /* ff777-fcu-efis-profile.cpp in Sources */,
@@ -1045,6 +1074,7 @@
 				F6EBDC052FC6C38F005AFCBD /* xcrafts-ejets-pdc-profile.cpp in Sources */,
 				F6A149322E4F03A400FB8395 /* product-fmc.cpp in Sources */,
 				F67FE8152E895BAC00C4243C /* laminar-a333-fcu-efis-profile.cpp in Sources */,
+				F60F7FDD2FC9B681000EA4E2 /* rotatemd11-agp-profile.cpp in Sources */,
 				F60ABAE52FBDF78D001C91EF /* xcrafts-erj-fcu-efis-profile.cpp in Sources */,
 				F6A149332E4F03A400FB8395 /* toliss-fmc-profile.cpp in Sources */,
 				F6A149342E4F03A400FB8395 /* laminar-a333-fmc-profile.cpp in Sources */,
@@ -1074,6 +1104,7 @@
 				56508BB21D043B1A701D5B0A /* sparky744-pap3-mcp-profile.cpp in Sources */,
 				F6EBDC0C2FC6C740005AFCBD /* xcrafts-erj-agp-profile.cpp in Sources */,
 				F6C6E0312E8D5DAA00558F46 /* laminar-737-pap3-mcp-profile.cpp in Sources */,
+				F6C2086B2FC9702A006973EE /* rotatemd11-fcu-efis-profile.cpp in Sources */,
 				F6C6E0322E8D5DAA00558F46 /* zibo-pap3-mcp-profile.cpp in Sources */,
 				F6CC2B4A2F0E4E5500C0A4D8 /* ff350-fcu-efis-profile.cpp in Sources */,
 				F6CC2B4B2F0E4E5500C0A4D8 /* ff767-fcu-efis-profile.cpp in Sources */,
@@ -1094,6 +1125,7 @@
 				F6F6F4E92EBF976E00321C19 /* ButtonIdentificationView.swift in Sources */,
 				F6AAEE242F261A790020CF32 /* zibo-ursa-minor-throttle-profile.cpp in Sources */,
 				F6AAEE252F261A790020CF32 /* ff777-ursa-minor-throttle-profile.cpp in Sources */,
+				F60F7FE22FC9B694000EA4E2 /* rotatemd11-ursa-minor-throttle-profile.cpp in Sources */,
 				F621F80D2F1C264A00DDB31E /* jf146-fcu-efis-profile.cpp in Sources */,
 				F6F6F4EA2EBF976E00321C19 /* ButtonMapping.swift in Sources */,
 				F6D8E6C72ED059390041C4FB /* product-ecam.cpp in Sources */,

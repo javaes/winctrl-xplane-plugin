@@ -50,6 +50,7 @@ enum class FCUEfisDatarefType : unsigned char {
     SET_VALUE_USING_COMMANDS, // Format: "dataref_to_set,lower_value_cmd,raise_value_cmd"
     TOGGLE_VALUE,
     EXECUTE_CMD_ONCE,
+    EXECUTE_CMD_PHASED,
     BAROMETER_PILOT,
     BAROMETER_FO,
     ADJUST_VALUE,

@@ -15,7 +15,7 @@ enum FMCLed : unsigned char {
     OVERALL_LEDS_BRIGHTNESS = 2,
 
     _PFP_START = 3,
-    PFP_CALL = 3,
+    PFP_CALL_DISPLAY = 3,
     PFP_FAIL = 4,
     PFP_MSG = 5,
     PFP_OFST = 6,

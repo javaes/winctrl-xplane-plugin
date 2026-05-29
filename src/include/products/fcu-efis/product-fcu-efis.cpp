@@ -14,6 +14,7 @@
 #include "profiles/jf146-fcu-efis-profile.h"
 #include "profiles/laminar-737-fcu-efis-profile.h"
 #include "profiles/laminar-a333-fcu-efis-profile.h"
+#include "profiles/rotatemd11-fcu-efis-profile.h"
 #include "profiles/sparky744-fcu-efis-profile.h"
 #include "profiles/toliss-fcu-efis-profile.h"
 #include "profiles/xcrafts-ejets-fcu-efis-profile.h"
@@ -51,7 +52,10 @@ ProductFCUEfis::~ProductFCUEfis() {
 }
 
 void ProductFCUEfis::setProfileForCurrentAircraft() {
-    if (JAR330FCUEfisProfile::IsEligible()) {
+    if (RotateMD11FCUEfisProfile::IsEligible()) {
+        profile = new RotateMD11FCUEfisProfile(this);
+        profileReady = true;
+    } else if (JAR330FCUEfisProfile::IsEligible()) {
         profile = new JAR330FCUEfisProfile(this);
         profileReady = true;
     } else if (FF350FCUEfisProfile::IsEligible()) {

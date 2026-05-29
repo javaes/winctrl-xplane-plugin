@@ -4,6 +4,7 @@
 #include "config.h"
 #include "dataref.h"
 #include "plugins-menu.h"
+#include "profiles/rotatemd11-agp-profile.h"
 #include "profiles/toliss-agp-profile.h"
 #include "profiles/xcrafts-ejets-agp-profile.h"
 #include "profiles/xcrafts-erj-agp-profile.h"
@@ -45,6 +46,9 @@ const char *ProductAGP::activeProfileName() const {
 void ProductAGP::setProfileForCurrentAircraft() {
     if (XCraftsEjetsAGPProfile::IsEligible()) {
         profile = new XCraftsEjetsAGPProfile(this);
+        profileReady = true;
+    } else if (RotateMD11AGPProfile::IsEligible()) {
+        profile = new RotateMD11AGPProfile(this);
         profileReady = true;
     } else if (XCraftsErjAGPProfile::IsEligible()) {
         profile = new XCraftsErjAGPProfile(this);

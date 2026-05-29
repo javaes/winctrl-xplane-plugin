@@ -46,7 +46,7 @@ XCraftsEjetsFMCProfile::XCraftsEjetsFMCProfile(ProductFMC *product) : FMCAircraf
     });
 
     Dataref::getInstance()->monitorExistingDataref<bool>(("XCrafts/FMS/WW_" + cdu + "_CALL").c_str(), [this, product](bool enabled) {
-        product->setLedBrightness(FMCLed::PFP_CALL, (enabled || isAnnunTest()) ? 1 : 0);
+        product->setLedBrightness(FMCLed::PFP_CALL_DISPLAY, (enabled || isAnnunTest()) ? 1 : 0);
         product->setLedBrightness(FMCLed::MCDU_MCDU, (enabled || isAnnunTest()) ? 1 : 0);
     });
 

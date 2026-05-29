@@ -79,21 +79,21 @@ const std::unordered_map<uint16_t, PAP3MCPButtonDef> &RotateMD11PAP3MCPProfile::
     static const std::unordered_map<uint16_t, PAP3MCPButtonDef> buttons = {
         // Row 1 (byte 0x01) - Main autopilot mode buttons
         // Note: MD-11 uses dataref writes instead of commands for buttons
-        {1, {"SPEED (FMS SPD)", "Rotate/aircraft/controls/fgs_fms_spd", PAP3MCPDatarefType::SET_VALUE_PHASED, 1.0}},
-        {2, {"PROF (VNAV)", "Rotate/aircraft/controls/fgs_prof", PAP3MCPDatarefType::SET_VALUE_PHASED, 1.0}},
+        {1, {"SPEED", "Rotate/aircraft/controls/fgs_fms_spd", PAP3MCPDatarefType::SET_VALUE_PHASED, 1.0}},
+        {2, {"PROF", "Rotate/aircraft/controls/fgs_prof", PAP3MCPDatarefType::SET_VALUE_PHASED, 1.0}},
         {3, {"LVL CHG", "Rotate/aircraft/controls/fgs_alt_mode_sel", PAP3MCPDatarefType::SET_VALUE_PHASED, -1.0}},
         {4, {"HDG SEL", "Rotate/aircraft/controls/fgs_hdg_mode_sel", PAP3MCPDatarefType::SET_VALUE_PHASED, -1.0}},
-        {5, {"NAV (LNAV)", "Rotate/aircraft/controls/fgs_nav", PAP3MCPDatarefType::SET_VALUE_PHASED, 1.0}},
-        {7, {"APPR/LAND (APP)", "Rotate/aircraft/controls/fgs_appr_land", PAP3MCPDatarefType::SET_VALUE_PHASED, 1.0}},
+        {5, {"NAV", "Rotate/aircraft/controls/fgs_nav", PAP3MCPDatarefType::SET_VALUE_PHASED, 1.0}},
+        {7, {"APP", "Rotate/aircraft/controls/fgs_appr_land", PAP3MCPDatarefType::SET_VALUE_PHASED, 1.0}},
 
         // Row 2 (byte 0x02) - Additional autopilot buttons
-        {8, {"ALT HOLD", "Rotate/aircraft/controls/fgs_alt_mode_sel", PAP3MCPDatarefType::SET_VALUE_PHASED, 1.0}},
-        {9, {"V/S (FPA)", "Rotate/aircraft/controls/fgs_vs_fpa", PAP3MCPDatarefType::SET_VALUE_PHASED, 1.0}},
-        {10, {"CMD A (AP)", "Rotate/aircraft/controls/fgs_autoflight", PAP3MCPDatarefType::SET_VALUE_PHASED, 1.0}},
-        {11, {"CWS A (AFS OVR 1)", "Rotate/aircraft/controls/fgs_afs_ovrd_off_1", PAP3MCPDatarefType::SET_VALUE_PHASED, 1.0}},
-        {12, {"CMD B (AP)", "Rotate/aircraft/controls/fgs_autoflight", PAP3MCPDatarefType::SET_VALUE_PHASED, 1.0}},
-        {13, {"CWS B (AFS OVR 2)", "Rotate/aircraft/controls/fgs_afs_ovrd_off_2", PAP3MCPDatarefType::SET_VALUE_PHASED, 1.0}},
-        {14, {"C/O (IAS/MACH)", "Rotate/aircraft/controls/fgs_ias_mach", PAP3MCPDatarefType::SET_VALUE_PHASED, 1.0}},
+        {8, {"ALT HLD", "Rotate/aircraft/controls/fgs_alt_mode_sel", PAP3MCPDatarefType::SET_VALUE_PHASED, 1.0}},
+        {9, {"V/S", "Rotate/aircraft/controls/fgs_vs_fpa", PAP3MCPDatarefType::SET_VALUE_PHASED, 1.0}},
+        {10, {"CMD A", "Rotate/aircraft/controls/fgs_autoflight", PAP3MCPDatarefType::SET_VALUE_PHASED, 1.0}},
+        {11, {"CWS A", "Rotate/aircraft/controls/fgs_afs_ovrd_off_1", PAP3MCPDatarefType::SET_VALUE_PHASED, 1.0}},
+        {12, {"CMD B", "Rotate/aircraft/controls/fgs_autoflight", PAP3MCPDatarefType::SET_VALUE_PHASED, 1.0}},
+        {13, {"CWS B", "Rotate/aircraft/controls/fgs_afs_ovrd_off_2", PAP3MCPDatarefType::SET_VALUE_PHASED, 1.0}},
+        {14, {"C/O", "Rotate/aircraft/controls/fgs_ias_mach", PAP3MCPDatarefType::SET_VALUE_PHASED, 1.0}},
         {15, {"SPD INTV", "Rotate/aircraft/controls/fgs_spd_sel_mode", PAP3MCPDatarefType::SET_VALUE_PHASED, -1.0}},
 
         // Row 3 (byte 0x03)

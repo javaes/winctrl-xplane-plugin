@@ -375,12 +375,10 @@ void ProductPAP3MCP::sendLCDDisplay(const std::string &speed, int heading, int a
             if (absV >= 100) {
                 drawDigit(G2, payload, VSPD_HUNDREDS, h);
             }
-            if (absV >= 10) {
+            if (absV >= 10 || absV == 0) {
                 drawDigit(G2, payload, VSPD_TENS, t);
             }
-            if (absV >= 1) {
-                drawDigit(G2, payload, VSPD_UNITS, u);
-            }
+            drawDigit(G2, payload, VSPD_UNITS, u);
 
             const bool neg = (v < 0);
             const bool pos = (v > 0);

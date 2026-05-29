@@ -5,6 +5,7 @@
 #include "dataref.h"
 #include "plugins-menu.h"
 #include "profiles/fps748-tcas-profile.h"
+#include "profiles/rotatemd11-tcas-profile.h"
 #include "profiles/sparky744-tcas-profile.h"
 #include "profiles/toliss-tcas-profile.h"
 #include "profiles/xcrafts-erj-tcas-profile.h"
@@ -47,6 +48,9 @@ const char *ProductTCAS::activeProfileName() const {
 void ProductTCAS::setProfileForCurrentAircraft() {
     if (FPS748TCASProfile::IsEligible()) {
         profile = new FPS748TCASProfile(this);
+        profileReady = true;
+    } else if (RotateMD11TCASProfile::IsEligible()) {
+        profile = new RotateMD11TCASProfile(this);
         profileReady = true;
     } else if (SparkyB744TCASProfile::IsEligible()) {
         profile = new SparkyB744TCASProfile(this);

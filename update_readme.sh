@@ -45,6 +45,7 @@ laminar-citx|Laminar Citation X
 c172|Laminar C172
 sparky744|Sparky 744
 jar330|JarDesign A330
+stratosphere77w|Stratosphere Studios 777-300ER
 "
 
 # Function to get display name

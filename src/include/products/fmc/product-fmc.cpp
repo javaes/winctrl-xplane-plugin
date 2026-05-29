@@ -13,6 +13,7 @@
 #include "profiles/laminar-citx-fmc-profile.h"
 #include "profiles/rotatemd11-fmc-profile.h"
 #include "profiles/sparky744-fmc-profile.h"
+#include "profiles/stratosphere77w-fmc-profile.h"
 #include "profiles/toliss-fmc-profile.h"
 #include "profiles/xcrafts-ejets-fmc-profile.h"
 #include "profiles/xcrafts-erj-fmc-profile.h"
@@ -99,6 +100,10 @@ void ProductFMC::setProfileForCurrentAircraft() {
     } else if (FlightFactor767FMCProfile::IsEligible()) {
         clearDisplay();
         profile = new FlightFactor767FMCProfile(this);
+        profileReady = true;
+    } else if (Strato77WFMCProfile::IsEligible()) {
+        clearDisplay();
+        profile = new Strato77WFMCProfile(this);
         profileReady = true;
     } else if (FlightFactor777FMCProfile::IsEligible()) {
         clearDisplay();

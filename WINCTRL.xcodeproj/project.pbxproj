@@ -90,12 +90,18 @@
 		F67FE8152E895BAC00C4243C /* laminar-a333-fcu-efis-profile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F67FE8132E895BAC00C4243C /* laminar-a333-fcu-efis-profile.cpp */; };
 		F68164E52E3161FD00319E9D /* usbcontroller.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F68164E42E3161FD00319E9D /* usbcontroller.cpp */; };
 		F68164E62E3161FD00319E9D /* usbcontroller.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F68164E42E3161FD00319E9D /* usbcontroller.cpp */; };
+		F681E21E2FC9E5A30009D9FB /* stratosphere77w-fmc-profile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F681E21D2FC9E5A30009D9FB /* stratosphere77w-fmc-profile.cpp */; };
+		F681E21F2FC9E5A30009D9FB /* stratosphere77w-fmc-profile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F681E21D2FC9E5A30009D9FB /* stratosphere77w-fmc-profile.cpp */; };
+		F681E2222FC9E5AE0009D9FB /* stratosphere77w-fcu-efis-profile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F681E2212FC9E5AE0009D9FB /* stratosphere77w-fcu-efis-profile.cpp */; };
+		F681E2232FC9E5AE0009D9FB /* stratosphere77w-fcu-efis-profile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F681E2212FC9E5AE0009D9FB /* stratosphere77w-fcu-efis-profile.cpp */; };
 		F6827E092E05652800382B28 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6827E042E05651E00382B28 /* ContentView.swift */; };
 		F6827E0A2E05652E00382B28 /* WinctrlDesktopApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6827E052E05651E00382B28 /* WinctrlDesktopApp.swift */; };
 		F68428612EC6389D0027756D /* toliss-ursa-minor-joystick-profile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F684285E2EC6389D0027756D /* toliss-ursa-minor-joystick-profile.cpp */; };
 		F68428622EC6389D0027756D /* toliss-ursa-minor-joystick-profile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F684285E2EC6389D0027756D /* toliss-ursa-minor-joystick-profile.cpp */; };
 		F68428652EC63F070027756D /* zibo-ursa-minor-joystick-profile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F68428642EC63F070027756D /* zibo-ursa-minor-joystick-profile.cpp */; };
 		F68428662EC63F070027756D /* zibo-ursa-minor-joystick-profile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F68428642EC63F070027756D /* zibo-ursa-minor-joystick-profile.cpp */; };
+		F68B545A2FCA23E300EB9EB3 /* stratosphere77w-pap3-mcp-profile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F68B54592FCA23E300EB9EB3 /* stratosphere77w-pap3-mcp-profile.cpp */; };
+		F68B545B2FCA23E300EB9EB3 /* stratosphere77w-pap3-mcp-profile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F68B54592FCA23E300EB9EB3 /* stratosphere77w-pap3-mcp-profile.cpp */; };
 		F691E46D2D0338E90000666C /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F691E46C2D0338E90000666C /* CoreFoundation.framework */; };
 		F69FF22D2E1D13CB00F9D2D9 /* GenericDeviceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F69FF2292E1D13CB00F9D2D9 /* GenericDeviceView.swift */; };
 		F69FF22E2E1D13CB00F9D2D9 /* DeviceModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F69FF2282E1D13CB00F9D2D9 /* DeviceModel.swift */; };
@@ -283,6 +289,10 @@
 		F67FE8132E895BAC00C4243C /* laminar-a333-fcu-efis-profile.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "laminar-a333-fcu-efis-profile.cpp"; sourceTree = "<group>"; };
 		F68164E42E3161FD00319E9D /* usbcontroller.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = usbcontroller.cpp; sourceTree = "<group>"; };
 		F681E21B2FC9D8BB0009D9FB /* 747.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = 747.h; sourceTree = "<group>"; };
+		F681E21C2FC9E5A30009D9FB /* stratosphere77w-fmc-profile.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "stratosphere77w-fmc-profile.h"; sourceTree = "<group>"; };
+		F681E21D2FC9E5A30009D9FB /* stratosphere77w-fmc-profile.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "stratosphere77w-fmc-profile.cpp"; sourceTree = "<group>"; };
+		F681E2202FC9E5AE0009D9FB /* stratosphere77w-fcu-efis-profile.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "stratosphere77w-fcu-efis-profile.h"; sourceTree = "<group>"; };
+		F681E2212FC9E5AE0009D9FB /* stratosphere77w-fcu-efis-profile.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "stratosphere77w-fcu-efis-profile.cpp"; sourceTree = "<group>"; };
 		F6827DF82E0564F700382B28 /* WINCTRLDesktop.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WINCTRLDesktop.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F6827E032E05651E00382B28 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		F6827E042E05651E00382B28 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -295,6 +305,8 @@
 		F68428602EC6389D0027756D /* ursa-minor-joystick-aircraft-profile.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ursa-minor-joystick-aircraft-profile.h"; sourceTree = "<group>"; };
 		F68428632EC63F070027756D /* zibo-ursa-minor-joystick-profile.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "zibo-ursa-minor-joystick-profile.h"; sourceTree = "<group>"; };
 		F68428642EC63F070027756D /* zibo-ursa-minor-joystick-profile.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "zibo-ursa-minor-joystick-profile.cpp"; sourceTree = "<group>"; };
+		F68B54582FCA23E300EB9EB3 /* stratosphere77w-pap3-mcp-profile.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "stratosphere77w-pap3-mcp-profile.h"; sourceTree = "<group>"; };
+		F68B54592FCA23E300EB9EB3 /* stratosphere77w-pap3-mcp-profile.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "stratosphere77w-pap3-mcp-profile.cpp"; sourceTree = "<group>"; };
 		F691E46C2D0338E90000666C /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
 		F69BE2962E619CC00019EA48 /* airbus.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = airbus.h; sourceTree = "<group>"; };
 		F69BE2972E61AC210019EA48 /* default.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = default.h; sourceTree = "<group>"; };
@@ -576,6 +588,8 @@
 				F60ABADC2FBDF33E001C91EF /* xcrafts-erj-fmc-profile.cpp */,
 				F60ABAE72FBE134D001C91EF /* jar330-fmc-profile.h */,
 				F60ABAE82FBE134D001C91EF /* jar330-fmc-profile.cpp */,
+				F681E21C2FC9E5A30009D9FB /* stratosphere77w-fmc-profile.h */,
+				F681E21D2FC9E5A30009D9FB /* stratosphere77w-fmc-profile.cpp */,
 			);
 			path = profiles;
 			sourceTree = "<group>";
@@ -705,6 +719,8 @@
 				F633E3D82FBE25B100CBE019 /* zibo-fcu-efis-profile.cpp */,
 				F6C208682FC9702A006973EE /* rotatemd11-fcu-efis-profile.h */,
 				F6C208692FC9702A006973EE /* rotatemd11-fcu-efis-profile.cpp */,
+				F681E2202FC9E5AE0009D9FB /* stratosphere77w-fcu-efis-profile.h */,
+				F681E2212FC9E5AE0009D9FB /* stratosphere77w-fcu-efis-profile.cpp */,
 			);
 			path = profiles;
 			sourceTree = "<group>";
@@ -739,6 +755,8 @@
 				F60ABAD02FBDF034001C91EF /* xcrafts-ejets-pap3-mcp-profile.cpp */,
 				F60ABADF2FBDF352001C91EF /* xcrafts-erj-pap3-mcp-profile.h */,
 				F60ABAE02FBDF352001C91EF /* xcrafts-erj-pap3-mcp-profile.cpp */,
+				F68B54582FCA23E300EB9EB3 /* stratosphere77w-pap3-mcp-profile.h */,
+				F68B54592FCA23E300EB9EB3 /* stratosphere77w-pap3-mcp-profile.cpp */,
 			);
 			path = profiles;
 			sourceTree = "<group>";
@@ -957,6 +975,7 @@
 				F60ABAE62FBDF78D001C91EF /* xcrafts-erj-fcu-efis-profile.cpp in Sources */,
 				F633E3D92FBE25B100CBE019 /* zibo-fcu-efis-profile.cpp in Sources */,
 				F6B149522E4F04AE00FB8395 /* fps748-fmc-profile.cpp in Sources */,
+				F681E2232FC9E5AE0009D9FB /* stratosphere77w-fcu-efis-profile.cpp in Sources */,
 				E164E7F621BA6932F4BE9D64 /* sparky744-fmc-profile.cpp in Sources */,
 				F6A1493F2E4F04AE00FB8395 /* ff777-fmc-profile.cpp in Sources */,
 				F60ABACD2FBDF029001C91EF /* xcrafts-ejets-fcu-efis-profile.cpp in Sources */,
@@ -1008,6 +1027,8 @@
 				F60ABAD12FBDF034001C91EF /* xcrafts-ejets-pap3-mcp-profile.cpp in Sources */,
 				5D2C5F88110970AC7E4A6F6C /* sparky744-tcas-profile.cpp in Sources */,
 				8321A6022ED27B1E00E3746A /* ff777-fcu-efis-profile.cpp in Sources */,
+				F681E21F2FC9E5A30009D9FB /* stratosphere77w-fmc-profile.cpp in Sources */,
+				F68B545A2FCA23E300EB9EB3 /* stratosphere77w-pap3-mcp-profile.cpp in Sources */,
 				F671B5DF2EA96BBE00141EF2 /* rotatemd11-fmc-profile.cpp in Sources */,
 				83124BD02EE0A3D700C34D9D /* ff767-fcu-efis-profile.cpp in Sources */,
 				F6748A012F0000010000A001 /* fps748-fcu-efis-profile.cpp in Sources */,
@@ -1043,6 +1064,7 @@
 				F6827E0A2E05652E00382B28 /* WinctrlDesktopApp.swift in Sources */,
 				F6EBDC152FC6CFD1005AFCBD /* zibo-agp-profile.cpp in Sources */,
 				F6EBDC112FC6CA46005AFCBD /* xcrafts-ejets-agp-profile.cpp in Sources */,
+				F68B545B2FCA23E300EB9EB3 /* stratosphere77w-pap3-mcp-profile.cpp in Sources */,
 				F635AD4B2E05819E005D6CDC /* usbdevice_mac.cpp in Sources */,
 				F67B29CE2FB71A19004849B1 /* c172-fcu-efis-profile.cpp in Sources */,
 				F67B29CF2FB71A19004849B1 /* cis-seneca-fcu-efis-profile.cpp in Sources */,
@@ -1101,6 +1123,7 @@
 				F6BBFF082ED741B900FE9D7F /* rotatemd11-pap3-mcp-profile.cpp in Sources */,
 				F6BBFF092ED741B900FE9D7F /* ff777-pap3-mcp-profile.cpp in Sources */,
 				F6FDC3D02F3E129F008E66F5 /* ff777-ursa-minor-joystick-profile.cpp in Sources */,
+				F681E21E2FC9E5A30009D9FB /* stratosphere77w-fmc-profile.cpp in Sources */,
 				F6C6E0302E8D5DAA00558F46 /* product-pap3-mcp.cpp in Sources */,
 				F60ABAC12FBDA042001C91EF /* fps748-pap3-mcp-profile.cpp in Sources */,
 				56508BB21D043B1A701D5B0A /* sparky744-pap3-mcp-profile.cpp in Sources */,
@@ -1121,6 +1144,7 @@
 				F60ABACE2FBDF029001C91EF /* xcrafts-ejets-fcu-efis-profile.cpp in Sources */,
 				F67961962E31357E008031F1 /* usbdevice_lin.cpp in Sources */,
 				F635AD422E05697B005D6CDC /* bridge.mm in Sources */,
+				F681E2222FC9E5AE0009D9FB /* stratosphere77w-fcu-efis-profile.cpp in Sources */,
 				F60ABAC52FBDA135001C91EF /* fps748-tcas-profile.cpp in Sources */,
 				D367AF53D692BF6AED261171 /* sparky744-tcas-profile.cpp in Sources */,
 				F6A77E792ED3620600061D03 /* segment-display.cpp in Sources */,

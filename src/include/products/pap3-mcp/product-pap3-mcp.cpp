@@ -10,6 +10,7 @@
 #include "profiles/laminar-737-pap3-mcp-profile.h"
 #include "profiles/rotatemd11-pap3-mcp-profile.h"
 #include "profiles/sparky744-pap3-mcp-profile.h"
+#include "profiles/stratosphere77w-pap3-mcp-profile.h"
 #include "profiles/xcrafts-ejets-pap3-mcp-profile.h"
 #include "profiles/xcrafts-erj-pap3-mcp-profile.h"
 #include "profiles/zibo-pap3-mcp-profile.h"
@@ -57,6 +58,8 @@ void ProductPAP3MCP::setProfileForCurrentAircraft() {
     } else if (XCraftsErjPAP3MCPProfile::IsEligible()) {
         profile = new XCraftsErjPAP3MCPProfile(this);
         profileReady = true;
+    } else if (Strato77WPAP3MCPProfile::IsEligible()) {
+        profile = new Strato77WPAP3MCPProfile(this);
     } else if (FF777PAP3MCPProfile::IsEligible()) {
         profile = new FF777PAP3MCPProfile(this);
         profileReady = true;

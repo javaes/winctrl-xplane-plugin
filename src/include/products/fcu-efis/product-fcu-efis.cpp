@@ -16,6 +16,7 @@
 #include "profiles/laminar-a333-fcu-efis-profile.h"
 #include "profiles/rotatemd11-fcu-efis-profile.h"
 #include "profiles/sparky744-fcu-efis-profile.h"
+#include "profiles/stratosphere77w-fcu-efis-profile.h"
 #include "profiles/toliss-fcu-efis-profile.h"
 #include "profiles/xcrafts-ejets-fcu-efis-profile.h"
 #include "profiles/xcrafts-erj-fcu-efis-profile.h"
@@ -78,6 +79,9 @@ void ProductFCUEfis::setProfileForCurrentAircraft() {
         profileReady = true;
     } else if (LaminarA333FCUEfisProfile::IsEligible()) {
         profile = new LaminarA333FCUEfisProfile(this);
+        profileReady = true;
+    } else if (Strato77WFCUEfisProfile::IsEligible()) {
+        profile = new Strato77WFCUEfisProfile(this);
         profileReady = true;
     } else if (FF777FCUEfisProfile::IsEligible()) {
         profile = new FF777FCUEfisProfile(this);

@@ -1,19 +1,19 @@
-#include "product-ursa-minor-joystick.h"
+#include "product-joystick.h"
 
 #include "appstate.h"
 #include "dataref.h"
 #include "plugins-menu.h"
-#include "profiles/toliss-ursa-minor-joystick-profile.h"
-#include "profiles/zibo-ursa-minor-joystick-profile.h"
+#include "profiles/toliss-joystick-profile.h"
+#include "profiles/zibo-joystick-profile.h"
 
 #include <algorithm>
 #include <cmath>
 
-ProductUrsaMinorJoystick::ProductUrsaMinorJoystick(HIDDeviceHandle hidDevice, uint16_t vendorId, uint16_t productId, std::string vendorName, std::string productName, unsigned char identifierByte) : USBDevice(hidDevice, vendorId, productId, vendorName, productName), identifierByte(identifierByte) {
+ProductJoystick::ProductJoystick(HIDDeviceHandle hidDevice, uint16_t vendorId, uint16_t productId, std::string vendorName, std::string productName, unsigned char identifierByte, unsigned char motorCode) : USBDevice(hidDevice, vendorId, productId, vendorName, productName), identifierByte(identifierByte), motorCode(motorCode) {
     connect();
 }
 
-ProductUrsaMinorJoystick::~ProductUrsaMinorJoystick() {
+ProductJoystick::~ProductJoystick() {
     blackout();
 
     PluginsMenu::getInstance()->removeItem(menuItemId);
@@ -24,25 +24,35 @@ ProductUrsaMinorJoystick::~ProductUrsaMinorJoystick() {
     }
 }
 
-const char *ProductUrsaMinorJoystick::classIdentifier() {
-    return "Ursa Minor Joystick";
+const char *ProductJoystick::classIdentifier() {
+    switch (productId) {
+        case 0xBC27:
+        case 0xBC28:
+        case 0xBC2A:
+        case 0xBC29:
+            return "Ursa Minor Joystick";
+        case 0xBEA8:
+            return "Orion Joystick";
+        default:
+            return "Joystick";
+    }
 }
 
-const char *ProductUrsaMinorJoystick::activeProfileName() const {
+const char *ProductJoystick::activeProfileName() const {
     return profile ? typeid(*profile).name() : "none";
 }
 
-void ProductUrsaMinorJoystick::setProfileForCurrentAircraft() {
-    if (TolissUrsaMinorJoystickProfile::IsEligible()) {
-        profile = new TolissUrsaMinorJoystickProfile(this);
-    } else if (ZiboUrsaMinorJoystickProfile::IsEligible()) {
-        profile = new ZiboUrsaMinorJoystickProfile(this);
+void ProductJoystick::setProfileForCurrentAircraft() {
+    if (TolissJoystickProfile::IsEligible()) {
+        profile = new TolissJoystickProfile(this);
+    } else if (ZiboJoystickProfile::IsEligible()) {
+        profile = new ZiboJoystickProfile(this);
     } else {
         profile = nullptr;
     }
 }
 
-bool ProductUrsaMinorJoystick::connect() {
+bool ProductJoystick::connect() {
     if (!USBDevice::connect()) {
         return false;
     }
@@ -52,8 +62,6 @@ bool ProductUrsaMinorJoystick::connect() {
 
     setProfileForCurrentAircraft();
 
-    // Even if no specific profile was found, we consider the device ready to use.
-    // This will enable the plugin to wake up and update - the vibration needs this.
     profileReady = true;
 
     std::string vibrationSetting = AppState::getInstance()->readPreference("JoystickVibration", "normal");
@@ -117,12 +125,12 @@ bool ProductUrsaMinorJoystick::connect() {
     return true;
 }
 
-void ProductUrsaMinorJoystick::blackout() {
+void ProductJoystick::blackout() {
     setLedBrightness(0);
     setVibration(0);
 }
 
-void ProductUrsaMinorJoystick::update() {
+void ProductJoystick::update() {
     if (!connected) {
         return;
     }
@@ -154,15 +162,19 @@ void ProductUrsaMinorJoystick::update() {
     }
 }
 
-void ProductUrsaMinorJoystick::setVibration(uint8_t vibration) {
+void ProductJoystick::setVibration(uint8_t vibration) {
     if (vibrationMultiplier <= std::numeric_limits<float>::epsilon()) {
         return;
     }
 
-    writeData({0x02, identifierByte, 0xBF, 0x00, 0x00, 0x03, 0x49, 0x00, vibration, 0x00, 0x00, 0x00, 0x00, 0x00});
+    writeData({0x02, identifierByte, motorCode, 0x00, 0x00, 0x03, 0x49, 0x00, vibration, 0x00, 0x00, 0x00, 0x00, 0x00});
 }
 
-void ProductUrsaMinorJoystick::setLedBrightness(uint8_t brightness) {
+void ProductJoystick::testVibration(uint8_t testIdentifier, uint8_t motorCodeTest) {
+    writeData({0x02, testIdentifier, motorCodeTest, 0x00, 0x00, 0x03, 0x49, 0x00, 0x80, 0x00, 0x00, 0x00, 0x00, 0x00});
+}
+
+void ProductJoystick::setLedBrightness(uint8_t brightness) {
     if (AppState::getInstance()->readPreference("JoystickLighting", "enabled") == "disabled") {
         brightness = 0;
     }
@@ -170,7 +182,7 @@ void ProductUrsaMinorJoystick::setLedBrightness(uint8_t brightness) {
     writeData({0x02, 0x20, 0xBB, 0x00, 0x00, 0x03, 0x49, 0x00, brightness, 0x00, 0x00, 0x00, 0x00, 0x00});
 }
 
-void ProductUrsaMinorJoystick::loadVibrationSetting(const std::string &preference) {
+void ProductJoystick::loadVibrationSetting(const std::string &preference) {
     if (preference == "disabled") {
         vibrationMultiplier = 1.0f;
         setVibration(0);

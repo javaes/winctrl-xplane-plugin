@@ -7,9 +7,10 @@
 #include "product-fmc.h"
 #include "product-pap3-mcp.h"
 #include "product-pdc.h"
+#include "product-rmp.h"
 #include "product-tcas.h"
-#include "product-ursa-minor-joystick.h"
 #include "product-ursa-minor-throttle.h"
+#include "product-joystick.h"
 
 #include <XPLMUtilities.h>
 
@@ -25,23 +26,28 @@ USBDevice *USBDevice::Device(HIDDeviceHandle hidDevice, uint16_t vendorId, uint1
     switch (productId) {
         case 0xBC27: { // URSA MINOR Airline Joystick L
             constexpr uint8_t identifierByte = 0x07;
-            return new ProductUrsaMinorJoystick(hidDevice, vendorId, productId, vendorName, productName, identifierByte);
+            constexpr uint8_t motorCode = 0xBF;
+            return new ProductJoystick(hidDevice, vendorId, productId, vendorName, productName, identifierByte, motorCode);
         }
         case 0xBC28: { // URSA MINOR Airline Joystick R
             constexpr uint8_t identifierByte = 0x08;
-            return new ProductUrsaMinorJoystick(hidDevice, vendorId, productId, vendorName, productName, identifierByte);
+            constexpr uint8_t motorCode = 0xBF;
+            return new ProductJoystick(hidDevice, vendorId, productId, vendorName, productName, identifierByte, motorCode);
         }
         case 0xBC2A: { // URSA MINOR Fighter Joystick L
             constexpr uint8_t identifierByte = 0x0A;
-            return new ProductUrsaMinorJoystick(hidDevice, vendorId, productId, vendorName, productName, identifierByte);
+            constexpr uint8_t motorCode = 0xBF;
+            return new ProductJoystick(hidDevice, vendorId, productId, vendorName, productName, identifierByte, motorCode);
         }
         case 0xBC29: { // URSA MINOR Fighter Joystick R
             constexpr uint8_t identifierByte = 0x09;
-            return new ProductUrsaMinorJoystick(hidDevice, vendorId, productId, vendorName, productName, identifierByte);
+            constexpr uint8_t motorCode = 0xBF;
+            return new ProductJoystick(hidDevice, vendorId, productId, vendorName, productName, identifierByte, motorCode);
         }
-        case 0xBEA8: { // Orion Joystick Base 2 + JGRIP-F16
-            constexpr uint8_t identifierByte = 0x08;
-            return new ProductUrsaMinorJoystick(hidDevice, vendorId, productId, vendorName, productName, identifierByte);
+        case 0xBEA8: { // WINWING Orion Joystick Base 2 + JGRIP-F16
+            constexpr uint8_t identifierByte = 0x01;
+            constexpr uint8_t motorCode = 0x00;
+            return new ProductJoystick(hidDevice, vendorId, productId, vendorName, productName, identifierByte, motorCode);
         }
 
         case 0xBB36: { // MCDU-32 (Captain)
@@ -133,6 +139,13 @@ USBDevice *USBDevice::Device(HIDDeviceHandle hidDevice, uint16_t vendorId, uint1
 
         case 0xBB81: // TCAS
             return new ProductTCAS(hidDevice, vendorId, productId, vendorName, productName);
+
+            // case 0xBBXX: // RMP L (Captain)
+            //     return new ProductRMP(hidDevice, vendorId, productId, vendorName, productName, RMPDeviceVariant::VARIANT_CAPTAIN);
+            // case 0xBBXX: // RMP C (Stby)
+            //     return new ProductRMP(hidDevice, vendorId, productId, vendorName, productName, RMPDeviceVariant::VARIANT_STBY);
+            // case 0xBBXX: // RMP R (First Officer)
+            //     return new ProductRMP(hidDevice, vendorId, productId, vendorName, productName, RMPDeviceVariant::VARIANT_FIRSTOFFICER);
 
         case 0xB920: // URSA MINOR 32 Throttle Metal L
         case 0xB930: // URSA MINOR 32 Throttle Metal R

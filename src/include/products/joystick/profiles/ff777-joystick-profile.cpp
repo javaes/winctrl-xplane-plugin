@@ -1,24 +1,25 @@
-#include "ff777-ursa-minor-joystick-profile.h"
+#include "ff777-joystick-profile.h"
 
 #include "appstate.h"
 #include "dataref.h"
-#include "product-ursa-minor-joystick.h"
+#include "product-joystick.h"
 
 #include <algorithm>
 #include <cmath>
 
-FF777UrsaMinorJoystickProfile::FF777UrsaMinorJoystickProfile(ProductUrsaMinorJoystick *product) : UrsaMinorJoystickAircraftProfile(product) {
-    Dataref::getInstance()->monitorExistingDataref<std::vector<float>>("laminar/B738/electric/panel_brightness", [product](const std::vector<float> &panelBrightness) {
+FF777JoystickProfile::FF777JoystickProfile(USBDevice *product) : JoystickAircraftProfile(product) {
+    auto joystick = static_cast<ProductJoystick *>(product);
+    Dataref::getInstance()->monitorExistingDataref<std::vector<float>>("laminar/B738/electric/panel_brightness", [joystick](const std::vector<float> &panelBrightness) {
         if (panelBrightness.size() < 4) {
             return;
         }
 
         bool hasPower = Dataref::getInstance()->get<bool>("sim/cockpit/electrical/avionics_on");
         uint8_t target = hasPower ? panelBrightness[3] * 255 : 0;
-        product->setLedBrightness(target);
+        joystick->setLedBrightness(target);
 
         if (!hasPower) {
-            product->setVibration(0);
+            joystick->setVibration(0);
         }
     });
 
@@ -27,12 +28,12 @@ FF777UrsaMinorJoystickProfile::FF777UrsaMinorJoystickProfile(ProductUrsaMinorJoy
     });
 }
 
-FF777UrsaMinorJoystickProfile::~FF777UrsaMinorJoystickProfile() {
+FF777JoystickProfile::~FF777JoystickProfile() {
     Dataref::getInstance()->unbind("sim/cockpit/electrical/avionics_on");
     Dataref::getInstance()->unbind("laminar/B738/electric/panel_brightness");
     Dataref::getInstance()->unbind("sim/flightmodel/failures/onground_any");
 }
 
-bool FF777UrsaMinorJoystickProfile::IsEligible() {
+bool FF777JoystickProfile::IsEligible() {
     return Dataref::getInstance()->exists("laminar/B738/electric/panel_brightness");
 }

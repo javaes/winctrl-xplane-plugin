@@ -1,12 +1,12 @@
-#ifndef PRODUCT_URSA_MINOR_JOYSTICK_H
-#define PRODUCT_URSA_MINOR_JOYSTICK_H
+#ifndef PRODUCT_JOYSTICK_H
+#define PRODUCT_JOYSTICK_H
 
-#include "ursa-minor-joystick-aircraft-profile.h"
+#include "joystick-aircraft-profile.h"
 #include "usbdevice.h"
 
-class ProductUrsaMinorJoystick : public USBDevice {
+class ProductJoystick : public USBDevice {
     private:
-        UrsaMinorJoystickAircraftProfile *profile;
+        JoystickAircraftProfile *profile;
         int menuItemId;
 
         int lastVibration = 0;
@@ -16,10 +16,11 @@ class ProductUrsaMinorJoystick : public USBDevice {
         void loadVibrationSetting(const std::string &preference);
 
     public:
-        ProductUrsaMinorJoystick(HIDDeviceHandle hidDevice, uint16_t vendorId, uint16_t productId, std::string vendorName, std::string productName, unsigned char identifierByte);
-        ~ProductUrsaMinorJoystick();
+        ProductJoystick(HIDDeviceHandle hidDevice, uint16_t vendorId, uint16_t productId, std::string vendorName, std::string productName, unsigned char identifierByte, unsigned char motorCode);
+        ~ProductJoystick();
 
         const unsigned char identifierByte;
+        const unsigned char motorCode;
         float vibrationMultiplier;
 
         const char *classIdentifier() override;
@@ -29,6 +30,7 @@ class ProductUrsaMinorJoystick : public USBDevice {
         void blackout() override;
 
         void setVibration(uint8_t vibration);
+        void testVibration(uint8_t testIdentifier, uint8_t motorCode);
         void setLedBrightness(uint8_t brightness);
 };
 

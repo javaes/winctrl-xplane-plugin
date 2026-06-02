@@ -22,6 +22,7 @@ DEVICE_NAMES="
 0|ecam|32 ECAM
 0|agp|32 AGP Metal
 0|tcas|32 TCAS
+0|rmp|32 RMP
 0|ursa-minor-throttle|URSA MINOR 32 Throttle Metal (+ optional 32 PAC Metal)
 "
 

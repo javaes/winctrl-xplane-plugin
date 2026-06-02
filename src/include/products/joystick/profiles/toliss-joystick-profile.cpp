@@ -1,20 +1,21 @@
-#include "toliss-ursa-minor-joystick-profile.h"
+#include "toliss-joystick-profile.h"
 
 #include "appstate.h"
 #include "dataref.h"
-#include "product-ursa-minor-joystick.h"
+#include "product-joystick.h"
 
 #include <algorithm>
 #include <cmath>
 
-TolissUrsaMinorJoystickProfile::TolissUrsaMinorJoystickProfile(ProductUrsaMinorJoystick *product) : UrsaMinorJoystickAircraftProfile(product) {
-    Dataref::getInstance()->monitorExistingDataref<float>("AirbusFBW/PanelBrightnessLevel", [product](float brightness) {
+TolissJoystickProfile::TolissJoystickProfile(USBDevice *product) : JoystickAircraftProfile(product) {
+    auto joystick = static_cast<ProductJoystick *>(product);
+    Dataref::getInstance()->monitorExistingDataref<float>("AirbusFBW/PanelBrightnessLevel", [joystick](float brightness) {
         bool hasPower = Dataref::getInstance()->get<bool>("sim/cockpit/electrical/avionics_on");
         uint8_t target = hasPower ? brightness * 255 : 0;
-        product->setLedBrightness(target);
+        joystick->setLedBrightness(target);
 
         if (!hasPower) {
-            product->setVibration(0);
+            joystick->setVibration(0);
         }
     });
 
@@ -23,12 +24,12 @@ TolissUrsaMinorJoystickProfile::TolissUrsaMinorJoystickProfile(ProductUrsaMinorJ
     });
 }
 
-TolissUrsaMinorJoystickProfile::~TolissUrsaMinorJoystickProfile() {
+TolissJoystickProfile::~TolissJoystickProfile() {
     Dataref::getInstance()->unbind("sim/cockpit/electrical/avionics_on");
     Dataref::getInstance()->unbind("AirbusFBW/PanelBrightnessLevel");
     Dataref::getInstance()->unbind("sim/flightmodel/failures/onground_any");
 }
 
-bool TolissUrsaMinorJoystickProfile::IsEligible() {
+bool TolissJoystickProfile::IsEligible() {
     return Dataref::getInstance()->exists("AirbusFBW/PanelBrightnessLevel");
 }

@@ -40,6 +40,10 @@ XCraftsEjetsFCUEfisProfile::XCraftsEjetsFCUEfisProfile(ProductFCUEfis *product) 
         product->setLedBrightness(FCUEfisLed::ATHR_GREEN, (active == 1 || isAnnunTest()) ? 1 : 0);
     });
 
+    Dataref::getInstance()->monitorExistingDataref<int>("sim/cockpit2/autopilot/st55_apr", [this, product](int active) {
+        product->setLedBrightness(FCUEfisLed::APPR_GREEN, (active == 1 || isAnnunTest()) ? 1 : 0);
+    });
+
     Dataref::getInstance()->monitorExistingDataref<bool>("XCrafts/ERJ/cockpit/annunciators_test", [this](bool) {
         Dataref::getInstance()->executeChangedCallbacksForDataref("sim/cockpit/autopilot/autopilot_mode");
         Dataref::getInstance()->executeChangedCallbacksForDataref("XCrafts/ERJ/autothrottle_armed");
@@ -52,6 +56,7 @@ XCraftsEjetsFCUEfisProfile::~XCraftsEjetsFCUEfisProfile() {
     Dataref::getInstance()->unbind("sim/cockpit/autopilot/autopilot_mode");
     Dataref::getInstance()->unbind("XCrafts/ERJ/autothrottle_armed");
     Dataref::getInstance()->unbind("XCrafts/ERJ/autopilot/autothrottle_system_active");
+    Dataref::getInstance()->unbind("sim/cockpit2/autopilot/st55_apr");
     Dataref::getInstance()->unbind("XCrafts/ERJ/cockpit/annunciators_test");
 }
 
@@ -82,6 +87,7 @@ const std::vector<std::string> &XCraftsEjetsFCUEfisProfile::displayDatarefs() co
 
         "sim/cockpit2/autopilot/st55_nav",
         "sim/cockpit2/autopilot/st55_vs",
+        "sim/cockpit2/autopilot/st55_apr",
     };
 
     return datarefs;

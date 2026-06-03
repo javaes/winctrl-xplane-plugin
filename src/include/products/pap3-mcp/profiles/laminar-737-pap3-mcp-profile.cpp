@@ -32,7 +32,7 @@ Laminar737PAP3MCPProfile::~Laminar737PAP3MCPProfile() {
 }
 
 bool Laminar737PAP3MCPProfile::IsEligible() {
-    return true;
+    return Dataref::getInstance()->exists("laminar/B738/autopilot/cmd_a_status") && Dataref::getInstance()->exists("zibomod/Aircraft_Path") == false;
 }
 
 const std::vector<std::string> &Laminar737PAP3MCPProfile::displayDatarefs() const {

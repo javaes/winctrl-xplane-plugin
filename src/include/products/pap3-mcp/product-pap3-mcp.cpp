@@ -66,14 +66,14 @@ void ProductPAP3MCP::setProfileForCurrentAircraft() {
     } else if (RotateMD11PAP3MCPProfile::IsEligible()) {
         profile = new RotateMD11PAP3MCPProfile(this);
         profileReady = true;
-    } else if (Laminar737PAP3MCPProfile::IsEligible()) {
-        profile = new Laminar737PAP3MCPProfile(this);
-        profileReady = true;
     } else if (FPS748PAP3MCPProfile::IsEligible()) {
         profile = new FPS748PAP3MCPProfile(this);
         profileReady = true;
     } else if (SparkyB744PAP3MCPProfile::IsEligible()) {
         profile = new SparkyB744PAP3MCPProfile(this);
+        profileReady = true;
+    } else if (Laminar737PAP3MCPProfile::IsEligible()) {
+        profile = new Laminar737PAP3MCPProfile(this);
         profileReady = true;
     } else {
         profile = nullptr;

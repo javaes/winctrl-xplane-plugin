@@ -116,15 +116,7 @@ Laminar737FCUEfisProfile::~Laminar737FCUEfisProfile() {
 }
 
 bool Laminar737FCUEfisProfile::IsEligible() {
-    // Check if it's a 737 by looking for ICAO code
-    std::string icao = Dataref::getInstance()->get<std::string>("sim/aircraft/view/acf_ICAO");
-
-    // Check for 737 variants (B731, B732, B733, B734, B735, B736, B737, B738, B739, etc.)
-    if (icao.starts_with("B73")) {
-        return true;
-    }
-
-    return false;
+    return Dataref::getInstance()->exists("laminar/B738/autopilot/cmd_a_status") && Dataref::getInstance()->exists("zibomod/Aircraft_Path") == false;
 }
 
 const std::vector<std::string> &Laminar737FCUEfisProfile::displayDatarefs() const {

@@ -44,65 +44,60 @@ const std::unordered_map<PDCButtonIndex3N3M, PDCButtonDef> &FPS748PDCProfile::bu
     std::string prefix = isSSG ? "SSG" : "FPS";
     bool isCaptain = product->deviceVariant == PDCDeviceVariant::VARIANT_3N_CAPTAIN || product->deviceVariant == PDCDeviceVariant::VARIANT_3M_CAPTAIN;
     std::string side = isCaptain ? "pilot" : "copilot";
-    std::string vorAdf1 = isCaptain ? (prefix + "/B748/MCP/ap_vor_adf1") : (prefix + "/B748/MCP/ap_CP_vor_adf1");
-    std::string vorAdf2 = isCaptain ? (prefix + "/B748/MCP/ap_vor_adf2") : (prefix + "/B748/MCP/ap_CP_vor_adf2");
-    std::string baroStd = isCaptain ? "FPS/PFD/baro_standard" : "FPS/PFD/baro_standard2";
-    std::string modeRef = prefix + "/B748/ND/mode_" + side;
-    std::string rangeRef = prefix + "/B748/ND/range_" + side;
 
     int cacheKey = (static_cast<int>(product->deviceVariant) << 1) | (isSSG ? 1 : 0);
     static std::unordered_map<int, std::unordered_map<PDCButtonIndex3N3M, PDCButtonDef>> cache;
 
     return cache.try_emplace(cacheKey,
                     std::unordered_map<PDCButtonIndex3N3M, PDCButtonDef>{
-                        {{0, 0},   {"FPV",                prefix + "/B748/PFD/fpv_sw_" + side,                    PDCDatarefType::SET_VALUE_MOMENTARY, 1.0}},
-                        {{1, 1},   {"MTRS",               "FPS/PFD/meters_sw_" + side,                            PDCDatarefType::SET_VALUE_MOMENTARY, 1.0}},
-                        {{-1, 2},  {"3M VSD",             ""}},
-                        {{2, 3},   {"WXR",                prefix + "/B748/ND/show_wheather_" + side + "_sw",      PDCDatarefType::SET_VALUE_MOMENTARY, 1.0}},
-                        {{3, 4},   {"STA",                prefix + "/B748/ND/show_VOR_" + side + "_sw",           PDCDatarefType::SET_VALUE_MOMENTARY, 1.0}},
-                        {{4, 5},   {"WPT",                prefix + "/B748/ND/show_waypoint_" + side + "_sw",      PDCDatarefType::SET_VALUE_MOMENTARY, 1.0}},
-                        {{5, 6},   {"ARPT",               prefix + "/B748/ND/show_airport_" + side + "_sw",       PDCDatarefType::SET_VALUE_MOMENTARY, 1.0}},
-                        {{6, 7},   {"DATA",               prefix + "/B748/ND/show_NDB_" + side + "_sw",           PDCDatarefType::SET_VALUE_MOMENTARY, 1.0}},
-                        {{7, 8},   {"POS",                prefix + "/B748/ND/show_POS_" + side + "_sw",           PDCDatarefType::SET_VALUE_MOMENTARY, 1.0}},
-                        {{8, 9},   {"TERR",               prefix + "/B748/ND/show_Terr_" + side + "_sw",          PDCDatarefType::SET_VALUE_MOMENTARY, 1.0}},
-                        {{9, 10},  {"LEFT VOR1",          vorAdf1,                                                  PDCDatarefType::SET_VALUE,           1.0}},
-                        {{10, 11}, {"LEFT OFF",           vorAdf1,                                                  PDCDatarefType::SET_VALUE,           0.0}},
-                        {{11, 12}, {"LEFT ADF1",          vorAdf1,                                                  PDCDatarefType::SET_VALUE,           -1.0}},
-                        {{12, 13}, {"RIGHT VOR2",         vorAdf2,                                                  PDCDatarefType::SET_VALUE,           1.0}},
-                        {{13, 14}, {"RIGHT OFF",          vorAdf2,                                                  PDCDatarefType::SET_VALUE,           0.0}},
-                        {{14, 15}, {"RIGHT ADF2",         vorAdf2,                                                  PDCDatarefType::SET_VALUE,           -1.0}},
-                        {{15, 16}, {"Mins RST",           ""}},
-                        {{16, 17}, {"VOR MAP CTR",        prefix + "/B748/ND/CRT_" + side + "_sw",                PDCDatarefType::SET_VALUE_MOMENTARY, 1.0}},
-                        {{17, 18}, {"RANGE TFC",          prefix + "/B748/ND/show_TCAS_" + side + "_sw",          PDCDatarefType::SET_VALUE_MOMENTARY, 1.0}},
-                        {{18, 19}, {"Baro STD",           baroStd,                                                  PDCDatarefType::SET_VALUE,           1.0}},
-                        {{-1, 20}, {"3M Range Minus",     ""}},
-                        {{-1, 21}, {"3M Range Plus",      ""}},
-                        {{21, 22}, {"Baro knob left fast", "custom",                                               PDCDatarefType::ADD_BARO_REPEATING,  -1.0}},
-                        {{22, 23}, {"Baro knob right fast","custom",                                               PDCDatarefType::ADD_BARO_REPEATING,   1.0}},
-                        {{23, 24}, {"Mins RADIO",         "FPS/AP/ra_baro_sel",                                    PDCDatarefType::SET_VALUE,           0.0}},
-                        {{24, 25}, {"Mins BARO",          "FPS/AP/ra_baro_sel",                                    PDCDatarefType::SET_VALUE,           1.0}},
-                        {{25, 26}, {"Baro inHg",          "FPS/PFD/baro_type_sw",                                  PDCDatarefType::SET_VALUE,           0.0}},
-                        {{26, 27}, {"Baro HPA",           "FPS/PFD/baro_type_sw",                                  PDCDatarefType::SET_VALUE,           1.0}},
-                        {{27, 28}, {"Map APP",            modeRef,                                                  PDCDatarefType::SET_VALUE,           0.0}},
-                        {{28, 29}, {"Map VOR",            modeRef,                                                  PDCDatarefType::SET_VALUE,           1.0}},
-                        {{29, 30}, {"Map MAP",            modeRef,                                                  PDCDatarefType::SET_VALUE,           2.0}},
-                        {{30, 31}, {"Map PLN",            modeRef,                                                  PDCDatarefType::SET_VALUE,           3.0}},
-                        {{31, -1}, {"3N Range 10",        rangeRef,                                                 PDCDatarefType::SET_VALUE,           1.0}}, // No 5nm range on 748
-                        {{32, -1}, {"3N Range 10",        rangeRef,                                                 PDCDatarefType::SET_VALUE,           1.0}},
-                        {{33, -1}, {"3N Range 20",        rangeRef,                                                 PDCDatarefType::SET_VALUE,           2.0}},
-                        {{34, -1}, {"3N Range 40",        rangeRef,                                                 PDCDatarefType::SET_VALUE,           3.0}},
-                        {{35, -1}, {"3N Range 80",        rangeRef,                                                 PDCDatarefType::SET_VALUE,           4.0}},
-                        {{36, -1}, {"3N Range 160",       rangeRef,                                                 PDCDatarefType::SET_VALUE,           5.0}},
-                        {{37, -1}, {"3N Range 320",       rangeRef,                                                 PDCDatarefType::SET_VALUE,           6.0}},
-                        {{38, -1}, {"3N Range 320",       rangeRef,                                                 PDCDatarefType::SET_VALUE,           6.0}}, // No 640nm range on 748
-                        {{19, 32}, {"Mins knob left fast", "custom",                                               PDCDatarefType::ADD_MINIMUMS_REPEATING, -1.0}},
-                        {{39, 33}, {"Mins knob left slow", "custom",                                               PDCDatarefType::ADD_MINIMUMS_REPEATING, -1.0}},
-                        {{40, 34}, {"Mins knob center",   ""}},
-                        {{41, 35}, {"Mins knob right slow","custom",                                               PDCDatarefType::ADD_MINIMUMS_REPEATING,  1.0}},
-                        {{20, 36}, {"Mins knob right fast","custom",                                               PDCDatarefType::ADD_MINIMUMS_REPEATING,  1.0}},
-                        {{42, 37}, {"Baro knob left slow", "custom",                                               PDCDatarefType::ADD_BARO_REPEATING,     -1.0}},
-                        {{43, 38}, {"Baro knob center",   ""}},
-                        {{44, 39}, {"Baro knob right slow","custom",                                               PDCDatarefType::ADD_BARO_REPEATING,      1.0}},
+                        {{0, 0}, {"FPV", prefix + "/B748/PFD/fpv_sw_" + side, PDCDatarefType::SET_VALUE_MOMENTARY, 1.0}},
+                        {{1, 1}, {"MTRS", "FPS/PFD/meters_sw_" + side, PDCDatarefType::SET_VALUE_MOMENTARY, 1.0}},
+                        {{-1, 2}, {"3M VSD", ""}},
+                        {{2, 3}, {"WXR", prefix + "/B748/ND/show_wheather_" + side + "_sw", PDCDatarefType::SET_VALUE_MOMENTARY, 1.0}},
+                        {{3, 4}, {"STA", prefix + "/B748/ND/show_VOR_" + side + "_sw", PDCDatarefType::SET_VALUE_MOMENTARY, 1.0}},
+                        {{4, 5}, {"WPT", prefix + "/B748/ND/show_waypoint_" + side + "_sw", PDCDatarefType::SET_VALUE_MOMENTARY, 1.0}},
+                        {{5, 6}, {"ARPT", prefix + "/B748/ND/show_airport_" + side + "_sw", PDCDatarefType::SET_VALUE_MOMENTARY, 1.0}},
+                        {{6, 7}, {"DATA", prefix + "/B748/ND/show_NDB_" + side + "_sw", PDCDatarefType::SET_VALUE_MOMENTARY, 1.0}},
+                        {{7, 8}, {"POS", prefix + "/B748/ND/show_POS_" + side + "_sw", PDCDatarefType::SET_VALUE_MOMENTARY, 1.0}},
+                        {{8, 9}, {"TERR", prefix + "/B748/ND/show_Terr_" + side + "_sw", PDCDatarefType::SET_VALUE_MOMENTARY, 1.0}},
+                        {{9, 10}, {"LEFT VOR1", isCaptain ? (prefix + "/B748/MCP/ap_vor_adf1") : (prefix + "/B748/MCP/ap_CP_vor_adf1"), PDCDatarefType::SET_VALUE, 1.0}},
+                        {{10, 11}, {"LEFT OFF", isCaptain ? (prefix + "/B748/MCP/ap_vor_adf1") : (prefix + "/B748/MCP/ap_CP_vor_adf1"), PDCDatarefType::SET_VALUE, 0.0}},
+                        {{11, 12}, {"LEFT ADF1", isCaptain ? (prefix + "/B748/MCP/ap_vor_adf1") : (prefix + "/B748/MCP/ap_CP_vor_adf1"), PDCDatarefType::SET_VALUE, -1.0}},
+                        {{12, 13}, {"RIGHT VOR2", isCaptain ? (prefix + "/B748/MCP/ap_vor_adf2") : (prefix + "/B748/MCP/ap_CP_vor_adf2"), PDCDatarefType::SET_VALUE, 1.0}},
+                        {{13, 14}, {"RIGHT OFF", isCaptain ? (prefix + "/B748/MCP/ap_vor_adf2") : (prefix + "/B748/MCP/ap_CP_vor_adf2"), PDCDatarefType::SET_VALUE, 0.0}},
+                        {{14, 15}, {"RIGHT ADF2", isCaptain ? (prefix + "/B748/MCP/ap_vor_adf2") : (prefix + "/B748/MCP/ap_CP_vor_adf2"), PDCDatarefType::SET_VALUE, -1.0}},
+                        {{15, 16}, {"Mins RST", ""}},
+                        {{16, 17}, {"VOR MAP CTR", prefix + "/B748/ND/CRT_" + side + "_sw", PDCDatarefType::SET_VALUE_MOMENTARY, 1.0}},
+                        {{17, 18}, {"RANGE TFC", prefix + "/B748/ND/show_TCAS_" + side + "_sw", PDCDatarefType::SET_VALUE_MOMENTARY, 1.0}},
+                        {{18, 19}, {"Baro STD", isCaptain ? "FPS/PFD/baro_standard" : "FPS/PFD/baro_standard2", PDCDatarefType::SET_VALUE, 1.0}},
+                        {{-1, 20}, {"3M Range Minus", ""}},
+                        {{-1, 21}, {"3M Range Plus", ""}},
+                        {{21, 22}, {"Baro knob left fast", "custom", PDCDatarefType::ADD_BARO_REPEATING, -1.0}},
+                        {{22, 23}, {"Baro knob right fast", "custom", PDCDatarefType::ADD_BARO_REPEATING, 1.0}},
+                        {{23, 24}, {"Mins RADIO", "FPS/PFD/dh_mode_sw", PDCDatarefType::SET_VALUE, 0.0}},
+                        {{24, 25}, {"Mins BARO", "FPS/PFD/dh_mode_sw", PDCDatarefType::SET_VALUE, 1.0}},
+                        {{25, 26}, {"Baro inHg", "FPS/PFD/baro_type_sw", PDCDatarefType::SET_VALUE, 0.0}},
+                        {{26, 27}, {"Baro HPA", "FPS/PFD/baro_type_sw", PDCDatarefType::SET_VALUE, 1.0}},
+                        {{27, 28}, {"Map APP", prefix + "/B748/ND/mode_" + side, PDCDatarefType::SET_VALUE, 0.0}},
+                        {{28, 29}, {"Map VOR", prefix + "/B748/ND/mode_" + side, PDCDatarefType::SET_VALUE, 1.0}},
+                        {{29, 30}, {"Map MAP", prefix + "/B748/ND/mode_" + side, PDCDatarefType::SET_VALUE, 2.0}},
+                        {{30, 31}, {"Map PLN", prefix + "/B748/ND/mode_" + side, PDCDatarefType::SET_VALUE, 3.0}},
+                        {{31, -1}, {"3N Map range 5", prefix + "/B748/ND/range_" + side, PDCDatarefType::SET_VALUE, 0.0}},
+                        {{32, -1}, {"3N Map range 10", prefix + "/B748/ND/range_" + side, PDCDatarefType::SET_VALUE, 1.0}},
+                        {{33, -1}, {"3N Map range 20", prefix + "/B748/ND/range_" + side, PDCDatarefType::SET_VALUE, 2.0}},
+                        {{34, -1}, {"3N Map range 40", prefix + "/B748/ND/range_" + side, PDCDatarefType::SET_VALUE, 3.0}},
+                        {{35, -1}, {"3N Map range 80", prefix + "/B748/ND/range_" + side, PDCDatarefType::SET_VALUE, 4.0}},
+                        {{36, -1}, {"3N Map range 160", prefix + "/B748/ND/range_" + side, PDCDatarefType::SET_VALUE, 5.0}},
+                        {{37, -1}, {"3N Map range 320", prefix + "/B748/ND/range_" + side, PDCDatarefType::SET_VALUE, 6.0}},
+                        {{38, -1}, {"3N Map range 640", prefix + "/B748/ND/range_" + side, PDCDatarefType::SET_VALUE, 7.0}},
+                        {{19, 32}, {"Mins knob left fast", "custom", PDCDatarefType::ADD_MINIMUMS_REPEATING, -1.0}},
+                        {{39, 33}, {"Mins knob left slow", "custom", PDCDatarefType::ADD_MINIMUMS_REPEATING, -1.0}},
+                        {{40, 34}, {"Mins knob center", ""}},
+                        {{41, 35}, {"Mins knob right slow", "custom", PDCDatarefType::ADD_MINIMUMS_REPEATING, 1.0}},
+                        {{20, 36}, {"Mins knob right fast", "custom", PDCDatarefType::ADD_MINIMUMS_REPEATING, 1.0}},
+                        {{42, 37}, {"Baro knob left slow", "custom", PDCDatarefType::ADD_BARO_REPEATING, -1.0}},
+                        {{43, 38}, {"Baro knob center", ""}},
+                        {{44, 39}, {"Baro knob right slow", "custom", PDCDatarefType::ADD_BARO_REPEATING, 1.0}},
                     })
         .first->second;
 }
@@ -142,6 +137,9 @@ void FPS748PDCProfile::buttonPressed(const PDCButtonDef *button, XPLMCommandPhas
         }
     } else if (phase == xplm_CommandBegin && button->datarefType == PDCDatarefType::SET_VALUE) {
         dm->set<double>(button->dataref.c_str(), button->value);
+        if (button->dataref == "FPS/PFD/dh_mode_sw") {
+            dm->set<int>("FPS/AP/ra_baro_sel", static_cast<int>(button->value));
+        }
     } else if (phase == xplm_CommandBegin && button->datarefType == PDCDatarefType::EXECUTE_CMD_ONCE) {
         dm->executeCommand(button->dataref.c_str());
     } else if (button->datarefType == PDCDatarefType::EXECUTE_CMD_PHASED) {
@@ -155,10 +153,10 @@ void FPS748PDCProfile::changeMinimums() {
     }
 
     auto dm = Dataref::getInstance();
-    bool isBaroMode = dm->get<int>("FPS/AP/ra_baro_sel") == 1;
+    bool isBaroMode = dm->get<int>("FPS/PFD/dh_mode_sw") == 1;
     const char *dataref = isBaroMode ? "FPS/AP/minimum_baro_dailed" : "FPS/AP/minimum_radio_dailed";
     int current = dm->get<int>(dataref);
-    dm->set<int>(dataref, current + minimumsDelta);
+    dm->set<int>(dataref, current + minimumsDelta * 10);
 }
 
 void FPS748PDCProfile::changeBaro() {

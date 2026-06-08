@@ -8,7 +8,7 @@
 
 #include <XPLMUtilities.h>
 
-ProductRMP::ProductRMP(HIDDeviceHandle hidDevice, uint16_t vendorId, uint16_t productId, std::string vendorName, std::string productName, RMPDeviceVariant variant) : USBDevice(hidDevice, vendorId, productId, vendorName, productName), deviceVariant(variant) {
+ProductRMP::ProductRMP(HIDDeviceHandle hidDevice, uint16_t vendorId, uint16_t productId, std::string vendorName, std::string productName, RMPDeviceVariant variant, uint8_t identifierByte) : USBDevice(hidDevice, vendorId, productId, vendorName, productName), identifierByte(identifierByte), deviceVariant(variant) {
     lastButtonStateLo = 0;
     lastButtonStateHi = 0;
     pressedButtonIndices = {};
@@ -115,7 +115,7 @@ void ProductRMP::setAllLedsEnabled(bool enable) {
 }
 
 void ProductRMP::setLedBrightness(RMPLed led, uint8_t brightness) {
-    writeData({0x02, ProductRMP::IdentifierByte, 0xBB, 0x00, 0x00, 0x03, 0x49, static_cast<uint8_t>(led), brightness, 0x00, 0x00, 0x00, 0x00, 0x00});
+    writeData({0x02, identifierByte, 0xBB, 0x00, 0x00, 0x03, 0x49, static_cast<uint8_t>(led), brightness, 0x00, 0x00, 0x00, 0x00, 0x00});
 }
 
 void ProductRMP::parseSegment(const std::string &text, int expectedLength, std::string &outDigits, uint16_t &colonMask, int digitOffset) {
@@ -171,7 +171,7 @@ void ProductRMP::parseSegment(const std::string &text, int expectedLength, std::
 
 void ProductRMP::setDisplayText(const std::string &active, const std::string &stby) {
     std::vector<uint8_t> packet = {
-        0xF0, 0x00, packetNumber, 0x35, ProductRMP::IdentifierByte,
+        0xF0, 0x00, packetNumber, 0x35, identifierByte,
         0xBB, 0x00, 0x00, 0x02, 0x01, 0x00, 0x00, 0xFF, 0xFF, 0x00, 0x00,
         0x00, 0x24, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
     packet.resize(64, 0x00);
@@ -206,7 +206,7 @@ void ProductRMP::setDisplayText(const std::string &active, const std::string &st
     writeData(packet);
 
     std::vector<uint8_t> commitPacket = {
-        0xF0, 0x00, packetNumber, 0x11, ProductRMP::IdentifierByte,
+        0xF0, 0x00, packetNumber, 0x11, identifierByte,
         0xBB, 0x00, 0x00, 0x03, 0x01, 0x00, 0x00, 0xFF, 0xFF, 0x00, 0x00};
     commitPacket.resize(64, 0x00);
     writeData(commitPacket);

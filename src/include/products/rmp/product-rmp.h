@@ -49,11 +49,10 @@ class ProductRMP : public USBDevice {
         void parseSegment(const std::string &text, int expectedLength, std::string &outDigits, uint16_t &colonMask, int digitOffset);
 
     public:
-        ProductRMP(HIDDeviceHandle hidDevice, uint16_t vendorId, uint16_t productId, std::string vendorName, std::string productName, RMPDeviceVariant variant);
+        ProductRMP(HIDDeviceHandle hidDevice, uint16_t vendorId, uint16_t productId, std::string vendorName, std::string productName, RMPDeviceVariant variant, uint8_t identifierByte);
         ~ProductRMP();
 
-        static constexpr unsigned char IdentifierByte = 0x80;
-
+        const unsigned char identifierByte;
         const RMPDeviceVariant deviceVariant;
 
         const char *classIdentifier() override;

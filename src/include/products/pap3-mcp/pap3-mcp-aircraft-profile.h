@@ -70,6 +70,8 @@ struct PAP3MCPDisplayData {
         bool showDashesWhenInactive = false; // Show dashes (---) when displays are inactive
         bool showLabelsWhenInactive = false; // Show labels even when displays are inactive
 
+        uint8_t machDigits = 2; // Number of MACH decimal digits to display (2 = .84, 3 = .842)
+
         // Special display flags
         bool digitA = false; // Special 'A' digit for SPD/MACH mode
         bool digitB = false; // Special '8' digit for bank angle

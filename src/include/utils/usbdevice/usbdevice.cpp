@@ -141,12 +141,18 @@ USBDevice *USBDevice::Device(HIDDeviceHandle hidDevice, uint16_t vendorId, uint1
         case 0xBB81: // TCAS
             return new ProductTCAS(hidDevice, vendorId, productId, vendorName, productName);
 
-            // case 0xBBXX: // RMP L (Captain)
-            //     return new ProductRMP(hidDevice, vendorId, productId, vendorName, productName, RMPDeviceVariant::VARIANT_CAPTAIN);
-            // case 0xBBXX: // RMP C (Stby)
-            //     return new ProductRMP(hidDevice, vendorId, productId, vendorName, productName, RMPDeviceVariant::VARIANT_STBY);
-            // case 0xBBXX: // RMP R (First Officer)
-            //     return new ProductRMP(hidDevice, vendorId, productId, vendorName, productName, RMPDeviceVariant::VARIANT_FIRSTOFFICER);
+        case 0xBB84: { // RMP L (Captain)
+            constexpr uint8_t identifierByte = 0x84; // TODO: verify with hardware
+            return new ProductRMP(hidDevice, vendorId, productId, vendorName, productName, RMPDeviceVariant::VARIANT_CAPTAIN, identifierByte);
+        }
+        case 0xBB85: { // RMP C (Stby)
+            constexpr uint8_t identifierByte = 0x85; // TODO: verify with hardware
+            return new ProductRMP(hidDevice, vendorId, productId, vendorName, productName, RMPDeviceVariant::VARIANT_STBY, identifierByte);
+        }
+        case 0xBB86: { // RMP R (First Officer)
+            constexpr uint8_t identifierByte = 0x86; // TODO: verify with hardware
+            return new ProductRMP(hidDevice, vendorId, productId, vendorName, productName, RMPDeviceVariant::VARIANT_FIRSTOFFICER, identifierByte);
+        }
 
         case 0xB920: // URSA MINOR 32 Throttle Metal L
         case 0xB930: // URSA MINOR 32 Throttle Metal R

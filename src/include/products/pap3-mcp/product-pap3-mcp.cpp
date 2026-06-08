@@ -268,12 +268,17 @@ void ProductPAP3MCP::sendLCDDisplay(const std::string &speed, int heading, int a
         if (displayData.speedVisible && isMach) {
             // MACH mode
             float mach = (spd < 1.0f) ? std::clamp(spd, 0.0f, 0.9999f) : std::clamp(spd / 100.0f, 0.0f, 0.9999f);
-            const int twoDigits = std::clamp(static_cast<int>(std::floor(mach * 1000.0f / 10.0f + 0.5f)), 0, 99);
-            const int tens = (twoDigits / 10) % 10;
-            const int units = twoDigits % 10;
 
-            drawDigit(G0, payload, SPD_TENS, tens);
-            drawDigit(G0, payload, SPD_UNITS, units);
+            if (displayData.machDigits >= 3) {
+                const int threeDigits = std::clamp(static_cast<int>(std::floor(mach * 1000.0f + 0.5f)), 0, 999);
+                drawDigit(G0, payload, SPD_HUNDREDS, (threeDigits / 100) % 10);
+                drawDigit(G0, payload, SPD_TENS,     (threeDigits / 10)  % 10);
+                drawDigit(G0, payload, SPD_UNITS,     threeDigits        % 10);
+            } else {
+                const int twoDigits = std::clamp(static_cast<int>(std::floor(mach * 100.0f + 0.5f)), 0, 99);
+                drawDigit(G0, payload, SPD_TENS,  (twoDigits / 10) % 10);
+                drawDigit(G0, payload, SPD_UNITS,  twoDigits        % 10);
+            }
 
             setFlag(payload, OFF_36, LBL_IAS, displayData.showLabels && false);
             setFlag(payload, OFF_32, LBL_MACH_L, displayData.showLabels && true);

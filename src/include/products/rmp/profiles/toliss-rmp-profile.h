@@ -9,7 +9,6 @@ class TolissRMPProfile : public RMPAircraftProfile {
     private:
         const char *rmpName() const;
         const char *sideName() const;
-        static std::string formatFrequency(int hz);
 
     public:
         TolissRMPProfile(ProductRMP *product);

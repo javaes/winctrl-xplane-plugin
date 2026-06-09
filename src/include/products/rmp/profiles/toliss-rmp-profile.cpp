@@ -29,17 +29,6 @@ const char *TolissRMPProfile::sideName() const {
     return "Capt";
 }
 
-std::string TolissRMPProfile::formatFrequency(int hz) {
-    if (hz <= 0) {
-        return "      ";
-    }
-    int mhz = hz / 1000000;
-    int khz = (hz % 1000000) / 1000;
-    char buf[8];
-    std::snprintf(buf, sizeof(buf), "%3d.%03d", mhz, khz);
-    return std::string(buf);
-}
-
 TolissRMPProfile::TolissRMPProfile(ProductRMP *product) : RMPAircraftProfile(product) {
     Dataref::getInstance()->monitorExistingDataref<float>("AirbusFBW/PanelBrightnessLevel", [product](float brightness) {
         bool hasEssentialBusPower = Dataref::getInstance()->get<bool>("AirbusFBW/FCUAvail");
@@ -63,11 +52,11 @@ TolissRMPProfile::TolissRMPProfile(ProductRMP *product) : RMPAircraftProfile(pro
     std::string activeRef = std::string("AirbusFBW/") + rmpName() + "/ActiveWindowString";
     std::string stbyRef = std::string("AirbusFBW/") + rmpName() + "/StandbyWindowString";
 
-    Dataref::getInstance()->monitorExistingDataref<int>(activeRef.c_str(), [this](int hz) {
+    Dataref::getInstance()->monitorExistingDataref<std::string>(activeRef.c_str(), [this](std::string s) {
         updateDisplays();
     });
 
-    Dataref::getInstance()->monitorExistingDataref<int>(stbyRef.c_str(), [this](int hz) {
+    Dataref::getInstance()->monitorExistingDataref<std::string>(stbyRef.c_str(), [this](std::string s) {
         updateDisplays();
     });
 }
@@ -148,8 +137,8 @@ void TolissRMPProfile::updateDisplays() {
 
     std::string activeRef = std::string("AirbusFBW/") + rmpName() + "/ActiveWindowString";
     std::string stbyRef = std::string("AirbusFBW/") + rmpName() + "/StandbyWindowString";
-    int activeHz = Dataref::getInstance()->get<int>(activeRef.c_str());
-    int stbyHz = Dataref::getInstance()->get<int>(stbyRef.c_str());
+    std::string activeHz = Dataref::getInstance()->get<std::string>(activeRef.c_str());
+    std::string stbyHz = Dataref::getInstance()->get<std::string>(stbyRef.c_str());
 
-    product->setDisplayText(formatFrequency(activeHz), formatFrequency(stbyHz));
+    product->setDisplayText(activeHz, stbyHz);
 }

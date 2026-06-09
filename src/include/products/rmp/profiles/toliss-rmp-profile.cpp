@@ -30,9 +30,15 @@ const char *TolissRMPProfile::sideName() const {
 }
 
 TolissRMPProfile::TolissRMPProfile(ProductRMP *product) : RMPAircraftProfile(product) {
+    _displayDatarefs = {
+        std::string("AirbusFBW/") + rmpName() + "/ActiveWindowString",
+        std::string("AirbusFBW/") + rmpName() + "/StandbyWindowString",
+        "sim/cockpit/electrical/avionics_on"
+    };
+
     Dataref::getInstance()->monitorExistingDataref<float>("AirbusFBW/PanelBrightnessLevel", [product](float brightness) {
-        bool hasEssentialBusPower = Dataref::getInstance()->get<bool>("AirbusFBW/FCUAvail");
-        bool hasPower = Dataref::getInstance()->get<bool>("sim/cockpit/electrical/avionics_on");
+        bool hasEssentialBusPower = Dataref::getInstance()->getCached<bool>("AirbusFBW/FCUAvail");
+        bool hasPower = Dataref::getInstance()->getCached<bool>("sim/cockpit/electrical/avionics_on");
         uint8_t backlightBrightness = hasPower ? brightness * 255 : 0;
 
         product->setLedBrightness(RMPLed::BACKLIGHT, backlightBrightness);
@@ -95,6 +101,10 @@ bool TolissRMPProfile::IsEligible() {
     return Dataref::getInstance()->exists("AirbusFBW/PanelBrightnessLevel");
 }
 
+const std::vector<std::string> &TolissRMPProfile::displayDatarefs() const {
+    return _displayDatarefs;
+}
+
 const std::unordered_map<uint16_t, RMPButtonDef> &TolissRMPProfile::buttonDefs() const {
     static std::unordered_map<RMPDeviceVariant, std::unordered_map<uint16_t, RMPButtonDef>> cache;
 
@@ -149,7 +159,7 @@ void TolissRMPProfile::updateDisplays() {
         return;
     }
 
-    bool hasPower = Dataref::getInstance()->get<bool>("sim/cockpit/electrical/avionics_on");
+    bool hasPower = Dataref::getInstance()->getCached<bool>("sim/cockpit/electrical/avionics_on");
     if (!hasPower) {
         product->setDisplayText("      ", "      ");
         return;
@@ -157,8 +167,8 @@ void TolissRMPProfile::updateDisplays() {
 
     std::string activeRef = std::string("AirbusFBW/") + rmpName() + "/ActiveWindowString";
     std::string stbyRef = std::string("AirbusFBW/") + rmpName() + "/StandbyWindowString";
-    std::string activeHz = Dataref::getInstance()->get<std::string>(activeRef.c_str());
-    std::string stbyHz = Dataref::getInstance()->get<std::string>(stbyRef.c_str());
+    std::string activeHz = Dataref::getInstance()->getCached<std::string>(activeRef.c_str());
+    std::string stbyHz = Dataref::getInstance()->getCached<std::string>(stbyRef.c_str());
 
     product->setDisplayText(activeHz, stbyHz);
 }

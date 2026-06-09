@@ -6,12 +6,14 @@
 #include "profiles/toliss-rmp-profile.h"
 #include "segment-display.h"
 
+#include <XPLMProcessing.h>
 #include <XPLMUtilities.h>
 
 ProductRMP::ProductRMP(HIDDeviceHandle hidDevice, uint16_t vendorId, uint16_t productId, std::string vendorName, std::string productName, RMPDeviceVariant variant, uint8_t identifierByte) : USBDevice(hidDevice, vendorId, productId, vendorName, productName), identifierByte(identifierByte), deviceVariant(variant) {
     lastButtonStateLo = 0;
     lastButtonStateHi = 0;
     pressedButtonIndices = {};
+    lastUpdateCycle = 0;
 
     connect();
 }
@@ -55,6 +57,9 @@ bool ProductRMP::connect() {
         return false;
     }
 
+    lastUpdateCycle = 0;
+    lastLedBrightness.clear();
+
     setLedBrightness(RMPLed::BACKLIGHT, 128);
     setLedBrightness(RMPLed::LCD_BRIGHTNESS, 128);
     setLedBrightness(RMPLed::OVERALL_LEDS_BRIGHTNESS, 255);
@@ -97,11 +102,30 @@ void ProductRMP::update() {
 
     if (++displayUpdateFrameCounter >= getDisplayUpdateFrameInterval(12)) {
         displayUpdateFrameCounter = 0;
+        updateDisplays(false);
+    }
+}
 
-        if (profile) {
-            profile->updateDisplays();
+void ProductRMP::updateDisplays(bool force) {
+    if (!connected || !profile) {
+        return;
+    }
+
+    bool shouldUpdate = force;
+    auto datarefManager = Dataref::getInstance();
+    for (const std::string &dataref : profile->displayDatarefs()) {
+        if (!lastUpdateCycle || datarefManager->getCachedLastUpdate(dataref.c_str()) > lastUpdateCycle) {
+            shouldUpdate = true;
+            break;
         }
     }
+
+    if (!shouldUpdate) {
+        return;
+    }
+
+    profile->updateDisplays();
+    lastUpdateCycle = XPLMGetCycleNumber();
 }
 
 void ProductRMP::setAllLedsEnabled(bool enable) {
@@ -115,6 +139,13 @@ void ProductRMP::setAllLedsEnabled(bool enable) {
 }
 
 void ProductRMP::setLedBrightness(RMPLed led, uint8_t brightness) {
+    int ledInt = static_cast<int>(led);
+    auto it = lastLedBrightness.find(ledInt);
+    if (it != lastLedBrightness.end() && it->second == brightness) {
+        return;
+    }
+    lastLedBrightness[ledInt] = brightness;
+
     writeData({0x02, identifierByte, 0xBB, 0x00, 0x00, 0x03, 0x49, static_cast<uint8_t>(led), brightness, 0x00, 0x00, 0x00, 0x00, 0x00});
 }
 

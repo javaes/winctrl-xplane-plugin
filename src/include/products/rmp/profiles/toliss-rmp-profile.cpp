@@ -49,6 +49,23 @@ TolissRMPProfile::TolissRMPProfile(ProductRMP *product) : RMPAircraftProfile(pro
         updateDisplays();
     });
 
+    std::string lightsRef = std::string("AirbusFBW/") + rmpName() + "Lights_Raw";
+
+    Dataref::getInstance()->monitorExistingDataref<std::vector<float>>(lightsRef.c_str(), [product](const std::vector<float> &brightness) {
+        product->setLedBrightness(RMPLed::VHF1, brightness[1] * 255);
+        product->setLedBrightness(RMPLed::VHF2, brightness[2] * 255);
+        product->setLedBrightness(RMPLed::VHF3, brightness[3] * 255);
+        product->setLedBrightness(RMPLed::HF1, brightness[4] * 255);
+        product->setLedBrightness(RMPLed::HF2, brightness[5] * 255);
+        product->setLedBrightness(RMPLed::AM, brightness[6] * 255);
+        product->setLedBrightness(RMPLed::VOR, brightness[7] * 255);
+        product->setLedBrightness(RMPLed::ILS, brightness[8] * 255);
+        product->setLedBrightness(RMPLed::ADF, brightness[10] * 255);
+        product->setLedBrightness(RMPLed::GLS, brightness[11] * 255);
+        product->setLedBrightness(RMPLed::SEL, brightness[12] * 255);
+        product->setLedBrightness(RMPLed::NAV, brightness[13] * 255);
+    });
+
     std::string activeRef = std::string("AirbusFBW/") + rmpName() + "/ActiveWindowString";
     std::string stbyRef = std::string("AirbusFBW/") + rmpName() + "/StandbyWindowString";
 
@@ -65,8 +82,11 @@ TolissRMPProfile::~TolissRMPProfile() {
     Dataref::getInstance()->unbind("AirbusFBW/PanelBrightnessLevel");
     Dataref::getInstance()->unbind("AirbusFBW/FCUAvail");
     Dataref::getInstance()->unbind("sim/cockpit/electrical/avionics_on");
+
+    std::string lightsRef = std::string("AirbusFBW/") + rmpName() + "Lights_Raw";
     std::string activeRef = std::string("AirbusFBW/") + rmpName() + "/ActiveWindowString";
     std::string stbyRef = std::string("AirbusFBW/") + rmpName() + "/StandbyWindowString";
+    Dataref::getInstance()->unbind(lightsRef.c_str());
     Dataref::getInstance()->unbind(activeRef.c_str());
     Dataref::getInstance()->unbind(stbyRef.c_str());
 }

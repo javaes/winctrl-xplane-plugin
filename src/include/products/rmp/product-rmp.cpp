@@ -124,27 +124,11 @@ void ProductRMP::parseSegment(const std::string &text, int expectedLength, std::
 
     for (size_t i = 0; i < text.length(); ++i) {
         char c = text[i];
-        if (c == ':' || c == '.') {
-            if (!digits.empty()) {
-                if (expectedLength >= 6) {
-                    // Standard: Enable bit for digit before (Left) and digit after (Right)
-
-                    if (c == ':') {
-                        localColonMask |= (1 << (digits.length() - 1)); // Upper Dot
-                    }
-
-                    localColonMask |= (1 << digits.length()); // Lower Dot
-                } else {
-                    // 4-Digit Displays: Enable bit for digit after (Right) and next digit (Right + 1)
-                    // The digit 'digits.length()' is the one we are about to add next.
-
-                    if (c == ':') {
-                        localColonMask |= (1 << digits.length()); // Upper Dot
-                    }
-
-                    localColonMask |= (1 << (digits.length() + 1)); // Lower Dot
-                }
-            }
+        if (c == '.' && !digits.empty()) {
+            localColonMask |= (1 << (digits.length() - 1));
+        } else if (c == '/') {
+            /* ToLiss datarefs use a C/course format for backup nav */
+            digits += '-';
         } else {
             digits += c;
         }
@@ -176,31 +160,24 @@ void ProductRMP::setDisplayText(const std::string &active, const std::string &st
         0x00, 0x24, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
     packet.resize(64, 0x00);
 
-    const int rowOffsets[8] = {25, 29, 33, 37, 41, 45, 49, 53};
+    const int byteOffset = 25;
 
     std::string allDigits;
     uint16_t colonMask = 0;
 
-    parseSegment(active, 6, allDigits, colonMask, 0);
-    parseSegment(stby,   6, allDigits, colonMask, 6);
+    /* Standby is first, Active is second */
+    parseSegment(stby,   6, allDigits, colonMask, 0);
+    parseSegment(active, 6, allDigits, colonMask, 6);
 
     for (int digitIndex = 0; digitIndex < 12; ++digitIndex) {
         char c = allDigits[digitIndex];
         uint8_t charMask = SegmentDisplay::getSegmentMask(c);
 
-        for (int segIndex = 0; segIndex < 7; ++segIndex) {
-            if (charMask & (1 << segIndex)) {
-                int byteOffset = rowOffsets[segIndex] + (digitIndex / 8);
-                int bitPos = digitIndex % 8;
-                packet[byteOffset] |= (1 << bitPos);
-            }
+        if (colonMask & (1 << digitIndex)) {
+            charMask |= 0x80;
         }
 
-        if (colonMask & (1 << digitIndex)) {
-            int byteOffset = rowOffsets[7] + (digitIndex / 8);
-            int bitPos = digitIndex % 8;
-            packet[byteOffset] |= (1 << bitPos);
-        }
+        packet[digitIndex + byteOffset] = charMask;
     }
 
     writeData(packet);

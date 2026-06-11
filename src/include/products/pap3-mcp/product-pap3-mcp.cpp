@@ -263,7 +263,7 @@ void ProductPAP3MCP::sendLCDDisplay(const std::string &speed, int heading, int a
     } else {
         // SPD: IAS vs MACH rendering
         const float spd = displayData.speed;
-        const bool isMach = (spd < 100.0f);
+        const bool isMach = displayData.digitA;
 
         if (displayData.speedVisible && isMach) {
             // MACH mode

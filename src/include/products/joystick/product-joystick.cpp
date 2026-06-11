@@ -10,6 +10,9 @@
 #include <cmath>
 
 ProductJoystick::ProductJoystick(HIDDeviceHandle hidDevice, uint16_t vendorId, uint16_t productId, std::string vendorName, std::string productName, unsigned char identifierByte, unsigned char motorCode) : USBDevice(hidDevice, vendorId, productId, vendorName, productName), identifierByte(identifierByte), motorCode(motorCode) {
+    profile = nullptr;
+    menuItemId = -1;
+
     connect();
 }
 

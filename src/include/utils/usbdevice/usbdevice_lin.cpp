@@ -11,6 +11,7 @@
 #include <iostream>
 #include <linux/hidraw.h>
 #include <sys/ioctl.h>
+#include <sys/select.h>
 #include <thread>
 #include <unistd.h>
 #include <XPLMUtilities.h>
@@ -30,28 +31,50 @@ bool USBDevice::connect() {
     }
     inputBuffer = new uint8_t[kInputReportSize];
 
+    if (pipe(inputPipe) < 0) {
+        Logger::getInstance()->error("Failed to create shutdown pipe: %d\n", errno);
+        inputPipe[0] = inputPipe[1] = -1;
+    }
+
     connected = true;
-    std::thread inputThread([this]() {
+    inputThread = std::thread([this]() {
         uint8_t buffer[65];
         while (connected && hidDevice >= 0) {
-            ssize_t bytesRead = read(hidDevice, buffer, sizeof(buffer));
-            if (bytesRead > 0 && connected) {
-                InputReportCallback(this, (int) bytesRead, buffer);
-            } else if (bytesRead < 0) {
-                // Device error or disconnected
-                Logger::getInstance()->error("Read failed with error: %d\n", errno);
-                break;
-            } else if (bytesRead == 0) {
-                // EOF - device disconnected
+            fd_set fds;
+            FD_ZERO(&fds);
+            FD_SET(hidDevice, &fds);
+            int maxFd = hidDevice + 1;
+            if (inputPipe[0] >= 0) {
+                FD_SET(inputPipe[0], &fds);
+                if (inputPipe[0] + 1 > maxFd) maxFd = inputPipe[0] + 1;
+            }
+
+            int ret = select(maxFd, &fds, nullptr, nullptr, nullptr);
+            if (ret < 0) {
+                if (errno == EINTR) continue;
+                Logger::getInstance()->error("Select failed: %d\n", errno);
                 break;
             }
 
-            std::this_thread::sleep_for(std::chrono::milliseconds(1));
+            if (inputPipe[0] >= 0 && FD_ISSET(inputPipe[0], &fds)) {
+                break; // shutdown signal
+            }
+
+            if (FD_ISSET(hidDevice, &fds)) {
+                ssize_t bytesRead = read(hidDevice, buffer, sizeof(buffer));
+                if (bytesRead > 0 && connected) {
+                    InputReportCallback(this, (int)bytesRead, buffer);
+                } else if (bytesRead < 0) {
+                    Logger::getInstance()->error("Read failed with error: %d\n", errno);
+                    break;
+                } else {
+                    break; // EOF — device disconnected
+                }
+            }
         }
 
         Logger::getInstance()->debug("Input thread exiting\n");
     });
-    inputThread.detach();
 
     writeThreadRunning = true;
     writeThread = std::thread(&USBDevice::writeThreadLoop, this);
@@ -87,17 +110,30 @@ void USBDevice::update() {
 }
 
 void USBDevice::disconnect() {
-    // Wait for write queue to drain before disconnecting
+    connected = false;
+
+    // Wake the input thread via the self-pipe so it exits its select() block
+    if (inputPipe[1] >= 0) {
+        uint8_t c = 0;
+        (void)write(inputPipe[1], &c, 1);
+    }
+
+    // Drain write queue, then stop the write thread
     while (writeQueueSize.load() > 0 && writeThreadRunning) {
         std::this_thread::sleep_for(std::chrono::milliseconds(10));
     }
-
-    connected = false;
     writeThreadRunning = false;
     writeQueueCV.notify_all();
     if (writeThread.joinable()) {
         writeThread.join();
     }
+
+    if (inputThread.joinable()) {
+        inputThread.join();
+    }
+
+    if (inputPipe[0] >= 0) { close(inputPipe[0]); inputPipe[0] = -1; }
+    if (inputPipe[1] >= 0) { close(inputPipe[1]); inputPipe[1] = -1; }
 
     if (hidDevice >= 0) {
         close(hidDevice);

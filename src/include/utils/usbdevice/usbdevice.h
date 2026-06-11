@@ -53,8 +53,11 @@ class USBDevice {
         void handleHIDValue(IOHIDValueRef value);
 #elif IBM
         USHORT outputReportByteLength = 0;
+        std::thread inputThread;
         static void InputReportCallback(void *context, DWORD bytesRead, uint8_t *report);
 #elif LIN
+        std::thread inputThread;
+        int inputPipe[2] = {-1, -1};
         static void InputReportCallback(void *context, int bytesRead, uint8_t *report);
 #endif
 

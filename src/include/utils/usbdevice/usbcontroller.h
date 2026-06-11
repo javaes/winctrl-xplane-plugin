@@ -3,8 +3,12 @@
 
 #include "usbdevice.h"
 
+#include <atomic>
+#include <condition_variable>
 #include <functional>
+#include <mutex>
 #include <string>
+#include <thread>
 #include <vector>
 
 #if APL
@@ -29,7 +33,15 @@ typedef int HIDDeviceHandle;
 class USBController {
     private:
         HIDManagerHandle hidManager;
-        bool shouldShutdown = false;
+        std::atomic<bool> shouldShutdown{false};
+
+#if IBM || LIN
+        std::thread monitorThread;
+#endif
+#if IBM
+        std::mutex monitorMutex;
+        std::condition_variable monitorCV;
+#endif
 
         USBController();
         ~USBController();

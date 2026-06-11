@@ -26,15 +26,16 @@ static std::set<std::pair<uint16_t, uint16_t>> pendingDevices;
 USBController::USBController() {
     enumerateDevices();
 
-    std::thread monitorThread([this]() {
+    monitorThread = std::thread([this]() {
         while (!shouldShutdown) {
-            std::this_thread::sleep_for(std::chrono::seconds(5));
+            std::unique_lock<std::mutex> lock(monitorMutex);
+            monitorCV.wait_for(lock, std::chrono::seconds(5), [this] { return shouldShutdown.load(); });
+            lock.unlock();
             if (!shouldShutdown) {
                 checkForDeviceChanges();
             }
         }
     });
-    monitorThread.detach();
 }
 
 USBController::~USBController() {
@@ -50,8 +51,11 @@ USBController *USBController::getInstance() {
 
 void USBController::destroy() {
     shouldShutdown = true;
+    monitorCV.notify_one();
 
-    std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    if (monitorThread.joinable()) {
+        monitorThread.join();
+    }
 
     for (auto ptr : devices) {
         devicePaths.erase(ptr);

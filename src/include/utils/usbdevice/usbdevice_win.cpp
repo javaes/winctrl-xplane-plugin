@@ -45,7 +45,7 @@ bool USBDevice::connect() {
     }
 
     connected = true;
-    std::thread inputThread([this]() {
+    inputThread = std::thread([this]() {
         uint8_t buffer[65];
         DWORD bytesRead;
         while (connected && hidDevice != INVALID_HANDLE_VALUE) {
@@ -55,14 +55,15 @@ bool USBDevice::connect() {
                 InputReportCallback(this, bytesRead, buffer);
             } else if (!result) {
                 DWORD error = GetLastError();
-                if (error == ERROR_DEVICE_NOT_CONNECTED) {
+                if (error == ERROR_DEVICE_NOT_CONNECTED ||
+                    error == ERROR_OPERATION_ABORTED ||
+                    error == ERROR_INVALID_HANDLE) {
                     break;
                 }
                 std::this_thread::sleep_for(std::chrono::milliseconds(10));
             }
         }
     });
-    inputThread.detach();
 
     writeThreadRunning = true;
     writeThread = std::thread(&USBDevice::writeThreadLoop, this);
@@ -104,21 +105,28 @@ void USBDevice::update() {
 }
 
 void USBDevice::disconnect() {
-    // Wait for write queue to drain before disconnecting
+    connected = false;
+
+    // Cancel any pending synchronous ReadFile so the input thread can exit
+    if (hidDevice != INVALID_HANDLE_VALUE) {
+        CancelIoEx(hidDevice, nullptr);
+    }
+
+    // Drain write queue, then stop the write thread
     while (writeQueueSize.load() > 0 && writeThreadRunning) {
         std::this_thread::sleep_for(std::chrono::milliseconds(10));
     }
-
-    connected = false;
     writeThreadRunning = false;
     writeQueueCV.notify_all();
     if (writeThread.joinable()) {
         writeThread.join();
     }
 
+    if (inputThread.joinable()) {
+        inputThread.join();
+    }
+
     if (hidDevice != INVALID_HANDLE_VALUE) {
-        // Give input thread time to exit
-        std::this_thread::sleep_for(std::chrono::milliseconds(50));
         CloseHandle(hidDevice);
         hidDevice = INVALID_HANDLE_VALUE;
     }

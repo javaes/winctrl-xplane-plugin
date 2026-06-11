@@ -41,10 +41,9 @@ USBController::USBController() {
     udev_monitor_enable_receiving(hidManager);
 
     shouldStopMonitoring = false;
-    std::thread monitorThread([this]() {
+    monitorThread = std::thread([this]() {
         monitorDevices();
     });
-    monitorThread.detach();
 }
 
 USBController::~USBController() {
@@ -61,8 +60,10 @@ USBController *USBController::getInstance() {
 void USBController::destroy() {
     shouldStopMonitoring = true;
 
-    // Give the monitoring thread time to exit gracefully
-    std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    // Join before touching any shared state or freeing udev resources
+    if (monitorThread.joinable()) {
+        monitorThread.join();
+    }
 
     for (auto ptr : devices) {
         delete ptr;

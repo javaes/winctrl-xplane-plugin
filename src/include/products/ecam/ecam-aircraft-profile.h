@@ -1,6 +1,8 @@
 #ifndef ECAM_AIRCRAFT_PROFILE_H
 #define ECAM_AIRCRAFT_PROFILE_H
 
+#include "owner-cleanup.h"
+
 #include <string>
 #include <unordered_map>
 #include <XPLMUtilities.h>
@@ -19,7 +21,9 @@ class ECAMAircraftProfile {
 
     public:
         ECAMAircraftProfile(ProductECAM *product) : product(product) {};
-        virtual ~ECAMAircraftProfile() = default;
+        virtual ~ECAMAircraftProfile() {
+            cleanupOwner(this);
+        }
 
         virtual const std::unordered_map<uint16_t, ECAMButtonDef> &buttonDefs() const = 0;
         virtual void buttonPressed(const ECAMButtonDef *button, XPLMCommandPhase phase) = 0;

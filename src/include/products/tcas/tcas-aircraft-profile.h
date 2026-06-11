@@ -1,6 +1,8 @@
 #ifndef TCAS_AIRCRAFT_PROFILE_H
 #define TCAS_AIRCRAFT_PROFILE_H
 
+#include "owner-cleanup.h"
+
 #include <string>
 #include <unordered_map>
 #include <vector>
@@ -27,7 +29,9 @@ class TCASAircraftProfile {
 
     public:
         TCASAircraftProfile(ProductTCAS *product) : product(product) {};
-        virtual ~TCASAircraftProfile() = default;
+        virtual ~TCASAircraftProfile() {
+            cleanupOwner(this);
+        }
 
         virtual const std::vector<std::string> &displayDatarefs() const = 0;
         virtual const std::unordered_map<uint16_t, TCASButtonDef> &buttonDefs() const = 0;

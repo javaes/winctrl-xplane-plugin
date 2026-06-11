@@ -1,6 +1,8 @@
 #ifndef PAP3MCP_AIRCRAFT_PROFILE_H
 #define PAP3MCP_AIRCRAFT_PROFILE_H
 
+#include "owner-cleanup.h"
+
 #include <cstdint>
 #include <string>
 #include <unordered_map>
@@ -111,7 +113,9 @@ class PAP3MCPAircraftProfile {
     public:
         PAP3MCPAircraftProfile(ProductPAP3MCP *product) :
             product(product) {};
-        virtual ~PAP3MCPAircraftProfile() = default;
+        virtual ~PAP3MCPAircraftProfile() {
+            cleanupOwner(this);
+        }
 
         virtual const std::vector<std::string> &displayDatarefs() const = 0;
 

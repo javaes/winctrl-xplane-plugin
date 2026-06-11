@@ -398,7 +398,11 @@ void PluginsMenu::handleMenuAction(void *mRef, void *iRef) {
     try {
         auto it = self->menuCallbacks.find(itemId);
         if (it != self->menuCallbacks.end() && it->second.second) {
-            it->second.second(itemId);
+            // Invoke a copy: the callback may call removeItem/clearAllItems
+            // (e.g. "Reload devices"), which erases the map entry and would
+            // destroy the std::function currently executing.
+            auto callback = it->second.second;
+            callback(itemId);
         }
     } catch (...) {
         // Swallow all exceptions to prevent crashes from menu callbacks

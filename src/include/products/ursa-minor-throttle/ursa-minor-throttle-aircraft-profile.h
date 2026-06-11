@@ -1,6 +1,8 @@
 #ifndef URSA_MINOR_THROTTLE_AIRCRAFT_PROFILE_H
 #define URSA_MINOR_THROTTLE_AIRCRAFT_PROFILE_H
 
+#include "owner-cleanup.h"
+
 #include <string>
 #include <unordered_map>
 #include <XPLMUtilities.h>
@@ -31,7 +33,9 @@ class UrsaMinorThrottleAircraftProfile {
 
     public:
         UrsaMinorThrottleAircraftProfile(ProductUrsaMinorThrottle *product) : product(product) {};
-        virtual ~UrsaMinorThrottleAircraftProfile() = default;
+        virtual ~UrsaMinorThrottleAircraftProfile() {
+            cleanupOwner(this);
+        }
 
         virtual void update() {}
 

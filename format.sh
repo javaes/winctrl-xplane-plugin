@@ -16,7 +16,9 @@ format_all() {
     find src -type f \( -name "*.cpp" -o -name "*.h" -o -name "*.hpp" -o -name "*.cc" \) \
         -not -path "*/build/*" \
         -not -path "*/.cmake/*" \
-        -not -path "*/CMakeFiles/*" | while read -r file; do
+        -not -path "*/CMakeFiles/*" \
+        -not -name "SimpleIni.h" \
+        -not -name "SimpleIni.h" | while read -r file; do
         format_file "$file"
     done
 }

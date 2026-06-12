@@ -65,6 +65,11 @@ FF777RMPProfile::FF777RMPProfile(ProductRMP *product) : RMPAircraftProfile(produ
         },
             this);
     }
+
+    Dataref::getInstance()->monitorExistingDataref<bool>("sim/cockpit/electrical/avionics_on", [this](bool poweredOn) {
+        updateDisplays();
+    },
+        this);
 }
 
 bool FF777RMPProfile::IsEligible() {

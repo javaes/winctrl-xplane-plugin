@@ -140,6 +140,7 @@ if [ ! -d "SDK" ]; then
 fi
 
 SDK_VERSION=$(grep "#define kXPLM_Version" SDK/CHeaders/XPLM/XPLMDefs.h | awk '{print $3}' | tr -d '()')
+JOBS=$(nproc 2>/dev/null || sysctl -n hw.logicalcpu 2>/dev/null || echo 4)
 
 echo "Building with SDK version $SDK_VERSION\n"
 
@@ -174,14 +175,14 @@ for platform in $PLATFORMS; do
         docker build -t gcc-cmake -f ./docker/Dockerfile.linux . && \
         docker run --user $(id -u):$(id -g) --rm -v $(pwd):/src -w /src gcc-cmake:latest bash -c "\
         cmake -DCMAKE_CXX_FLAGS='-march=x86-64' -DCMAKE_TOOLCHAIN_FILE=toolchain-$platform.cmake -DSDK_VERSION=$SDK_VERSION -Bbuild/$platform -H. && \
-        make -C build/$platform -j\$(nproc)"
+        make -C build/$platform -j$JOBS -j\$(nproc)"
     else
         if [ "$DEV_MODE" = true ] && [ ! -z "$XPLANE_PLUGIN_PATH" ]; then
             cmake -DCMAKE_TOOLCHAIN_FILE=toolchain-$platform.cmake -DSDK_VERSION=$SDK_VERSION -DXPLANE_PLUGIN_PATH="$XPLANE_PLUGIN_PATH" -Bbuild/$platform -H.
         else
             cmake -DCMAKE_TOOLCHAIN_FILE=toolchain-$platform.cmake -DSDK_VERSION=$SDK_VERSION -Bbuild/$platform -H.
         fi
-        make -C build/$platform
+        make -C build/$platform -j$JOBS
     fi
 
     if [ $? -eq 0 ]; then

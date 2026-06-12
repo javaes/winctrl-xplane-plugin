@@ -28,19 +28,23 @@ C172FCUEfisProfile::C172FCUEfisProfile(ProductFCUEfis *product) : FCUEfisAircraf
         product->setLedBrightness(FCUEfisLed::EFISL_SCREEN_BACKLIGHT, target);
 
         product->forceStateSync();
-    }, this);
+    },
+        this);
 
     Dataref::getInstance()->monitorExistingDataref<bool>("sim/physics/metric_press", [product](bool isMetric) {
         product->updateDisplays();
-    }, this);
+    },
+        this);
 
     Dataref::getInstance()->monitorExistingDataref<bool>("sim/cockpit2/autopilot/servos_on", [product](bool isAutopilotEngaged) {
         product->setLedBrightness(FCUEfisLed::AP1_GREEN, isAutopilotEngaged ? 1 : 0);
-    }, this);
+    },
+        this);
 
     Dataref::getInstance()->monitorExistingDataref<int>("sim/cockpit2/autopilot/heading_mode", [this, product](int headingMode) {
         product->setLedBrightness(FCUEfisLed::LOC_GREEN, headingMode == 2);
-    }, this);
+    },
+        this);
 
     Dataref::getInstance()->executeChangedCallbacksForDataref("sim/cockpit2/electrical/instrument_brightness_ratio_manual");
 }

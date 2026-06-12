@@ -2,7 +2,6 @@
 #define FCUEFIS_AIRCRAFT_PROFILE_H
 
 #include "profile-cleanup.h"
-
 #include "segment-display.h"
 
 #include <cfloat>
@@ -225,6 +224,7 @@ class FCUEfisAircraftProfile {
     public:
         FCUEfisAircraftProfile(ProductFCUEfis *product) :
             product(product) {};
+
         virtual ~FCUEfisAircraftProfile() {
             cleanupProfile(this);
         }

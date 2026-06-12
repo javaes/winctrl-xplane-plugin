@@ -4,13 +4,13 @@
 #include "config.h"
 
 #include <atomic>
-#include <typeinfo>
 #include <condition_variable>
 #include <cstdint>
 #include <mutex>
 #include <queue>
 #include <string>
 #include <thread>
+#include <typeinfo>
 #include <vector>
 
 #if APL

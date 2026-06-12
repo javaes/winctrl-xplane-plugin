@@ -33,6 +33,7 @@ class UrsaMinorThrottleAircraftProfile {
 
     public:
         UrsaMinorThrottleAircraftProfile(ProductUrsaMinorThrottle *product) : product(product) {};
+
         virtual ~UrsaMinorThrottleAircraftProfile() {
             cleanupProfile(this);
         }

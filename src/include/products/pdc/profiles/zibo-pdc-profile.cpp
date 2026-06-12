@@ -21,19 +21,23 @@ ZiboPDCProfile::ZiboPDCProfile(ProductPDC *product) : PDCAircraftProfile(product
         product->setLedBrightness(PDCLed::BACKLIGHT, brightness);
 
         product->forceStateSync();
-    }, this);
+    },
+        this);
 
     Dataref::getInstance()->monitorExistingDataref<bool>("sim/cockpit/electrical/avionics_on", [product](bool hasPower) {
         Dataref::getInstance()->executeChangedCallbacksForDataref("laminar/B738/electric/panel_brightness");
-    }, this);
+    },
+        this);
 
     Dataref::getInstance()->monitorExistingDataref<std::vector<float>>("laminar/B738/dspl_light_test", [this](const std::vector<float> &displayTest) {
         Dataref::getInstance()->executeChangedCallbacksForDataref("laminar/B738/electric/panel_brightness");
-    }, this);
+    },
+        this);
 
     Dataref::getInstance()->monitorExistingDataref<bool>("laminar/B738/electric/main_bus", [product](bool hasPower) {
         Dataref::getInstance()->executeChangedCallbacksForDataref("sim/cockpit/electrical/avionics_on");
-    }, this);
+    },
+        this);
 }
 
 bool ZiboPDCProfile::IsEligible() {

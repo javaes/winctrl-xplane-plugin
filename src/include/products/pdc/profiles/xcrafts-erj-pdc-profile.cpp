@@ -16,7 +16,8 @@ XCraftsErjPDCProfile::XCraftsErjPDCProfile(ProductPDC *product) : PDCAircraftPro
         uint8_t target = static_cast<uint8_t>(brightness[12] * 255);
         product->setLedBrightness(PDCLed::BACKLIGHT, target);
         product->forceStateSync();
-    }, this);
+    },
+        this);
 }
 
 bool XCraftsErjPDCProfile::IsEligible() {

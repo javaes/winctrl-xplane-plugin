@@ -10,7 +10,7 @@
 class JF146FCUEfisProfile : public FCUEfisAircraftProfile {
     private:
         bool isAnnunTest(bool allowEssentialBusPowerOnly = false);
-        std::unordered_map<const FCUEfisButtonDef*, float> lastPressTime;
+        std::unordered_map<const FCUEfisButtonDef *, float> lastPressTime;
 
     public:
         JF146FCUEfisProfile(ProductFCUEfis *product);

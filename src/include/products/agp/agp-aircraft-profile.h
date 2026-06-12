@@ -29,6 +29,7 @@ class AGPAircraftProfile {
 
     public:
         AGPAircraftProfile(ProductAGP *product) : product(product) {};
+
         virtual ~AGPAircraftProfile() {
             cleanupProfile(this);
         }

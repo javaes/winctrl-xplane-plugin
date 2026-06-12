@@ -14,6 +14,7 @@ class JoystickAircraftProfile {
 
     public:
         JoystickAircraftProfile(USBDevice *product) : product(product) {};
+
         virtual ~JoystickAircraftProfile() {
             cleanupProfile(this);
         }

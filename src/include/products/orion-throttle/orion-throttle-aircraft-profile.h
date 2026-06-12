@@ -11,6 +11,7 @@ class OrionThrottleAircraftProfile {
 
     public:
         OrionThrottleAircraftProfile(USBDevice *product) : product(product) {};
+
         virtual ~OrionThrottleAircraftProfile() {
             cleanupProfile(this);
         }

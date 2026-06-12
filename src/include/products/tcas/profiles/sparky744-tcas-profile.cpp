@@ -12,16 +12,15 @@ SparkyB744TCASProfile::SparkyB744TCASProfile(ProductTCAS *product) : TCASAircraf
         product->setLedBrightness(TCASLed::BACKLIGHT, backlight);
         product->setLedBrightness(TCASLed::LCD_BRIGHTNESS, powered ? 255 : 0);
         product->setLedBrightness(TCASLed::OVERALL_LEDS_BRIGHTNESS, powered ? 255 : 0);
-    }, this);
+    },
+        this);
 
     Dataref::getInstance()->executeChangedCallbacksForDataref("sim/cockpit/electrical/avionics_on");
 }
 
 bool SparkyB744TCASProfile::IsEligible() {
     auto dr = Dataref::getInstance();
-    return dr->exists("laminar/B747/fms1/Line01_L")
-        && !dr->exists("FPS/748/simtime")
-        && !dr->exists("SSG/748/simtime");
+    return dr->exists("laminar/B747/fms1/Line01_L") && !dr->exists("FPS/748/simtime") && !dr->exists("SSG/748/simtime");
 }
 
 const std::vector<std::string> &SparkyB744TCASProfile::displayDatarefs() const {

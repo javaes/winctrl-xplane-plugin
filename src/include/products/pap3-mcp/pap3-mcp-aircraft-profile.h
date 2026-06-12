@@ -113,6 +113,7 @@ class PAP3MCPAircraftProfile {
     public:
         PAP3MCPAircraftProfile(ProductPAP3MCP *product) :
             product(product) {};
+
         virtual ~PAP3MCPAircraftProfile() {
             cleanupProfile(this);
         }

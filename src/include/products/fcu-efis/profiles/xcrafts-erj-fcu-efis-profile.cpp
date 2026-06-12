@@ -32,23 +32,27 @@ XCraftsErjFCUEfisProfile::XCraftsErjFCUEfisProfile(ProductFCUEfis *product) : FC
         product->setLedBrightness(FCUEfisLed::EFISL_SCREEN_BACKLIGHT, screenBrightness);
 
         product->forceStateSync();
-    }, this);
+    },
+        this);
 
     Dataref::getInstance()->monitorExistingDataref<int>("sim/cockpit/autopilot/autopilot_mode", [product](int mode) {
         bool engaged = (mode == 2);
         product->setLedBrightness(FCUEfisLed::AP1_GREEN, engaged ? 1 : 0);
         product->setLedBrightness(FCUEfisLed::AP2_GREEN, engaged ? 1 : 0);
-    }, this);
+    },
+        this);
 
     Dataref::getInstance()->monitorExistingDataref<int>("sim/cockpit2/autopilot/flight_director_mode", [product](int fdMode) {
         bool engaged = (fdMode == 1);
         product->setLedBrightness(FCUEfisLed::EFISL_FD_GREEN, engaged ? 1 : 0);
-    }, this);
+    },
+        this);
 
     Dataref::getInstance()->monitorExistingDataref<int>("sim/cockpit2/autopilot/flight_director2_mode", [product](int fdMode) {
         bool engaged = (fdMode == 1);
         product->setLedBrightness(FCUEfisLed::EFISR_FD_GREEN, engaged ? 1 : 0);
-    }, this);
+    },
+        this);
 }
 
 bool XCraftsErjFCUEfisProfile::IsEligible() {

@@ -16,31 +16,37 @@ FlightFactor777FMCProfile::FlightFactor777FMCProfile(ProductFMC *product) : FMCA
     Dataref::getInstance()->monitorExistingDataref<float>(("1-sim/" + cdu + "/brt").c_str(), [product, cdu](float brightness) {
         uint8_t target = Dataref::getInstance()->get<bool>(("1-sim/" + cdu + "/ok").c_str()) ? brightness * 255 : 0;
         product->setLedBrightness(FMCLed::SCREEN_BACKLIGHT, target);
-    }, this);
+    },
+        this);
 
     Dataref::getInstance()->monitorExistingDataref<float>("1-sim/ckpt/lights/aisle", [product, cdu](float brightness) {
         uint8_t target = Dataref::getInstance()->get<bool>(("1-sim/" + cdu + "/ok").c_str()) ? brightness * 255 : 0;
         product->setLedBrightness(FMCLed::BACKLIGHT, target);
-    }, this);
+    },
+        this);
 
     Dataref::getInstance()->monitorExistingDataref<bool>(("1-sim/" + cdu + "/ok").c_str(), [cdu](bool poweredOn) {
         Dataref::getInstance()->executeChangedCallbacksForDataref(("1-sim/" + cdu + "/brt").c_str());
         Dataref::getInstance()->executeChangedCallbacksForDataref("1-sim/ckpt/lights/aisle");
-    }, this);
+    },
+        this);
 
     Dataref::getInstance()->monitorExistingDataref<bool>("1-sim/ckpt/lamps/cduCptAct", [product](bool enabled) {
         product->setLedBrightness(FMCLed::PFP_EXEC, enabled ? 1 : 0);
         product->setLedBrightness(FMCLed::MCDU_STATUS, enabled ? 1 : 0);
-    }, this);
+    },
+        this);
 
     Dataref::getInstance()->monitorExistingDataref<bool>("1-sim/ckpt/lamps/cduCptMSG", [product](bool enabled) {
         product->setLedBrightness(FMCLed::PFP_MSG, enabled ? 1 : 0);
         product->setLedBrightness(FMCLed::MCDU_MCDU, enabled ? 1 : 0);
-    }, this);
+    },
+        this);
 
     Dataref::getInstance()->monitorExistingDataref<bool>("1-sim/ckpt/lamps/cduCptOFST", [product](bool enabled) {
         product->setLedBrightness(FMCLed::PFP_OFST, enabled ? 1 : 0);
-    }, this);
+    },
+        this);
 }
 
 bool FlightFactor777FMCProfile::IsEligible() {

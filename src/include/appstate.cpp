@@ -179,7 +179,9 @@ void AppState::cancelTasksForOwner(void *owner) {
     std::lock_guard<std::mutex> lock(taskQueueMutex);
     taskQueue.erase(
         std::remove_if(taskQueue.begin(), taskQueue.end(),
-            [owner](const DelayedTask &t) { return t.owner == owner; }),
+            [owner](const DelayedTask &t) {
+                return t.owner == owner;
+            }),
         taskQueue.end());
     cancelledOwners.push_back(owner);
 }

@@ -28,21 +28,25 @@ CISSenecaFCUEfisProfile::CISSenecaFCUEfisProfile(ProductFCUEfis *product) : FCUE
         product->setLedBrightness(FCUEfisLed::EFISL_SCREEN_BACKLIGHT, target);
 
         product->forceStateSync();
-    }, this);
+    },
+        this);
 
     Dataref::getInstance()->monitorExistingDataref<bool>("CIS/PA34/instruments/altimeter/HpA", [product](bool isHpa) {
         product->updateDisplays();
-    }, this);
+    },
+        this);
 
     Dataref::getInstance()->monitorExistingDataref<bool>("CIS/PA34/autopilot/ap_light", [product](bool isAutopilotEngaged) {
         product->setLedBrightness(FCUEfisLed::AP1_GREEN, isAutopilotEngaged ? 1 : 0);
         product->setLedBrightness(FCUEfisLed::AP2_GREEN, isAutopilotEngaged ? 1 : 0);
-    }, this);
+    },
+        this);
 
     Dataref::getInstance()->monitorExistingDataref<bool>("sim/cockpit2/annunciators/flight_director", [product](bool enabled) {
         product->setLedBrightness(FCUEfisLed::EFISL_FD_GREEN, enabled ? 1 : 0);
         product->setLedBrightness(FCUEfisLed::EFISR_FD_GREEN, enabled ? 1 : 0);
-    }, this);
+    },
+        this);
 
     Dataref::getInstance()->executeChangedCallbacksForDataref("sim/cockpit2/electrical/instrument_brightness_ratio_manual");
 }

@@ -13,11 +13,13 @@ FPS748TCASProfile::FPS748TCASProfile(ProductTCAS *product) : TCASAircraftProfile
         product->setLedBrightness(TCASLed::BACKLIGHT, backlight);
         product->setLedBrightness(TCASLed::LCD_BRIGHTNESS, hasPower ? 255 : 0);
         product->setLedBrightness(TCASLed::OVERALL_LEDS_BRIGHTNESS, hasPower ? 255 : 0);
-    }, this);
+    },
+        this);
 
     Dataref::getInstance()->monitorExistingDataref<bool>((altPrefix + "/Elec/bus_1_powered").c_str(), [altPrefix](bool) {
         Dataref::getInstance()->executeChangedCallbacksForDataref((altPrefix + "/LGT/glaresheld_sw").c_str());
-    }, this);
+    },
+        this);
 
     Dataref::getInstance()->executeChangedCallbacksForDataref((altPrefix + "/Elec/bus_1_powered").c_str());
 }

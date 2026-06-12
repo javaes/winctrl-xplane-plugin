@@ -15,18 +15,19 @@ Strato77WFMCProfile::Strato77WFMCProfile(ProductFMC *product) : FMCAircraftProfi
         uint8_t target = powered ? 200 : 0;
         product->setLedBrightness(FMCLed::SCREEN_BACKLIGHT, target);
         product->setLedBrightness(FMCLed::BACKLIGHT, target);
-    }, this);
+    },
+        this);
 
     // FMC activity (EXEC light) — array: [0]=left, [1]=right, [2]=center
     Dataref::getInstance()->monitorExistingDataref<std::vector<float>>("Strato/777/cdu_fmc_act", [product](std::vector<float> act) {
-        int idx = product->deviceVariant == FMCDeviceVariant::VARIANT_CAPTAIN  ? 0
+        int idx = product->deviceVariant == FMCDeviceVariant::VARIANT_CAPTAIN      ? 0
                 : product->deviceVariant == FMCDeviceVariant::VARIANT_FIRSTOFFICER ? 1
                                                                                    : 2;
-        bool active = (int)act.size() > idx && act[idx] > 0.5f;
+        bool active = (int) act.size() > idx && act[idx] > 0.5f;
         product->setLedBrightness(FMCLed::PFP_EXEC, active ? 1 : 0);
         product->setLedBrightness(FMCLed::MCDU_STATUS, active ? 1 : 0);
-    }, this);
-
+    },
+        this);
 }
 
 bool Strato77WFMCProfile::IsEligible() {
@@ -56,10 +57,10 @@ const std::vector<std::string> &Strato77WFMCProfile::displayDatarefs() const {
 }
 
 const std::vector<FMCButtonDef> &Strato77WFMCProfile::buttonDefs() const {
-    const std::string fms = product->deviceVariant == FMCDeviceVariant::VARIANT_CAPTAIN  ? "fms1"
+    const std::string fms = product->deviceVariant == FMCDeviceVariant::VARIANT_CAPTAIN      ? "fms1"
                           : product->deviceVariant == FMCDeviceVariant::VARIANT_FIRSTOFFICER ? "fms2"
                                                                                              : "fms3";
-    const std::string brt = product->deviceVariant == FMCDeviceVariant::VARIANT_CAPTAIN  ? "fmsL"
+    const std::string brt = product->deviceVariant == FMCDeviceVariant::VARIANT_CAPTAIN      ? "fmsL"
                           : product->deviceVariant == FMCDeviceVariant::VARIANT_FIRSTOFFICER ? "fmsR"
                                                                                              : "fmsC";
     static std::unordered_map<FMCDeviceVariant, std::vector<FMCButtonDef>> cache;
@@ -219,7 +220,7 @@ void Strato77WFMCProfile::updatePage(std::vector<std::vector<char>> &page) {
                                                                                          : "fms2";
     const std::string base = "Strato/B777/" + fms + "/Line";
 
-    for (int lineNum = 1; lineNum <= (int)ProductFMC::PageLines; ++lineNum) {
+    for (int lineNum = 1; lineNum <= (int) ProductFMC::PageLines; ++lineNum) {
         char buf[4];
         snprintf(buf, sizeof(buf), "%02d", lineNum);
         int lineIndex = lineNum - 1;
@@ -247,7 +248,7 @@ void Strato77WFMCProfile::updatePage(std::vector<std::vector<char>> &page) {
             // Small font lines use cyan (labels); large font lines use white (data)
             char color = fontSmall ? 'c' : 'w';
 
-            for (int i = 0; i < (int)text.size() && i < (int)ProductFMC::PageCharsPerLine; ++i) {
+            for (int i = 0; i < (int) text.size() && i < (int) ProductFMC::PageCharsPerLine; ++i) {
                 unsigned char c = text[i];
                 if (c == 0x00) {
                     break;

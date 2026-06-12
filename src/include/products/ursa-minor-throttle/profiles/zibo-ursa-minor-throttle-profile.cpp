@@ -23,36 +23,43 @@ ZiboUrsaMinorThrottleProfile::ZiboUrsaMinorThrottleProfile(ProductUrsaMinorThrot
 
         updateDisplays();
         product->forceStateSync();
-    }, this);
+    },
+        this);
 
     Dataref::getInstance()->monitorExistingDataref<bool>("sim/cockpit/electrical/avionics_on", [this, product](bool hasPower) {
         Dataref::getInstance()->executeChangedCallbacksForDataref("laminar/B738/electric/panel_brightness");
 
         updateDisplays();
         product->forceStateSync();
-    }, this);
+    },
+        this);
 
     Dataref::getInstance()->monitorExistingDataref<std::vector<float>>("laminar/B738/dspl_light_test", [this](const std::vector<float> &displayTest) {
         Dataref::getInstance()->executeChangedCallbacksForDataref("laminar/B738/electric/panel_brightness");
-    }, this);
+    },
+        this);
 
     Dataref::getInstance()->monitorExistingDataref<bool>("laminar/B738/electric/main_bus", [product](bool hasPower) {
         Dataref::getInstance()->executeChangedCallbacksForDataref("sim/cockpit/electrical/avionics_on");
-    }, this);
+    },
+        this);
 
     Dataref::getInstance()->monitorExistingDataref<float>("sim/flightmodel/controls/vstab2_rud1def", [this, product](float trimPosition) {
         updateDisplays();
-    }, this);
+    },
+        this);
 
     Dataref::getInstance()->monitorExistingDataref<float>("laminar/B738/annunciator/engine1_fire", [this, product](float brightness) {
         product->setLedBrightness(UrsaMinorThrottleLed::ENG_1_FAULT, 0);
         product->setLedBrightness(UrsaMinorThrottleLed::ENG_1_FIRE, brightness > std::numeric_limits<float>::epsilon());
-    }, this);
+    },
+        this);
 
     Dataref::getInstance()->monitorExistingDataref<float>("laminar/B738/annunciator/engine2_fire", [this, product](float brightness) {
         product->setLedBrightness(UrsaMinorThrottleLed::ENG_2_FAULT, 0);
         product->setLedBrightness(UrsaMinorThrottleLed::ENG_2_FIRE, brightness > std::numeric_limits<float>::epsilon());
-    }, this);
+    },
+        this);
 }
 
 bool ZiboUrsaMinorThrottleProfile::IsEligible() {

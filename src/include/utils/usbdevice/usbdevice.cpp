@@ -5,13 +5,13 @@
 #include "product-ecam.h"
 #include "product-fcu-efis.h"
 #include "product-fmc.h"
+#include "product-joystick.h"
+#include "product-orion-throttle.h"
 #include "product-pap3-mcp.h"
 #include "product-pdc.h"
 #include "product-rmp.h"
 #include "product-tcas.h"
 #include "product-ursa-minor-throttle.h"
-#include "product-orion-throttle.h"
-#include "product-joystick.h"
 
 #include <XPLMUtilities.h>
 

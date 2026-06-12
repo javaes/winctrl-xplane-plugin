@@ -53,6 +53,7 @@ class PDCAircraftProfile {
 
     public:
         PDCAircraftProfile(ProductPDC *product) : product(product) {};
+
         virtual ~PDCAircraftProfile() {
             cleanupProfile(this);
         }

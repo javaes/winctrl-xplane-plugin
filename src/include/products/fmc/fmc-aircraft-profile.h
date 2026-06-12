@@ -1,9 +1,8 @@
 #ifndef FMC_AIRCRAFT_PROFILE_H
 #define FMC_AIRCRAFT_PROFILE_H
 
-#include "profile-cleanup.h"
-
 #include "fmc-hardware-mapping.h"
+#include "profile-cleanup.h"
 
 #include <array>
 #include <map>
@@ -104,6 +103,7 @@ class FMCAircraftProfile {
     public:
         FMCAircraftProfile(ProductFMC *product) :
             product(product) {};
+
         virtual ~FMCAircraftProfile() {
             cleanupProfile(this);
         }

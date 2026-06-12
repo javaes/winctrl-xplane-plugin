@@ -14,20 +14,24 @@ FF777PDCProfile::FF777PDCProfile(ProductPDC *product) : PDCAircraftProfile(produ
         product->setLedBrightness(PDCLed::BACKLIGHT, target);
 
         product->forceStateSync();
-    }, this);
+    },
+        this);
 
     // We abuse the GPU hatch dataref to trigger an update when the UI is closed.
     Dataref::getInstance()->monitorExistingDataref<bool>("1-sim/anim/hatchGPU", [product](bool gpuHatchOpen) {
         Dataref::getInstance()->executeChangedCallbacksForDataref("1-sim/output/mcp/ok");
-    }, this);
+    },
+        this);
 
     Dataref::getInstance()->monitorExistingDataref<bool>("1-sim/output/mcp/ok", [product](bool hasPower) {
         Dataref::getInstance()->executeChangedCallbacksForDataref("1-sim/ckpt/lights/glareshield");
-    }, this);
+    },
+        this);
 
     Dataref::getInstance()->monitorExistingDataref<int>("1-sim/ckpt/indLightTestSwitch/anim", [this, product](int isTest) {
         Dataref::getInstance()->executeChangedCallbacksForDataref("1-sim/output/mcp/ok");
-    }, this);
+    },
+        this);
 }
 
 bool FF777PDCProfile::IsEligible() {

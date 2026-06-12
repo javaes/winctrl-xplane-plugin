@@ -52,12 +52,16 @@ bool USBDevice::connect() {
             int maxFd = hidDevice + 1;
             if (inputPipe[0] >= 0) {
                 FD_SET(inputPipe[0], &fds);
-                if (inputPipe[0] + 1 > maxFd) maxFd = inputPipe[0] + 1;
+                if (inputPipe[0] + 1 > maxFd) {
+                    maxFd = inputPipe[0] + 1;
+                }
             }
 
             int ret = select(maxFd, &fds, nullptr, nullptr, nullptr);
             if (ret < 0) {
-                if (errno == EINTR) continue;
+                if (errno == EINTR) {
+                    continue;
+                }
                 Logger::getInstance()->error("Select failed: %d\n", errno);
                 break;
             }
@@ -69,7 +73,7 @@ bool USBDevice::connect() {
             if (FD_ISSET(hidDevice, &fds)) {
                 ssize_t bytesRead = read(hidDevice, buffer, sizeof(buffer));
                 if (bytesRead > 0 && connected) {
-                    InputReportCallback(this, (int)bytesRead, buffer);
+                    InputReportCallback(this, (int) bytesRead, buffer);
                 } else if (bytesRead < 0) {
                     Logger::getInstance()->error("Read failed with error: %d\n", errno);
                     break;
@@ -121,7 +125,7 @@ void USBDevice::disconnect() {
     // Wake the input thread via the self-pipe so it exits its select() block
     if (inputPipe[1] >= 0) {
         uint8_t c = 0;
-        (void)write(inputPipe[1], &c, 1);
+        (void) write(inputPipe[1], &c, 1);
     }
 
     // Drain write queue, then stop the write thread
@@ -138,8 +142,14 @@ void USBDevice::disconnect() {
         inputThread.join();
     }
 
-    if (inputPipe[0] >= 0) { close(inputPipe[0]); inputPipe[0] = -1; }
-    if (inputPipe[1] >= 0) { close(inputPipe[1]); inputPipe[1] = -1; }
+    if (inputPipe[0] >= 0) {
+        close(inputPipe[0]);
+        inputPipe[0] = -1;
+    }
+    if (inputPipe[1] >= 0) {
+        close(inputPipe[1]);
+        inputPipe[1] = -1;
+    }
 
     if (hidDevice >= 0) {
         close(hidDevice);

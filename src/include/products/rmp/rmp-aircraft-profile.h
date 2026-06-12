@@ -28,6 +28,7 @@ class RMPAircraftProfile {
 
     public:
         RMPAircraftProfile(ProductRMP *product) : product(product) {};
+
         virtual ~RMPAircraftProfile() {
             cleanupProfile(this);
         }

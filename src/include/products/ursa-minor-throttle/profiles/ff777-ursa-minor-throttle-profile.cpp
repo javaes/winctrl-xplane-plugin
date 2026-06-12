@@ -17,36 +17,44 @@ FF777UrsaMinorThrottleProfile::FF777UrsaMinorThrottleProfile(ProductUrsaMinorThr
 
         updateDisplays();
         product->forceStateSync();
-    }, this);
+    },
+        this);
 
     // We abuse the GPU hatch dataref to trigger an update when the UI is closed.
     Dataref::getInstance()->monitorExistingDataref<bool>("1-sim/anim/hatchGPU", [product](bool gpuHatchOpen) {
         Dataref::getInstance()->executeChangedCallbacksForDataref("1-sim/output/mcp/ok");
-    }, this);
+    },
+        this);
 
     Dataref::getInstance()->monitorExistingDataref<bool>("1-sim/output/mcp/ok", [product](bool hasPower) {
         Dataref::getInstance()->executeChangedCallbacksForDataref("1-sim/ckpt/lights/glareshield");
-    }, this);
+    },
+        this);
 
     Dataref::getInstance()->monitorExistingDataref<float>("sim/flightmodel/controls/vstab2_rud1def", [this, product](float trimPosition) {
         updateDisplays();
-    }, this);
+    },
+        this);
 
     Dataref::getInstance()->monitorExistingDataref<bool>("1-sim/ckpt/lampsGlow/cutoffLeftLGT", [this, product](bool isOn) {
         product->setLedBrightness(UrsaMinorThrottleLed::ENG_1_FAULT, isOn ? 1 : 0);
-    }, this);
+    },
+        this);
 
     Dataref::getInstance()->monitorExistingDataref<bool>("1-sim/ckpt/lampsGlow/cutoffRightLGT", [this, product](bool isOn) {
         product->setLedBrightness(UrsaMinorThrottleLed::ENG_2_FAULT, isOn ? 1 : 0);
-    }, this);
+    },
+        this);
 
     Dataref::getInstance()->monitorExistingDataref<bool>("1-sim/ckpt/lampsGlow/engLeftFireDISCH", [this, product](bool isOn) {
         product->setLedBrightness(UrsaMinorThrottleLed::ENG_1_FIRE, isOn ? 1 : 0);
-    }, this);
+    },
+        this);
 
     Dataref::getInstance()->monitorExistingDataref<bool>("1-sim/ckpt/lampsGlow/engRightFireDISCH", [this, product](bool isOn) {
         product->setLedBrightness(UrsaMinorThrottleLed::ENG_2_FIRE, isOn ? 1 : 0);
-    }, this);
+    },
+        this);
 }
 
 bool FF777UrsaMinorThrottleProfile::IsEligible() {

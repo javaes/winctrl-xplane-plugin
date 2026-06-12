@@ -37,11 +37,13 @@ RotateMD11PAP3MCPProfile::RotateMD11PAP3MCPProfile(ProductPAP3MCP *product) : PA
         }
 
         product->forceStateSync();
-    }, this);
+    },
+        this);
 
     Dataref::getInstance()->monitorExistingDataref<float>("Rotate/aircraft/systems/light_fgs_panel_brt_ratio", [](float panelLights) {
         Dataref::getInstance()->executeChangedCallbacksForDataref("Rotate/aircraft/systems/elec_dc_batt_bus_pwrd");
-    }, this);
+    },
+        this);
 
     // MD-11 MCP has NO LED annunciators - all LEDs disabled by not setting up monitors
     // The real MD-11 uses a different display system (not LED buttons)

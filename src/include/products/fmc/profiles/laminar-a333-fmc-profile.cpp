@@ -19,11 +19,13 @@ LaminarA333FMCProfile::LaminarA333FMCProfile(ProductFMC *product) : FMCAircraftP
         uint8_t target = Dataref::getInstance()->getCached<bool>("sim/cockpit/electrical/avionics_on") ? brightness[6] * 255 : 0;
         product->setLedBrightness(FMCLed::BACKLIGHT, target);
         product->setLedBrightness(FMCLed::SCREEN_BACKLIGHT, target);
-    }, this);
+    },
+        this);
 
     Dataref::getInstance()->monitorExistingDataref<bool>("sim/cockpit/electrical/avionics_on", [this](bool poweredOn) {
         Dataref::getInstance()->executeChangedCallbacksForDataref("sim/cockpit2/electrical/instrument_brightness_ratio_manual");
-    }, this);
+    },
+        this);
 
     product->setLedBrightness(FMCLed::BACKLIGHT, 128);
     product->setLedBrightness(FMCLed::SCREEN_BACKLIGHT, 128);

@@ -3,11 +3,11 @@
 #include "appstate.h"
 #include "dataref.h"
 #include "plugins-menu.h"
-#include "profiles/fps748-pdc-profile.h"
 #include "profiles/ff777-pdc-profile.h"
-#include "profiles/zibo-pdc-profile.h"
-#include "profiles/xcrafts-erj-pdc-profile.h"
+#include "profiles/fps748-pdc-profile.h"
 #include "profiles/xcrafts-ejets-pdc-profile.h"
+#include "profiles/xcrafts-erj-pdc-profile.h"
+#include "profiles/zibo-pdc-profile.h"
 
 #include <algorithm>
 #include <cmath>

@@ -21,6 +21,7 @@ class ECAMAircraftProfile {
 
     public:
         ECAMAircraftProfile(ProductECAM *product) : product(product) {};
+
         virtual ~ECAMAircraftProfile() {
             cleanupProfile(this);
         }

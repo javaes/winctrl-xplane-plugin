@@ -14,24 +14,28 @@ TolissUrsaMinorThrottleProfile::TolissUrsaMinorThrottleProfile(ProductUrsaMinorT
 
         product->setLedBrightness(UrsaMinorThrottleLed::BACKLIGHT, backlightBrightness);
         product->setLedBrightness(UrsaMinorThrottleLed::OVERALL_LEDS_AND_LCD_BRIGHTNESS, hasPower ? 255 : 0);
-    }, this);
+    },
+        this);
 
     Dataref::getInstance()->monitorExistingDataref<bool>("sim/cockpit/electrical/avionics_on", [this, product](bool poweredOn) {
         Dataref::getInstance()->executeChangedCallbacksForDataref("AirbusFBW/PanelBrightnessLevel");
 
         updateDisplays();
         product->forceStateSync();
-    }, this);
+    },
+        this);
 
     Dataref::getInstance()->monitorExistingDataref<float>("AirbusFBW/YawTrimPosition", [this, product](float trimPosition) {
         updateDisplays();
-    }, this);
+    },
+        this);
 
     Dataref::getInstance()->monitorExistingDataref<int>("AirbusFBW/AnnunMode", [this, product](int annunMode) {
         Dataref::getInstance()->executeChangedCallbacksForDataref("AirbusFBW/OHPLightsATA70_Raw");
 
         updateDisplays();
-    }, this);
+    },
+        this);
 
     Dataref::getInstance()->monitorExistingDataref<std::vector<float>>("AirbusFBW/OHPLightsATA70_Raw", [this, product](const std::vector<float> &panelLights) {
         if (panelLights.size() < 13) {
@@ -42,7 +46,8 @@ TolissUrsaMinorThrottleProfile::TolissUrsaMinorThrottleProfile(ProductUrsaMinorT
         product->setLedBrightness(UrsaMinorThrottleLed::ENG_1_FIRE, panelLights[11] > std::numeric_limits<float>::epsilon() || isAnnunTest() ? 1 : 0);
         product->setLedBrightness(UrsaMinorThrottleLed::ENG_2_FAULT, panelLights[12] > std::numeric_limits<float>::epsilon() || isAnnunTest() ? 1 : 0);
         product->setLedBrightness(UrsaMinorThrottleLed::ENG_2_FIRE, panelLights[13] > std::numeric_limits<float>::epsilon() || isAnnunTest() ? 1 : 0);
-    }, this);
+    },
+        this);
 }
 
 bool TolissUrsaMinorThrottleProfile::IsEligible() {

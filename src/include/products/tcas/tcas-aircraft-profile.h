@@ -29,6 +29,7 @@ class TCASAircraftProfile {
 
     public:
         TCASAircraftProfile(ProductTCAS *product) : product(product) {};
+
         virtual ~TCASAircraftProfile() {
             cleanupProfile(this);
         }

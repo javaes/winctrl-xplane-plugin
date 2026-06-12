@@ -21,11 +21,13 @@ ZiboJoystickProfile::ZiboJoystickProfile(USBDevice *product) : JoystickAircraftP
         if (!hasPower) {
             joystick->setVibration(0);
         }
-    }, this);
+    },
+        this);
 
     Dataref::getInstance()->monitorExistingDataref<bool>("sim/cockpit/electrical/avionics_on", [](bool poweredOn) {
         Dataref::getInstance()->executeChangedCallbacksForDataref("laminar/B738/electric/panel_brightness");
-    }, this);
+    },
+        this);
 }
 
 bool ZiboJoystickProfile::IsEligible() {

@@ -24,50 +24,58 @@ RotateMD11FMCProfile::RotateMD11FMCProfile(ProductFMC *product) : FMCAircraftPro
                         Dataref::getInstance()->get<bool>("Rotate/aircraft/systems/elec_emer_ac_bus_l_pwrd");
         uint8_t target = hasPower ? static_cast<uint8_t>(brightness * 255) : 0;
         product->setLedBrightness(FMCLed::SCREEN_BACKLIGHT, target);
-    }, this);
+    },
+        this);
 
     Dataref::getInstance()->monitorExistingDataref<float>("Rotate/aircraft/controls/instr_panel_lts", [product](float brightness) {
         bool hasPower = Dataref::getInstance()->get<bool>("Rotate/aircraft/systems/elec_ac_bus_1_pwrd") ||
                         Dataref::getInstance()->get<bool>("Rotate/aircraft/systems/elec_emer_ac_bus_l_pwrd");
         uint8_t target = hasPower ? static_cast<uint8_t>(brightness * 255) : 0;
         product->setLedBrightness(FMCLed::BACKLIGHT, target);
-    }, this);
+    },
+        this);
 
     // Monitor both power buses and re-trigger brightness callbacks when either changes
     Dataref::getInstance()->monitorExistingDataref<bool>("Rotate/aircraft/systems/elec_ac_bus_1_pwrd", [brtDataref](bool) {
         Dataref::getInstance()->executeChangedCallbacksForDataref(brtDataref.c_str());
         Dataref::getInstance()->executeChangedCallbacksForDataref("Rotate/aircraft/controls/instr_panel_lts");
-    }, this);
+    },
+        this);
 
     Dataref::getInstance()->monitorExistingDataref<bool>("Rotate/aircraft/systems/elec_emer_ac_bus_l_pwrd", [brtDataref](bool) {
         Dataref::getInstance()->executeChangedCallbacksForDataref(brtDataref.c_str());
         Dataref::getInstance()->executeChangedCallbacksForDataref("Rotate/aircraft/controls/instr_panel_lts");
-    }, this);
+    },
+        this);
 
     Dataref::getInstance()->monitorExistingDataref<std::vector<int>>("Rotate/aircraft/systems/mcdu_msg_lt", [product, idx](const std::vector<int> &lights) {
         bool on = idx < static_cast<int>(lights.size()) && lights[idx] > 0;
         product->setLedBrightness(FMCLed::PFP_MSG, on ? 1 : 0);
         product->setLedBrightness(FMCLed::MCDU_MCDU, on ? 1 : 0);
-    }, this);
+    },
+        this);
 
     Dataref::getInstance()->monitorExistingDataref<std::vector<int>>("Rotate/aircraft/systems/mcdu_dspy_lt", [product, idx](const std::vector<int> &lights) {
         bool on = idx < static_cast<int>(lights.size()) && lights[idx] > 0;
         product->setLedBrightness(FMCLed::PFP_CALL_DISPLAY, on ? 1 : 0);
         product->setLedBrightness(FMCLed::MCDU_IND, on ? 1 : 0);
-    }, this);
+    },
+        this);
 
     Dataref::getInstance()->monitorExistingDataref<std::vector<int>>("Rotate/aircraft/systems/mcdu_fail_lt", [product, idx](const std::vector<int> &lights) {
         bool on = idx < static_cast<int>(lights.size()) && lights[idx] > 0;
         product->setLedBrightness(FMCLed::MCDU_FAIL, on ? 1 : 0);
         product->setLedBrightness(FMCLed::PFP_FAIL, on ? 1 : 0);
-    }, this);
+    },
+        this);
 
     // OFST light
     Dataref::getInstance()->monitorExistingDataref<std::vector<int>>("Rotate/aircraft/systems/mcdu_ofst_lt", [product, idx](const std::vector<int> &lights) {
         bool on = idx < static_cast<int>(lights.size()) && lights[idx] > 0;
         product->setLedBrightness(FMCLed::PFP_OFST, on ? 1 : 0);
         product->setLedBrightness(FMCLed::MCDU_STATUS, on ? 1 : 0);
-    }, this);
+    },
+        this);
 
     // Trigger initialization
     Dataref::getInstance()->executeChangedCallbacksForDataref(brtDataref.c_str());

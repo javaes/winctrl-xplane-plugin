@@ -19,7 +19,8 @@ XCraftsErjFMCProfile::XCraftsErjFMCProfile(ProductFMC *product) : FMCAircraftPro
         uint8_t target = static_cast<uint8_t>(brightness[12] * 255);
         product->setLedBrightness(FMCLed::BACKLIGHT, target);
         product->setLedBrightness(FMCLed::SCREEN_BACKLIGHT, target);
-    }, this);
+    },
+        this);
 
     product->setLedBrightness(FMCLed::BACKLIGHT, 128);
     product->setLedBrightness(FMCLed::SCREEN_BACKLIGHT, 128);

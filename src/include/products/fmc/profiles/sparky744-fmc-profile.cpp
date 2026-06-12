@@ -15,7 +15,8 @@ SparkyB744FMCProfile::SparkyB744FMCProfile(ProductFMC *product) : FMCAircraftPro
         uint8_t target = powered ? 200 : 0;
         product->setLedBrightness(FMCLed::BACKLIGHT, target);
         product->setLedBrightness(FMCLed::SCREEN_BACKLIGHT, target);
-    }, this);
+    },
+        this);
 
     Dataref::getInstance()->monitorExistingDataref<bool>("sim/cockpit2/radios/indicators/fms_exec_light_pilot", [product](bool lit) {
         if (product->deviceVariant == FMCDeviceVariant::VARIANT_CAPTAIN) {
@@ -23,7 +24,8 @@ SparkyB744FMCProfile::SparkyB744FMCProfile(ProductFMC *product) : FMCAircraftPro
             product->setLedBrightness(FMCLed::PFP_EXEC, target);
             product->setLedBrightness(FMCLed::MCDU_STATUS, target);
         }
-    }, this);
+    },
+        this);
 
     Dataref::getInstance()->monitorExistingDataref<bool>("sim/cockpit2/radios/indicators/fms_exec_light_copilot", [product](bool lit) {
         if (product->deviceVariant == FMCDeviceVariant::VARIANT_FIRSTOFFICER) {
@@ -31,7 +33,8 @@ SparkyB744FMCProfile::SparkyB744FMCProfile(ProductFMC *product) : FMCAircraftPro
             product->setLedBrightness(FMCLed::PFP_EXEC, target);
             product->setLedBrightness(FMCLed::MCDU_STATUS, target);
         }
-    }, this);
+    },
+        this);
 
     Dataref::getInstance()->executeChangedCallbacksForDataref("sim/cockpit/electrical/avionics_on");
     Dataref::getInstance()->executeChangedCallbacksForDataref("sim/cockpit2/radios/indicators/fms_exec_light_pilot");

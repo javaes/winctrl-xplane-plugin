@@ -62,9 +62,9 @@ FF777RMPProfile::FF777RMPProfile(ProductRMP *product) : RMPAircraftProfile(produ
             uint8_t ledBrightness = brightness * 255;
 
             product->setLedBrightness(pair.first, ledBrightness);
-        }, this);
+        },
+            this);
     }
-
 }
 
 bool FF777RMPProfile::IsEligible() {

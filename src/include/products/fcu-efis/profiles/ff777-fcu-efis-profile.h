@@ -30,7 +30,7 @@ class FF777FCUEfisProfile : public FCUEfisAircraftProfile {
             return true;
         }
 
-        void buttonPressed(const FCUEfisButtonDef *button, XPLMCommandPhase phase) override;        
+        void buttonPressed(const FCUEfisButtonDef *button, XPLMCommandPhase phase) override;
 };
 
 #endif

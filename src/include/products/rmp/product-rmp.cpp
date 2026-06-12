@@ -3,8 +3,8 @@
 #include "appstate.h"
 #include "dataref.h"
 #include "plugins-menu.h"
-#include "profiles/toliss-rmp-profile.h"
 #include "profiles/ff777-rmp-profile.h"
+#include "profiles/toliss-rmp-profile.h"
 #include "segment-display.h"
 
 #include <XPLMProcessing.h>

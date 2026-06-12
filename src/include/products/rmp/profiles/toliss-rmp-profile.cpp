@@ -58,16 +58,19 @@ TolissRMPProfile::TolissRMPProfile(ProductRMP *product) : RMPAircraftProfile(pro
         product->setLedBrightness(RMPLed::BACKLIGHT, backlightBrightness);
         product->setLedBrightness(RMPLed::LCD_BRIGHTNESS, available ? 255 : 0);
         product->setLedBrightness(RMPLed::OVERALL_LEDS_BRIGHTNESS, available ? 255 : 0);
-    }, this);
+    },
+        this);
 
     Dataref::getInstance()->monitorExistingDataref<int>(rmpAvailRef.c_str(), [](int available) {
         Dataref::getInstance()->executeChangedCallbacksForDataref("AirbusFBW/PanelBrightnessLevel");
-    }, this);
+    },
+        this);
 
-    Dataref::getInstance()->monitorExistingDataref<bool>("sim/cockpit/electrical/avionics_on", [this](bool poweredOn) {
+    Dataref::getInstance()->monitorExistingDataref<bool>("sim/cockpit/electrical/avionics_on", [](bool poweredOn) {
         Dataref::getInstance()->executeChangedCallbacksForDataref("AirbusFBW/PanelBrightnessLevel");
         updateDisplays();
-    }, this);
+    },
+        this);
 
     std::string lightsRef = std::string("AirbusFBW/") + rmpName() + "Lights_Raw";
 
@@ -88,18 +91,21 @@ TolissRMPProfile::TolissRMPProfile(ProductRMP *product) : RMPAircraftProfile(pro
         product->setLedBrightness(RMPLed::GLS, brightness[11] * 255);
         product->setLedBrightness(RMPLed::SEL, brightness[12] * 255);
         product->setLedBrightness(RMPLed::NAV, brightness[13] * 255);
-    }, this);
+    },
+        this);
 
     std::string activeRef = std::string("AirbusFBW/") + rmpName() + "/ActiveWindowString";
     std::string stbyRef = std::string("AirbusFBW/") + rmpName() + "/StandbyWindowString";
 
     Dataref::getInstance()->monitorExistingDataref<std::string>(activeRef.c_str(), [this](std::string s) {
         updateDisplays();
-    }, this);
+    },
+        this);
 
     Dataref::getInstance()->monitorExistingDataref<std::string>(stbyRef.c_str(), [this](std::string s) {
         updateDisplays();
-    }, this);
+    },
+        this);
 }
 
 TolissRMPProfile::~TolissRMPProfile() {

@@ -20,6 +20,8 @@
 		DFE44309A6CBA55292A1F2E2 /* sparky744-fcu-efis-profile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 47B7241413C5ED0B0A9A0EE9 /* sparky744-fcu-efis-profile.cpp */; };
 		E164E7F621BA6932F4BE9D64 /* sparky744-fmc-profile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BE235D138BEFE0AA64B3E71E /* sparky744-fmc-profile.cpp */; };
 		F09E1F4D94AF546216806480 /* sparky744-pap3-mcp-profile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7E13DD4D95F3A91328C88046 /* sparky744-pap3-mcp-profile.cpp */; };
+		F6025FE52FDC04DD00C7F37D /* ff777-rmp-profile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F6025FE42FDC04DD00C7F37D /* ff777-rmp-profile.cpp */; };
+		F6025FE62FDC04DD00C7F37D /* ff777-rmp-profile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F6025FE42FDC04DD00C7F37D /* ff777-rmp-profile.cpp */; };
 		F603CF6F2FCDA132005DF928 /* toliss-rmp-profile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F603CF692FCDA132005DF928 /* toliss-rmp-profile.cpp */; };
 		F603CF702FCDA132005DF928 /* product-rmp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F603CF6C2FCDA132005DF928 /* product-rmp.cpp */; };
 		F603CF712FCDA132005DF928 /* toliss-rmp-profile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F603CF692FCDA132005DF928 /* toliss-rmp-profile.cpp */; };
@@ -230,6 +232,8 @@
 		BE235D138BEFE0AA64B3E71E /* sparky744-fmc-profile.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "sparky744-fmc-profile.cpp"; sourceTree = "<group>"; };
 		D607B19909A556E400699BC3 /* winctrl.xpl */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = winctrl.xpl; sourceTree = BUILT_PRODUCTS_DIR; };
 		DC211E08776D68F8FD61EC52 /* sparky744-tcas-profile.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "sparky744-tcas-profile.cpp"; sourceTree = "<group>"; };
+		F6025FE32FDC04DD00C7F37D /* ff777-rmp-profile.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ff777-rmp-profile.h"; sourceTree = "<group>"; };
+		F6025FE42FDC04DD00C7F37D /* ff777-rmp-profile.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "ff777-rmp-profile.cpp"; sourceTree = "<group>"; };
 		F603CF682FCDA132005DF928 /* toliss-rmp-profile.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "toliss-rmp-profile.h"; sourceTree = "<group>"; };
 		F603CF692FCDA132005DF928 /* toliss-rmp-profile.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "toliss-rmp-profile.cpp"; sourceTree = "<group>"; };
 		F603CF6B2FCDA132005DF928 /* product-rmp.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "product-rmp.h"; sourceTree = "<group>"; };
@@ -486,6 +490,8 @@
 			children = (
 				F603CF682FCDA132005DF928 /* toliss-rmp-profile.h */,
 				F603CF692FCDA132005DF928 /* toliss-rmp-profile.cpp */,
+				F6025FE32FDC04DD00C7F37D /* ff777-rmp-profile.h */,
+				F6025FE42FDC04DD00C7F37D /* ff777-rmp-profile.cpp */,
 			);
 			path = profiles;
 			sourceTree = "<group>";
@@ -1120,6 +1126,7 @@
 				F60ABAC22FBDA042001C91EF /* fps748-pap3-mcp-profile.cpp in Sources */,
 				F09E1F4D94AF546216806480 /* sparky744-pap3-mcp-profile.cpp in Sources */,
 				F6354FB92FC457B200D67444 /* xcrafts-erj-tcas-profile.cpp in Sources */,
+				F6025FE62FDC04DD00C7F37D /* ff777-rmp-profile.cpp in Sources */,
 				F67961952E31357E008031F1 /* usbdevice_lin.cpp in Sources */,
 				F635AD472E0579E9005D6CDC /* usbcontroller_mac.cpp in Sources */,
 				F6AF9EC12D06F84900530297 /* dataref.cpp in Sources */,
@@ -1141,6 +1148,7 @@
 				F67B29CF2FB71A19004849B1 /* cis-seneca-fcu-efis-profile.cpp in Sources */,
 				F6B0007C2F8FE329001FE040 /* product-tcas.cpp in Sources */,
 				F60F7FD92FC9B67B000EA4E2 /* rotatemd11-tcas-profile.cpp in Sources */,
+				F6025FE52FDC04DD00C7F37D /* ff777-rmp-profile.cpp in Sources */,
 				F6B0007D2F8FE329001FE040 /* toliss-tcas-profile.cpp in Sources */,
 				F64BE3EB2E1BF625003C1B73 /* usbdevice_win.cpp in Sources */,
 				F6CC2B492F0E4E5100C0A4D8 /* ff777-fcu-efis-profile.cpp in Sources */,

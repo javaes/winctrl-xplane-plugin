@@ -15,8 +15,13 @@ extern "C" {
 #include <hidpi.h>
 }
 
+std::string USBDevice::pendingDevicePath;
+
 USBDevice::USBDevice(HIDDeviceHandle aHidDevice, uint16_t aVendorId, uint16_t aProductId, std::string aVendorName, std::string aProductName) :
-    hidDevice(aHidDevice), vendorId(aVendorId), productId(aProductId), vendorName(aVendorName), productName(aProductName), connected(false) {}
+    hidDevice(aHidDevice), vendorId(aVendorId), productId(aProductId), vendorName(aVendorName), productName(aProductName), connected(false) {
+    devicePath = pendingDevicePath;
+    pendingDevicePath.clear();
+}
 
 USBDevice::~USBDevice() {
     // Device destructor calls cancelTasksForOwner as a fallback in case a
@@ -45,6 +50,20 @@ bool USBDevice::connect() {
         HidD_FreePreparsedData(preparsedData);
     } else {
         Logger::getInstance()->error("Failed to get preparsed data\n");
+    }
+
+    if (hidWriteDevice != INVALID_HANDLE_VALUE) {
+        CloseHandle(hidWriteDevice);
+        hidWriteDevice = INVALID_HANDLE_VALUE;
+    }
+    if (!devicePath.empty()) {
+        hidWriteDevice = CreateFileA(devicePath.c_str(), GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE, nullptr, OPEN_EXISTING, 0, nullptr);
+    }
+    if (hidWriteDevice == INVALID_HANDLE_VALUE) {
+        // Writes fall back to the shared handle, where they serialize against
+        // the blocking ReadFile and throttle to the device's input report rate.
+        Logger::getInstance()->error("Failed to open dedicated write handle for %s, falling back to shared handle: %lu\n",
+            productName.empty() ? "Unknown" : productName.c_str(), GetLastError());
     }
 
     connected = true;
@@ -122,6 +141,11 @@ void USBDevice::disconnect() {
     writeQueueCV.notify_all();
     if (writeThread.joinable()) {
         writeThread.join();
+    }
+
+    if (hidWriteDevice != INVALID_HANDLE_VALUE) {
+        CloseHandle(hidWriteDevice);
+        hidWriteDevice = INVALID_HANDLE_VALUE;
     }
 
     if (inputThread.joinable()) {
@@ -202,13 +226,14 @@ void USBDevice::writeThreadLoop() {
         }
 
         if (!data.empty() && hidDevice != INVALID_HANDLE_VALUE && connected) {
+            HANDLE writeHandle = hidWriteDevice != INVALID_HANDLE_VALUE ? hidWriteDevice : hidDevice;
             std::vector<uint8_t> paddedData = data;
             if (outputReportByteLength > 0 && paddedData.size() < outputReportByteLength) {
                 paddedData.resize(outputReportByteLength, 0);
             }
 
             DWORD bytesWritten;
-            if (!WriteFile(hidDevice, paddedData.data(), (DWORD) paddedData.size(), &bytesWritten, nullptr)) {
+            if (!WriteFile(writeHandle, paddedData.data(), (DWORD) paddedData.size(), &bytesWritten, nullptr)) {
                 DWORD error = GetLastError();
                 const char *errorName = "UNKNOWN";
                 if (error == ERROR_DEVICE_NOT_CONNECTED) {

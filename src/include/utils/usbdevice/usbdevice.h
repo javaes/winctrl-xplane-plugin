@@ -59,6 +59,13 @@ class USBDevice {
         // thread model, so it cannot be used with WaitForSingleObject or
         // CancelSynchronousIo.
         std::atomic<HANDLE> inputThreadHandle{nullptr};
+        // Dedicated write handle. Windows serializes synchronous I/O per file
+        // object, so a blocking ReadFile pending on hidDevice would stall every
+        // WriteFile on that handle until the next input report arrives. Writing
+        // through a second file object decouples the two; writes stay fully
+        // synchronous and ordered.
+        HANDLE hidWriteDevice = INVALID_HANDLE_VALUE;
+        std::string devicePath;
         static void InputReportCallback(void *context, DWORD bytesRead, uint8_t *report);
 #elif LIN
         std::thread inputThread;
@@ -72,6 +79,15 @@ class USBDevice {
 
         HIDDeviceHandle hidDevice;
         std::atomic<bool> connected{false};
+#if IBM
+        // Device interface path of the next device to be constructed, set by
+        // USBController immediately before the USBDevice::Device factory call
+        // and consumed by the constructor. Creation is serialized on the
+        // flight loop, so a static handoff is safe. Needed because connect()
+        // runs inside the product constructor, before the controller could
+        // set an instance member.
+        static std::string pendingDevicePath;
+#endif
 #if APL
         // Set when the OS already removed the device: disconnect() must skip
         // IOHIDDeviceClose but still release the retained reference.

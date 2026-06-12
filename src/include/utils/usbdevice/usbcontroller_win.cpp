@@ -101,7 +101,9 @@ USBDevice *USBController::createDeviceFromHandle(HANDLE hidDevice, const std::st
     WideCharToMultiByte(CP_UTF8, 0, vendorName, -1, vendorNameA, sizeof(vendorNameA), nullptr, nullptr);
     WideCharToMultiByte(CP_UTF8, 0, productName, -1, productNameA, sizeof(productNameA), nullptr, nullptr);
 
+    USBDevice::pendingDevicePath = devicePath;
     USBDevice *device = USBDevice::Device(hidDevice, attributes.VendorID, attributes.ProductID, std::string(vendorNameA), std::string(productNameA));
+    USBDevice::pendingDevicePath.clear();
 
     if (device) {
         devicePaths[device] = devicePath;

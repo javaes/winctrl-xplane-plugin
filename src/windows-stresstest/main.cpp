@@ -42,6 +42,7 @@ static void printMenu(StressFMC *fmc) {
     printf("  4. Clear display\n");
     printf("  5. %s High Performance power plan\n",
         WindowsPowerScheme::isHighPerfEnabled() ? "Disable" : "Enable");
+    printf("  6. Load font\n");
     printf("  Q. Quit\n\n");
     printf("> ");
     fflush(stdout);
@@ -138,6 +139,40 @@ static void clearFMCDisplay(StressFMC *fmc) {
 }
 
 // ---------------------------------------------------------------------------
+// Menu option 6 — pick a font and upload it. The upload is timed until the
+// write queue drains, which makes it a direct benchmark for HID write
+// throughput (a font is a few hundred 64-byte packets).
+// ---------------------------------------------------------------------------
+static void loadFont(StressFMC *fmc) {
+    clearScreen();
+    printf("Load font\n");
+    printf("=========\n\n");
+    for (size_t i = 0; i < StressFMC::fontCount(); ++i) {
+        printf("  %zu. %s\n", i + 1, StressFMC::fontName(i));
+    }
+    printf("  Any other key: cancel\n\n");
+    printf("> ");
+    fflush(stdout);
+
+    int ch = _getch();
+    size_t index = static_cast<size_t>(ch - '1');
+    if (index >= StressFMC::fontCount()) {
+        return;
+    }
+
+    printf("%c\n\nUploading %s font...\n", ch, StressFMC::fontName(index));
+    fflush(stdout);
+
+    DWORD start = GetTickCount();
+    fmc->loadFont(index);
+    while (fmc->getWriteQueueSize() > 0) {
+        Sleep(1);
+    }
+    printf("Done: queue drained in %lu ms.\n", GetTickCount() - start);
+    Sleep(1500);
+}
+
+// ---------------------------------------------------------------------------
 
 int main() {
     clearScreen();
@@ -190,6 +225,9 @@ int main() {
                 break;
             case '5':
                 toggleHighPerformance();
+                break;
+            case '6':
+                loadFont(fmc);
                 break;
             case 'q':
             case 'Q':

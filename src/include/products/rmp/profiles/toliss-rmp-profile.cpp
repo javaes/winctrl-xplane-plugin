@@ -58,6 +58,8 @@ TolissRMPProfile::TolissRMPProfile(ProductRMP *product) : RMPAircraftProfile(pro
         product->setLedBrightness(RMPLed::BACKLIGHT, backlightBrightness);
         product->setLedBrightness(RMPLed::LCD_BRIGHTNESS, available ? 255 : 0);
         product->setLedBrightness(RMPLed::OVERALL_LEDS_BRIGHTNESS, available ? 255 : 0);
+
+        product->forceStateSync();
     },
         this);
 

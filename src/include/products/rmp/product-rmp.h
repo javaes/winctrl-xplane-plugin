@@ -54,13 +54,15 @@ class ProductRMP : public USBDevice {
 
         void setProfileForCurrentAircraft();
         void parseSegment(const std::string &text, int expectedLength, std::string &outDigits, uint16_t &colonMask, int digitOffset);
+        const char *positionName() const;
+        std::string variantPreferenceKey() const;
 
     public:
-        ProductRMP(HIDDeviceHandle hidDevice, uint16_t vendorId, uint16_t productId, std::string vendorName, std::string productName, RMPDeviceVariant variant, uint8_t identifierByte);
+        ProductRMP(HIDDeviceHandle hidDevice, uint16_t vendorId, uint16_t productId, std::string vendorName, std::string productName);
         ~ProductRMP();
 
-        const unsigned char identifierByte;
-        RMPDeviceVariant deviceVariant;
+        static constexpr unsigned char IdentifierByte = 0x82;
+        RMPDeviceVariant deviceVariant = RMPDeviceVariant::VARIANT_CAPTAIN;
 
         const char *classIdentifier() override;
         const char *activeProfileName() const override;
@@ -70,6 +72,7 @@ class ProductRMP : public USBDevice {
         void blackout() override;
         void didReceiveData(int reportId, uint8_t *report, int reportLength) override;
         void didReceiveButton(uint16_t hardwareButtonIndex, bool pressed, uint8_t count = 1) override;
+        void forceStateSync() override;
 
         void setDeviceVariant(RMPDeviceVariant variant);
         void setAllLedsEnabled(bool enabled);

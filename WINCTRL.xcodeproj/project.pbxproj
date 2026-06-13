@@ -191,6 +191,8 @@
 		F6D8E6C82ED059390041C4FB /* toliss-ecam-profile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F6D8E6C12ED059390041C4FB /* toliss-ecam-profile.cpp */; };
 		F6D8E6C92ED059390041C4FB /* product-ecam.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F6D8E6C52ED059390041C4FB /* product-ecam.cpp */; };
 		F6D8E6CA2ED059390041C4FB /* toliss-ecam-profile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F6D8E6C12ED059390041C4FB /* toliss-ecam-profile.cpp */; };
+		F6E05E782FDDE23F00C1FA45 /* kingair350-fcu-efis-profile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F6E05E772FDDE23F00C1FA45 /* kingair350-fcu-efis-profile.cpp */; };
+		F6E05E792FDDE23F00C1FA45 /* kingair350-fcu-efis-profile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F6E05E772FDDE23F00C1FA45 /* kingair350-fcu-efis-profile.cpp */; };
 		F6E73EE12ED9CCA7000A8B6A /* product-ursa-minor-throttle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F6E73EDE2ED9CCA7000A8B6A /* product-ursa-minor-throttle.cpp */; };
 		F6E73EE22ED9CCA7000A8B6A /* toliss-ursa-minor-throttle-profile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F6E73EDB2ED9CCA7000A8B6A /* toliss-ursa-minor-throttle-profile.cpp */; };
 		F6E73EE32ED9CCA7000A8B6A /* product-ursa-minor-throttle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F6E73EDE2ED9CCA7000A8B6A /* product-ursa-minor-throttle.cpp */; };
@@ -421,6 +423,8 @@
 		F6D8E6C32ED059390041C4FB /* ecam-aircraft-profile.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ecam-aircraft-profile.h"; sourceTree = "<group>"; };
 		F6D8E6C42ED059390041C4FB /* product-ecam.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "product-ecam.h"; sourceTree = "<group>"; };
 		F6D8E6C52ED059390041C4FB /* product-ecam.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "product-ecam.cpp"; sourceTree = "<group>"; };
+		F6E05E762FDDE23F00C1FA45 /* kingair350-fcu-efis-profile.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "kingair350-fcu-efis-profile.h"; sourceTree = "<group>"; };
+		F6E05E772FDDE23F00C1FA45 /* kingair350-fcu-efis-profile.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "kingair350-fcu-efis-profile.cpp"; sourceTree = "<group>"; };
 		F6E73EDA2ED9CCA7000A8B6A /* toliss-ursa-minor-throttle-profile.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "toliss-ursa-minor-throttle-profile.h"; sourceTree = "<group>"; };
 		F6E73EDB2ED9CCA7000A8B6A /* toliss-ursa-minor-throttle-profile.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "toliss-ursa-minor-throttle-profile.cpp"; sourceTree = "<group>"; };
 		F6E73EDD2ED9CCA7000A8B6A /* product-ursa-minor-throttle.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "product-ursa-minor-throttle.h"; sourceTree = "<group>"; };
@@ -806,6 +810,8 @@
 				F6C208692FC9702A006973EE /* rotatemd11-fcu-efis-profile.cpp */,
 				F681E2202FC9E5AE0009D9FB /* stratosphere77w-fcu-efis-profile.h */,
 				F681E2212FC9E5AE0009D9FB /* stratosphere77w-fcu-efis-profile.cpp */,
+				F6E05E762FDDE23F00C1FA45 /* kingair350-fcu-efis-profile.h */,
+				F6E05E772FDDE23F00C1FA45 /* kingair350-fcu-efis-profile.cpp */,
 			);
 			path = profiles;
 			sourceTree = "<group>";
@@ -1093,6 +1099,7 @@
 				F603CFA72FCECBA1005DF928 /* toliss-joystick-profile.cpp in Sources */,
 				F6BBFF0B2ED741B900FE9D7F /* ff777-pap3-mcp-profile.cpp in Sources */,
 				F64BE3E72E1BF625003C1B73 /* usbdevice_win.cpp in Sources */,
+				F6E05E782FDDE23F00C1FA45 /* kingair350-fcu-efis-profile.cpp in Sources */,
 				F6E73EE32ED9CCA7000A8B6A /* product-ursa-minor-throttle.cpp in Sources */,
 				F6B520E92FC7676F00A04562 /* xcrafts-erj-ursa-minor-throttle-profile.cpp in Sources */,
 				F6EBDC142FC6CFD1005AFCBD /* zibo-agp-profile.cpp in Sources */,
@@ -1200,6 +1207,7 @@
 				F69FF22E2E1D13CB00F9D2D9 /* DeviceModel.swift in Sources */,
 				F6EBDC092FC6C497005AFCBD /* xcrafts-erj-pdc-profile.cpp in Sources */,
 				F69FF22F2E1D13CB00F9D2D9 /* JoystickControlView.swift in Sources */,
+				F6E05E792FDDE23F00C1FA45 /* kingair350-fcu-efis-profile.cpp in Sources */,
 				F671B5DE2EA96BBE00141EF2 /* rotatemd11-fmc-profile.cpp in Sources */,
 				F60ABAE22FBDF352001C91EF /* xcrafts-erj-pap3-mcp-profile.cpp in Sources */,
 				F67110DD2E5AF429008D493B /* font.cpp in Sources */,

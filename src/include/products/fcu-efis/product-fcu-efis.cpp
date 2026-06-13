@@ -12,6 +12,7 @@
 #include "profiles/fps748-fcu-efis-profile.h"
 #include "profiles/jar330-fcu-efis-profile.h"
 #include "profiles/jf146-fcu-efis-profile.h"
+#include "profiles/kingair350-fcu-efis-profile.h"
 #include "profiles/laminar-737-fcu-efis-profile.h"
 #include "profiles/laminar-a333-fcu-efis-profile.h"
 #include "profiles/rotatemd11-fcu-efis-profile.h"
@@ -99,6 +100,9 @@ void ProductFCUEfis::setProfileForCurrentAircraft() {
         profileReady = true;
     } else if (JF146FCUEfisProfile::IsEligible()) {
         profile = new JF146FCUEfisProfile(this);
+        profileReady = true;
+    } else if (KingAir350FCUEfisProfile::IsEligible()) {
+        profile = new KingAir350FCUEfisProfile(this);
         profileReady = true;
     } else if (ZiboFCUEfisProfile::IsEligible()) {
         profile = new ZiboFCUEfisProfile(this);

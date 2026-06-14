@@ -22,7 +22,8 @@ ZiboFMCProfile::ZiboFMCProfile(ProductFMC *product) : FMCAircraftProfile(product
 
         uint8_t target = Dataref::getInstance()->get<bool>("sim/cockpit/electrical/avionics_on") ? screenBrightness[product->deviceVariant == FMCDeviceVariant::VARIANT_CAPTAIN ? 10 : 11] * 255 : 0;
         product->setLedBrightness(FMCLed::SCREEN_BACKLIGHT, target);
-    });
+    },
+        this);
 
     Dataref::getInstance()->monitorExistingDataref<std::vector<float>>("laminar/B738/electric/panel_brightness", [product](const std::vector<float> &panelBrightness) {
         if (panelBrightness.size() < 4) {
@@ -31,30 +32,26 @@ ZiboFMCProfile::ZiboFMCProfile(ProductFMC *product) : FMCAircraftProfile(product
 
         uint8_t target = Dataref::getInstance()->get<bool>("sim/cockpit/electrical/avionics_on") ? panelBrightness[3] * 255 : 0;
         product->setLedBrightness(FMCLed::BACKLIGHT, target);
-    });
+    },
+        this);
 
     Dataref::getInstance()->monitorExistingDataref<bool>("sim/cockpit/electrical/avionics_on", [](bool poweredOn) {
         Dataref::getInstance()->executeChangedCallbacksForDataref("laminar/B738/electric/panel_brightness");
         Dataref::getInstance()->executeChangedCallbacksForDataref("laminar/B738/electric/instrument_brightness");
-    });
+    },
+        this);
 
     Dataref::getInstance()->monitorExistingDataref<bool>("laminar/B738/fmc/fmc_message", [product](bool enabled) {
         product->setLedBrightness(FMCLed::PFP_MSG, enabled ? 1 : 0);
         product->setLedBrightness(FMCLed::MCDU_MCDU, enabled ? 1 : 0);
-    });
+    },
+        this);
 
     Dataref::getInstance()->monitorExistingDataref<bool>("laminar/B738/indicators/fmc_exec_lights", [product](bool enabled) {
         product->setLedBrightness(FMCLed::PFP_EXEC, enabled ? 1 : 0);
         product->setLedBrightness(FMCLed::MCDU_STATUS, enabled ? 1 : 0);
-    });
-}
-
-ZiboFMCProfile::~ZiboFMCProfile() {
-    Dataref::getInstance()->unbind("laminar/B738/electric/instrument_brightness");
-    Dataref::getInstance()->unbind("laminar/B738/electric/panel_brightness");
-    Dataref::getInstance()->unbind("sim/cockpit/electrical/avionics_on");
-    Dataref::getInstance()->unbind("laminar/B738/fmc/fmc_message");
-    Dataref::getInstance()->unbind("laminar/B738/indicators/fmc_exec_lights");
+    },
+        this);
 }
 
 bool ZiboFMCProfile::IsEligible() {
@@ -400,11 +397,18 @@ void ZiboFMCProfile::buttonPressed(const FMCButtonDef *button, XPLMCommandPhase 
                 const auto &keys = std::get<std::vector<FMCKey>>(button->key);
                 for (const auto &k : keys) {
                     for (const auto &m : fansMapping) {
-                        if (k == m.first) { pressedKey = k; break; }
+                        if (k == m.first) {
+                            pressedKey = k;
+                            break;
+                        }
                     }
-                    if (pressedKey != FMCKey::INVALID_UNKNOWN) break;
+                    if (pressedKey != FMCKey::INVALID_UNKNOWN) {
+                        break;
+                    }
                 }
-                if (pressedKey == FMCKey::INVALID_UNKNOWN) pressedKey = keys[0];
+                if (pressedKey == FMCKey::INVALID_UNKNOWN) {
+                    pressedKey = keys[0];
+                }
             }
 
             for (const auto &mapping : fansMapping) {
@@ -413,7 +417,10 @@ void ZiboFMCProfile::buttonPressed(const FMCButtonDef *button, XPLMCommandPhase 
                     auto it = buttonKeyMap().find(mapping.second);
                     if (it != buttonKeyMap().end()) {
                         if (phase == xplm_CommandBegin && button->datarefType == FMCDatarefType::EXECUTE_CMD_ONCE) {
-                            datarefManager->executeCommand(it->second->dataref.c_str(), phase);
+                            // Default phase -1 maps to XPLMCommandOnce; passing
+                            // xplm_CommandBegin would issue an XPLMCommandBegin
+                            // that is never balanced with an End.
+                            datarefManager->executeCommand(it->second->dataref.c_str());
                         } else if (button->datarefType == FMCDatarefType::EXECUTE_CMD_PHASED) {
                             datarefManager->executeCommand(it->second->dataref.c_str(), phase);
                         }
@@ -424,7 +431,7 @@ void ZiboFMCProfile::buttonPressed(const FMCButtonDef *button, XPLMCommandPhase 
         }
 
         if (phase == xplm_CommandBegin && button->datarefType == FMCDatarefType::EXECUTE_CMD_ONCE) {
-            datarefManager->executeCommand(button->dataref.c_str(), phase);
+            datarefManager->executeCommand(button->dataref.c_str());
         } else if (button->datarefType == FMCDatarefType::EXECUTE_CMD_PHASED) {
             datarefManager->executeCommand(button->dataref.c_str(), phase);
         }

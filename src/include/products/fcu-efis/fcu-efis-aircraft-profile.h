@@ -1,6 +1,7 @@
 #ifndef FCUEFIS_AIRCRAFT_PROFILE_H
 #define FCUEFIS_AIRCRAFT_PROFILE_H
 
+#include "profile-cleanup.h"
 #include "segment-display.h"
 
 #include <cfloat>
@@ -223,7 +224,10 @@ class FCUEfisAircraftProfile {
     public:
         FCUEfisAircraftProfile(ProductFCUEfis *product) :
             product(product) {};
-        virtual ~FCUEfisAircraftProfile() = default;
+
+        virtual ~FCUEfisAircraftProfile() {
+            cleanupProfile(this);
+        }
 
         virtual const std::vector<std::string> &displayDatarefs() const = 0;
         virtual const std::unordered_map<uint16_t, FCUEfisButtonDef> &buttonDefs() const = 0;

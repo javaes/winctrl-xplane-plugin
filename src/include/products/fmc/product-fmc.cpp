@@ -53,6 +53,7 @@ ProductFMC::ProductFMC(HIDDeviceHandle hidDevice, uint16_t vendorId, uint16_t pr
 }
 
 ProductFMC::~ProductFMC() {
+    AppState::getInstance()->cancelTasksForOwner(this);
     blackout();
     if (fontsMenuItemId >= 0) {
         PluginsMenu::getInstance()->removeItem(fontsMenuItemId);
@@ -180,7 +181,7 @@ bool ProductFMC::connect() {
             {.name = "Identify", .content = [this](int menuId) {
                  setLedBrightness(FMCLed::OVERALL_LEDS_BRIGHTNESS, 255);
                  setAllLedsEnabled(true);
-                 AppState::getInstance()->executeAfter(2000, [this]() {
+                 AppState::getInstance()->executeAfter(2000, this, [this]() {
                      setAllLedsEnabled(false);
                  });
              }},
@@ -296,6 +297,10 @@ void ProductFMC::didReceiveButton(uint16_t hardwareButtonIndex, bool pressed, ui
     USBDevice::didReceiveButton(hardwareButtonIndex, pressed, count);
 
     if (!connected || !profile) {
+        return;
+    }
+
+    if (isButtonHandledByXPlane(hardwareButtonIndex)) {
         return;
     }
 

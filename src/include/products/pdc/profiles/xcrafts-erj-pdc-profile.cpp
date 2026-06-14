@@ -16,11 +16,8 @@ XCraftsErjPDCProfile::XCraftsErjPDCProfile(ProductPDC *product) : PDCAircraftPro
         uint8_t target = static_cast<uint8_t>(brightness[12] * 255);
         product->setLedBrightness(PDCLed::BACKLIGHT, target);
         product->forceStateSync();
-    });
-}
-
-XCraftsErjPDCProfile::~XCraftsErjPDCProfile() {
-    Dataref::getInstance()->unbind("sim/cockpit2/electrical/instrument_brightness_ratio_manual");
+    },
+        this);
 }
 
 bool XCraftsErjPDCProfile::IsEligible() {

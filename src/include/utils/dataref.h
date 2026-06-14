@@ -19,17 +19,27 @@ using DatarefShouldChangeCallback = std::function<bool(T)>;
 template<typename T>
 using DatarefMonitorChangedCallback = std::function<void(T)>;
 
+struct TaggedCallback {
+        void *owner;
+        DatarefShouldChangeCallback<DataRefValueType> func;
+};
+
 struct BoundRef {
         XPLMDataRef handle;
         void *valuePointer;
-        std::vector<DatarefShouldChangeCallback<DataRefValueType>> changeCallbacks;
+        std::vector<TaggedCallback> changeCallbacks;
 };
 
 typedef std::function<void(XPLMCommandPhase inPhase)> CommandExecutedCallback;
 
+struct TaggedCommandCallback {
+        void *owner;
+        CommandExecutedCallback func;
+};
+
 struct BoundCommand {
         XPLMCommandRef handle;
-        CommandExecutedCallback callback;
+        std::vector<TaggedCommandCallback> callbacks;
 };
 
 struct CachedValue {
@@ -56,13 +66,14 @@ class Dataref {
         static Dataref *getInstance();
 
         template<typename T>
-        void monitorExistingDataref(const char *ref, DatarefMonitorChangedCallback<T> callback);
+        void monitorExistingDataref(const char *ref, DatarefMonitorChangedCallback<T> callback, void *owner = nullptr);
         template<typename T>
         void createDataref(
             const char *ref, T *value, bool writable = false, DatarefShouldChangeCallback<T> changeCallback = nullptr);
-        void bindExistingCommand(const char *command, CommandExecutedCallback callback);
+        void bindExistingCommand(const char *command, CommandExecutedCallback callback, void *owner = nullptr);
         void createCommand(const char *command, const char *description, CommandExecutedCallback callback);
         void unbind(const char *ref);
+        void unbindAll(void *owner);
         void destroyAllBindings();
         int _commandCallback(XPLMCommandRef inCommand, XPLMCommandPhase inPhase, void *inRefcon);
 

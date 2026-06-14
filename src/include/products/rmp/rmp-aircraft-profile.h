@@ -1,6 +1,8 @@
 #ifndef RMP_AIRCRAFT_PROFILE_H
 #define RMP_AIRCRAFT_PROFILE_H
 
+#include "profile-cleanup.h"
+
 #include <string>
 #include <unordered_map>
 #include <vector>
@@ -26,7 +28,10 @@ class RMPAircraftProfile {
 
     public:
         RMPAircraftProfile(ProductRMP *product) : product(product) {};
-        virtual ~RMPAircraftProfile() = default;
+
+        virtual ~RMPAircraftProfile() {
+            cleanupProfile(this);
+        }
 
         virtual const std::vector<std::string> &displayDatarefs() const = 0;
         virtual const std::unordered_map<uint16_t, RMPButtonDef> &buttonDefs() const = 0;

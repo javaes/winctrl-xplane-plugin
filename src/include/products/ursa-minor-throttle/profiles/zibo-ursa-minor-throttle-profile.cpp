@@ -23,46 +23,43 @@ ZiboUrsaMinorThrottleProfile::ZiboUrsaMinorThrottleProfile(ProductUrsaMinorThrot
 
         updateDisplays();
         product->forceStateSync();
-    });
+    },
+        this);
 
     Dataref::getInstance()->monitorExistingDataref<bool>("sim/cockpit/electrical/avionics_on", [this, product](bool hasPower) {
         Dataref::getInstance()->executeChangedCallbacksForDataref("laminar/B738/electric/panel_brightness");
 
         updateDisplays();
         product->forceStateSync();
-    });
+    },
+        this);
 
     Dataref::getInstance()->monitorExistingDataref<std::vector<float>>("laminar/B738/dspl_light_test", [this](const std::vector<float> &displayTest) {
         Dataref::getInstance()->executeChangedCallbacksForDataref("laminar/B738/electric/panel_brightness");
-    });
+    },
+        this);
 
     Dataref::getInstance()->monitorExistingDataref<bool>("laminar/B738/electric/main_bus", [product](bool hasPower) {
         Dataref::getInstance()->executeChangedCallbacksForDataref("sim/cockpit/electrical/avionics_on");
-    });
+    },
+        this);
 
     Dataref::getInstance()->monitorExistingDataref<float>("sim/flightmodel/controls/vstab2_rud1def", [this, product](float trimPosition) {
         updateDisplays();
-    });
+    },
+        this);
 
     Dataref::getInstance()->monitorExistingDataref<float>("laminar/B738/annunciator/engine1_fire", [this, product](float brightness) {
         product->setLedBrightness(UrsaMinorThrottleLed::ENG_1_FAULT, 0);
         product->setLedBrightness(UrsaMinorThrottleLed::ENG_1_FIRE, brightness > std::numeric_limits<float>::epsilon());
-    });
+    },
+        this);
 
     Dataref::getInstance()->monitorExistingDataref<float>("laminar/B738/annunciator/engine2_fire", [this, product](float brightness) {
         product->setLedBrightness(UrsaMinorThrottleLed::ENG_2_FAULT, 0);
         product->setLedBrightness(UrsaMinorThrottleLed::ENG_2_FIRE, brightness > std::numeric_limits<float>::epsilon());
-    });
-}
-
-ZiboUrsaMinorThrottleProfile::~ZiboUrsaMinorThrottleProfile() {
-    Dataref::getInstance()->unbind("laminar/B738/electric/panel_brightness");
-    Dataref::getInstance()->unbind("sim/cockpit/electrical/avionics_on");
-    Dataref::getInstance()->unbind("laminar/B738/dspl_light_test");
-    Dataref::getInstance()->unbind("laminar/B738/electric/main_bus");
-    Dataref::getInstance()->unbind("sim/flightmodel/controls/vstab2_rud1def");
-    Dataref::getInstance()->unbind("laminar/B738/annunciator/engine1_fire");
-    Dataref::getInstance()->unbind("laminar/B738/annunciator/engine2_fire");
+    },
+        this);
 }
 
 bool ZiboUrsaMinorThrottleProfile::IsEligible() {
@@ -81,7 +78,7 @@ const std::unordered_map<uint16_t, UrsaMinorThrottleButtonDef> &ZiboUrsaMinorThr
         {7, {"ENG mode NORMAL", "laminar/B738/rotary/eng1_start_off,laminar/B738/rotary/eng2_start_off", UrsaMinorThrottleDatarefType::EXECUTE_MULTIPLE_CMD_ONCE}},
         {8, {"ENG mode START", "laminar/B738/rotary/eng1_start_cont,laminar/B738/rotary/eng2_start_cont", UrsaMinorThrottleDatarefType::EXECUTE_MULTIPLE_CMD_ONCE}},
         {9, {"AT disconnect Left", "laminar/B738/autopilot/left_at_dis_press"}},
-        {10, {"AT disconnect Right", ""}}, // We could map to the same as above, but not mapping anything lets the user assign a different command if desired.
+        {10, {"AT disconnect Right", "laminar/B738/autopilot/right_at_dis_press"}},
         {11, {"TOGA L", ""}},
         {12, {"MCT L", ""}},
         {13, {"CLB L", ""}},

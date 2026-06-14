@@ -9,6 +9,8 @@
 #include <cmath>
 
 ProductECAM::ProductECAM(HIDDeviceHandle hidDevice, uint16_t vendorId, uint16_t productId, std::string vendorName, std::string productName) : USBDevice(hidDevice, vendorId, productId, vendorName, productName) {
+    profile = nullptr;
+    menuItemId = -1;
     lastButtonStateLo = 0;
     lastButtonStateHi = 0;
     pressedButtonIndices = {};
@@ -17,6 +19,7 @@ ProductECAM::ProductECAM(HIDDeviceHandle hidDevice, uint16_t vendorId, uint16_t 
 }
 
 ProductECAM::~ProductECAM() {
+    AppState::getInstance()->cancelTasksForOwner(this);
     blackout();
 
     PluginsMenu::getInstance()->removeItem(menuItemId);
@@ -65,7 +68,7 @@ bool ProductECAM::connect() {
                  setLedBrightness(ECAMLed::EMER_CANC_BRIGHTNESS, 128);
                  setLedBrightness(ECAMLed::OVERALL_LEDS_BRIGHTNESS, 255);
                  setAllLedsEnabled(true);
-                 AppState::getInstance()->executeAfter(2000, [this]() {
+                 AppState::getInstance()->executeAfter(2000, this, [this]() {
                      setAllLedsEnabled(false);
                  });
              }},
@@ -138,6 +141,10 @@ void ProductECAM::didReceiveButton(uint16_t hardwareButtonIndex, bool pressed, u
     USBDevice::didReceiveButton(hardwareButtonIndex, pressed, count);
 
     if (!connected || !profile) {
+        return;
+    }
+
+    if (isButtonHandledByXPlane(hardwareButtonIndex)) {
         return;
     }
 

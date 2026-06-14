@@ -13,11 +13,8 @@ XCraftsEjetsPDCProfile::XCraftsEjetsPDCProfile(ProductPDC *product) : PDCAircraf
         uint8_t target = static_cast<uint8_t>(brightness * 255);
         product->setLedBrightness(PDCLed::BACKLIGHT, target);
         product->forceStateSync();
-    });
-}
-
-XCraftsEjetsPDCProfile::~XCraftsEjetsPDCProfile() {
-    Dataref::getInstance()->unbind("XCrafts/panel_brt_1");
+    },
+        this);
 }
 
 bool XCraftsEjetsPDCProfile::IsEligible() {

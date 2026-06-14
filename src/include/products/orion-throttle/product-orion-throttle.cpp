@@ -9,10 +9,14 @@
 #include <limits>
 
 ProductOrionThrottle::ProductOrionThrottle(HIDDeviceHandle hidDevice, uint16_t vendorId, uint16_t productId, std::string vendorName, std::string productName) : USBDevice(hidDevice, vendorId, productId, vendorName, productName) {
+    profile = nullptr;
+    menuItemId = -1;
+
     connect();
 }
 
 ProductOrionThrottle::~ProductOrionThrottle() {
+    AppState::getInstance()->cancelTasksForOwner(this);
     blackout();
     PluginsMenu::getInstance()->removeItem(menuItemId);
 
@@ -49,31 +53,31 @@ bool ProductOrionThrottle::connect() {
         std::vector<MenuItem>{
             {.name = "Identify", .content = [this](int menuId) {
                  setVibration(128);
-                 AppState::getInstance()->executeAfter(2000, [this]() {
+                 AppState::getInstance()->executeAfter(2000, this, [this]() {
                      setVibration(0);
                  });
              }},
             {.name = "Vibration", .content = std::vector<MenuItem>{
 
-                                     {.name = "Disabled", .checked = vibrationSetting == "disabled", .content = [this](int itemId) {
-                                          AppState::getInstance()->writePreference("OrionThrottleVibration", "disabled");
-                                          loadVibrationSetting("disabled");
-                                          PluginsMenu::getInstance()->uncheckSubmenuSiblings(itemId);
-                                          PluginsMenu::getInstance()->setItemChecked(itemId, true);
-                                      }},
-                                     {.name = "Normal", .checked = vibrationSetting == "normal", .content = [this](int itemId) {
-                                          AppState::getInstance()->writePreference("OrionThrottleVibration", "normal");
-                                          loadVibrationSetting("normal");
-                                          PluginsMenu::getInstance()->uncheckSubmenuSiblings(itemId);
-                                          PluginsMenu::getInstance()->setItemChecked(itemId, true);
-                                      }},
-                                     {.name = "Strong", .checked = vibrationSetting == "strong", .content = [this](int itemId) {
-                                          AppState::getInstance()->writePreference("OrionThrottleVibration", "strong");
-                                          loadVibrationSetting("strong");
-                                          PluginsMenu::getInstance()->uncheckSubmenuSiblings(itemId);
-                                          PluginsMenu::getInstance()->setItemChecked(itemId, true);
-                                      }},
-                                 }},
+                                      {.name = "Disabled", .checked = vibrationSetting == "disabled", .content = [this](int itemId) {
+                                           AppState::getInstance()->writePreference("OrionThrottleVibration", "disabled");
+                                           loadVibrationSetting("disabled");
+                                           PluginsMenu::getInstance()->uncheckSubmenuSiblings(itemId);
+                                           PluginsMenu::getInstance()->setItemChecked(itemId, true);
+                                       }},
+                                      {.name = "Normal", .checked = vibrationSetting == "normal", .content = [this](int itemId) {
+                                           AppState::getInstance()->writePreference("OrionThrottleVibration", "normal");
+                                           loadVibrationSetting("normal");
+                                           PluginsMenu::getInstance()->uncheckSubmenuSiblings(itemId);
+                                           PluginsMenu::getInstance()->setItemChecked(itemId, true);
+                                       }},
+                                      {.name = "Strong", .checked = vibrationSetting == "strong", .content = [this](int itemId) {
+                                           AppState::getInstance()->writePreference("OrionThrottleVibration", "strong");
+                                           loadVibrationSetting("strong");
+                                           PluginsMenu::getInstance()->uncheckSubmenuSiblings(itemId);
+                                           PluginsMenu::getInstance()->setItemChecked(itemId, true);
+                                       }},
+                                  }},
         });
 
     return true;

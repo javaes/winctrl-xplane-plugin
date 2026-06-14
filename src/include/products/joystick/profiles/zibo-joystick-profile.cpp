@@ -21,17 +21,13 @@ ZiboJoystickProfile::ZiboJoystickProfile(USBDevice *product) : JoystickAircraftP
         if (!hasPower) {
             joystick->setVibration(0);
         }
-    });
+    },
+        this);
 
     Dataref::getInstance()->monitorExistingDataref<bool>("sim/cockpit/electrical/avionics_on", [](bool poweredOn) {
         Dataref::getInstance()->executeChangedCallbacksForDataref("laminar/B738/electric/panel_brightness");
-    });
-}
-
-ZiboJoystickProfile::~ZiboJoystickProfile() {
-    Dataref::getInstance()->unbind("sim/cockpit/electrical/avionics_on");
-    Dataref::getInstance()->unbind("laminar/B738/electric/panel_brightness");
-    Dataref::getInstance()->unbind("sim/flightmodel/failures/onground_any");
+    },
+        this);
 }
 
 bool ZiboJoystickProfile::IsEligible() {

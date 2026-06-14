@@ -14,24 +14,28 @@ TolissUrsaMinorThrottleProfile::TolissUrsaMinorThrottleProfile(ProductUrsaMinorT
 
         product->setLedBrightness(UrsaMinorThrottleLed::BACKLIGHT, backlightBrightness);
         product->setLedBrightness(UrsaMinorThrottleLed::OVERALL_LEDS_AND_LCD_BRIGHTNESS, hasPower ? 255 : 0);
-    });
+    },
+        this);
 
     Dataref::getInstance()->monitorExistingDataref<bool>("sim/cockpit/electrical/avionics_on", [this, product](bool poweredOn) {
         Dataref::getInstance()->executeChangedCallbacksForDataref("AirbusFBW/PanelBrightnessLevel");
 
         updateDisplays();
         product->forceStateSync();
-    });
+    },
+        this);
 
     Dataref::getInstance()->monitorExistingDataref<float>("AirbusFBW/YawTrimPosition", [this, product](float trimPosition) {
         updateDisplays();
-    });
+    },
+        this);
 
     Dataref::getInstance()->monitorExistingDataref<int>("AirbusFBW/AnnunMode", [this, product](int annunMode) {
         Dataref::getInstance()->executeChangedCallbacksForDataref("AirbusFBW/OHPLightsATA70_Raw");
 
         updateDisplays();
-    });
+    },
+        this);
 
     Dataref::getInstance()->monitorExistingDataref<std::vector<float>>("AirbusFBW/OHPLightsATA70_Raw", [this, product](const std::vector<float> &panelLights) {
         if (panelLights.size() < 13) {
@@ -42,15 +46,8 @@ TolissUrsaMinorThrottleProfile::TolissUrsaMinorThrottleProfile(ProductUrsaMinorT
         product->setLedBrightness(UrsaMinorThrottleLed::ENG_1_FIRE, panelLights[11] > std::numeric_limits<float>::epsilon() || isAnnunTest() ? 1 : 0);
         product->setLedBrightness(UrsaMinorThrottleLed::ENG_2_FAULT, panelLights[12] > std::numeric_limits<float>::epsilon() || isAnnunTest() ? 1 : 0);
         product->setLedBrightness(UrsaMinorThrottleLed::ENG_2_FIRE, panelLights[13] > std::numeric_limits<float>::epsilon() || isAnnunTest() ? 1 : 0);
-    });
-}
-
-TolissUrsaMinorThrottleProfile::~TolissUrsaMinorThrottleProfile() {
-    Dataref::getInstance()->unbind("AirbusFBW/PanelBrightnessLevel");
-    Dataref::getInstance()->unbind("sim/cockpit/electrical/avionics_on");
-    Dataref::getInstance()->unbind("AirbusFBW/AnnunMode");
-    Dataref::getInstance()->unbind("AirbusFBW/YawTrimPosition");
-    Dataref::getInstance()->unbind("AirbusFBW/OHPLightsATA70_Raw");
+    },
+        this);
 }
 
 bool TolissUrsaMinorThrottleProfile::IsEligible() {
@@ -69,7 +66,7 @@ const std::unordered_map<uint16_t, UrsaMinorThrottleButtonDef> &TolissUrsaMinorT
         {7, {"ENG mode NORMAL", "AirbusFBW/ENGModeSwitch", UrsaMinorThrottleDatarefType::SET_VALUE, 1}},
         {8, {"ENG mode START", "AirbusFBW/ENGModeSwitch", UrsaMinorThrottleDatarefType::SET_VALUE, 2}},
         {9, {"AT disconnect Left", "sim/autopilot/autothrottle_off"}},
-        {10, {"AT disconnect Right", ""}}, // We could map to the same as above, but not mapping anything lets the user assign a different command if desired.
+        {10, {"AT disconnect Right", "sim/autopilot/autothrottle_off"}},
         {11, {"TOGA L", ""}},
         {12, {"MCT L", ""}},
         {13, {"CLB L", ""}},

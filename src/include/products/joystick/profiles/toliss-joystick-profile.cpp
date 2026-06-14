@@ -17,17 +17,13 @@ TolissJoystickProfile::TolissJoystickProfile(USBDevice *product) : JoystickAircr
         if (!hasPower) {
             joystick->setVibration(0);
         }
-    });
+    },
+        this);
 
     Dataref::getInstance()->monitorExistingDataref<bool>("sim/cockpit/electrical/avionics_on", [](bool poweredOn) {
         Dataref::getInstance()->executeChangedCallbacksForDataref("AirbusFBW/PanelBrightnessLevel");
-    });
-}
-
-TolissJoystickProfile::~TolissJoystickProfile() {
-    Dataref::getInstance()->unbind("sim/cockpit/electrical/avionics_on");
-    Dataref::getInstance()->unbind("AirbusFBW/PanelBrightnessLevel");
-    Dataref::getInstance()->unbind("sim/flightmodel/failures/onground_any");
+    },
+        this);
 }
 
 bool TolissJoystickProfile::IsEligible() {

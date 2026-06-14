@@ -12,6 +12,7 @@
 #include "profiles/fps748-fcu-efis-profile.h"
 #include "profiles/jar330-fcu-efis-profile.h"
 #include "profiles/jf146-fcu-efis-profile.h"
+#include "profiles/kingair350-fcu-efis-profile.h"
 #include "profiles/laminar-737-fcu-efis-profile.h"
 #include "profiles/laminar-a333-fcu-efis-profile.h"
 #include "profiles/rotatemd11-fcu-efis-profile.h"
@@ -34,6 +35,7 @@
 
 ProductFCUEfis::ProductFCUEfis(HIDDeviceHandle hidDevice, uint16_t vendorId, uint16_t productId, std::string vendorName, std::string productName) : USBDevice(hidDevice, vendorId, productId, vendorName, productName) {
     profile = nullptr;
+    menuItemId = -1;
     displayData = {};
     lastUpdateCycle = 0;
     pressedButtonIndices = {};
@@ -42,6 +44,7 @@ ProductFCUEfis::ProductFCUEfis(HIDDeviceHandle hidDevice, uint16_t vendorId, uin
 }
 
 ProductFCUEfis::~ProductFCUEfis() {
+    AppState::getInstance()->cancelTasksForOwner(this);
     blackout();
 
     PluginsMenu::getInstance()->removeItem(menuItemId);
@@ -98,6 +101,9 @@ void ProductFCUEfis::setProfileForCurrentAircraft() {
     } else if (JF146FCUEfisProfile::IsEligible()) {
         profile = new JF146FCUEfisProfile(this);
         profileReady = true;
+    } else if (KingAir350FCUEfisProfile::IsEligible()) {
+        profile = new KingAir350FCUEfisProfile(this);
+        profileReady = true;
     } else if (ZiboFCUEfisProfile::IsEligible()) {
         profile = new ZiboFCUEfisProfile(this);
         profileReady = true;
@@ -152,7 +158,7 @@ bool ProductFCUEfis::connect() {
                      setLedBrightness(FCUEfisLed::EFISL_OVERALL_GREEN, 255);
                      setLedBrightness(FCUEfisLed::EFISR_OVERALL_GREEN, 255);
                      setAllLedsEnabled(true);
-                     AppState::getInstance()->executeAfter(2000, [this]() {
+                     AppState::getInstance()->executeAfter(2000, this, [this]() {
                          setAllLedsEnabled(false);
                      });
                  }},
@@ -603,6 +609,10 @@ void ProductFCUEfis::didReceiveButton(uint16_t hardwareButtonIndex, bool pressed
     USBDevice::didReceiveButton(hardwareButtonIndex, pressed, count);
 
     if (!connected || !profile) {
+        return;
+    }
+
+    if (isButtonHandledByXPlane(hardwareButtonIndex)) {
         return;
     }
 

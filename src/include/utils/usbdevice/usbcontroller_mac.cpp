@@ -77,12 +77,18 @@ void USBController::destroy() {
     devices.clear();
 
     if (hidManager) {
+        IOHIDManagerUnscheduleFromRunLoop(hidManager, CFRunLoopGetCurrent(), kCFRunLoopDefaultMode);
         IOHIDManagerClose(hidManager, kIOHIDOptionsTypeNone);
         CFRelease(hidManager);
         hidManager = nullptr;
     }
 
     instance = nullptr;
+}
+
+void USBController::forgetDevice(USBDevice *device) {
+    // No path/pending tracking outside the devices vector on macOS.
+    (void) device;
 }
 
 bool USBController::deviceExistsWithHIDDevice(IOHIDDeviceRef device) {
@@ -134,15 +140,15 @@ void USBController::DeviceAddedCallback(void *context, IOReturn result, void *se
     productNameStr.erase(0, productNameStr.find_first_not_of(" \t\n\r"));
     productNameStr.erase(productNameStr.find_last_not_of(" \t\n\r") + 1);
 
-    AppState::getInstance()->executeAfter(0, [self, device, vendorId, productId, vendorNameStr, productNameStr]() {
-        if (self->deviceExistsWithHIDDevice(device)) {
-            return;
+    CFRetain(device);
+    AppState::getInstance()->executeAfter(0, self, [self, device, vendorId, productId, vendorNameStr, productNameStr]() {
+        if (!self->deviceExistsWithHIDDevice(device)) {
+            USBDevice *newDevice = USBDevice::Device(device, vendorId, productId, vendorNameStr, productNameStr);
+            if (newDevice) {
+                self->devices.push_back(newDevice);
+            }
         }
-
-        USBDevice *newDevice = USBDevice::Device(device, vendorId, productId, vendorNameStr, productNameStr);
-        if (newDevice) {
-            self->devices.push_back(newDevice);
-        }
+        CFRelease(device);
     });
 }
 
@@ -159,12 +165,15 @@ void USBController::DeviceRemovedCallback(void *context, IOReturn result, void *
         }
     }
 
-    AppState::getInstance()->executeAfter(0, [self, device]() {
+    AppState::getInstance()->executeAfter(0, self, [self, device]() {
         for (auto it = self->devices.begin(); it != self->devices.end();) {
             if ((*it)->hidDevice == device) {
-                // Null the hidDevice before disconnect so it skips IOHIDDeviceClose.
-                // The OS has already removed the device and re-closing it triggers an IOKit assertion.. ugh
-                (*it)->hidDevice = nullptr;
+                // The OS has already removed the device; mark it so disconnect
+                // skips IOHIDDeviceClose (re-closing triggers an IOKit
+                // assertion) but still releases our retained reference. The
+                // handle stays valid until disconnect has joined the write
+                // thread, so in-flight writes hit a live (if dead) ref.
+                (*it)->deviceRemoved = true;
                 (*it)->disconnect();
                 delete *it;
                 it = self->devices.erase(it);

@@ -16,17 +16,20 @@ TolissECAMProfile::TolissECAMProfile(ProductECAM *product) : ECAMAircraftProfile
 
         product->setLedBrightness(ECAMLed::BACKLIGHT, backlightBrightness);
         product->setLedBrightness(ECAMLed::EMER_CANC_BRIGHTNESS, backlightBrightness);
-    });
+    },
+        this);
 
     Dataref::getInstance()->monitorExistingDataref<bool>("sim/cockpit/electrical/avionics_on", [](bool poweredOn) {
         Dataref::getInstance()->executeChangedCallbacksForDataref("AirbusFBW/PanelBrightnessLevel");
         Dataref::getInstance()->executeChangedCallbacksForDataref(ifXPlane11("AirbusFBW/OHPLightsATA31", "AirbusFBW/OHPLightsATA31_Raw"));
-    });
+    },
+        this);
 
     Dataref::getInstance()->monitorExistingDataref<bool>("AirbusFBW/ECPAvail", [this, product](bool enabled) {
         Dataref::getInstance()->executeChangedCallbacksForDataref("AirbusFBW/PanelBrightnessLevel");
         Dataref::getInstance()->executeChangedCallbacksForDataref(ifXPlane11("AirbusFBW/OHPLightsATA31", "AirbusFBW/OHPLightsATA31_Raw"));
-    });
+    },
+        this);
 
     Dataref::getInstance()->monitorExistingDataref<std::vector<float>>(ifXPlane11("AirbusFBW/OHPLightsATA31", "AirbusFBW/OHPLightsATA31_Raw"), [product](const std::vector<float> &panelLights) {
         if (panelLights.size() < 45) {
@@ -49,14 +52,8 @@ TolissECAMProfile::TolissECAMProfile(ProductECAM *product) : ECAMAircraftProfile
         product->setLedBrightness(ECAMLed::STS, panelLights[41] > std::numeric_limits<float>::epsilon() ? 1 : 0);
         product->setLedBrightness(ECAMLed::CLR_LEFT, panelLights[42] > std::numeric_limits<float>::epsilon() ? 1 : 0);
         product->setLedBrightness(ECAMLed::CLR_RIGHT, panelLights[43] > std::numeric_limits<float>::epsilon() ? 1 : 0);
-    });
-}
-
-TolissECAMProfile::~TolissECAMProfile() {
-    Dataref::getInstance()->unbind("AirbusFBW/PanelBrightnessLevel");
-    Dataref::getInstance()->unbind("sim/cockpit/electrical/avionics_on");
-    Dataref::getInstance()->unbind("AirbusFBW/ECPAvail");
-    Dataref::getInstance()->unbind(ifXPlane11("AirbusFBW/OHPLightsATA31", "AirbusFBW/OHPLightsATA31_Raw"));
+    },
+        this);
 }
 
 bool TolissECAMProfile::IsEligible() {

@@ -62,34 +62,14 @@ FF777RMPProfile::FF777RMPProfile(ProductRMP *product) : RMPAircraftProfile(produ
             uint8_t ledBrightness = brightness * 255;
 
             product->setLedBrightness(pair.first, ledBrightness);
-        });
+        },
+            this);
     }
 
-    std::string rmpOffRef = std::string("1-sim/ckpt/lamps/rad") + rmpName() + "Off";
-    std::string activeRef = std::string("1-sim/output/radio/") + sideName() + "Active";
-    std::string stbyRef = std::string("1-sim/output/radio/") + sideName() + "Stby";
-
-    Dataref::getInstance()->monitorExistingDataref<std::string>(activeRef.c_str(), [this](std::string s) {
+    Dataref::getInstance()->monitorExistingDataref<bool>("sim/cockpit/electrical/avionics_on", [this](bool poweredOn) {
         updateDisplays();
-    });
-
-    Dataref::getInstance()->monitorExistingDataref<std::string>(stbyRef.c_str(), [this](std::string s) {
-        updateDisplays();
-    });
-
-    Dataref::getInstance()->monitorExistingDataref<std::string>(rmpOffRef.c_str(), [this](std::string s) {
-        updateDisplays();
-    });
-}
-
-FF777RMPProfile::~FF777RMPProfile() {
-    for (const auto &pair : _ledDatarefs) {
-        Dataref::getInstance()->unbind(pair.second.c_str());
-    }
-
-    for (const auto &dataref : _displayDatarefs) {
-        Dataref::getInstance()->unbind(dataref.c_str());
-    }
+    },
+        this);
 }
 
 bool FF777RMPProfile::IsEligible() {

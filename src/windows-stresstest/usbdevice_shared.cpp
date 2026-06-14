@@ -44,6 +44,10 @@ const char *USBDevice::classIdentifier() {
     return "USBDevice";
 }
 
+const char *USBDevice::activeProfileName() const {
+    return "none";
+}
+
 void USBDevice::blackout() {}
 
 void USBDevice::didReceiveData(int /*reportId*/, uint8_t * /*report*/, int /*reportLength*/) {}

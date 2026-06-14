@@ -1,6 +1,8 @@
 #ifndef ORION_THROTTLE_AIRCRAFT_PROFILE_H
 #define ORION_THROTTLE_AIRCRAFT_PROFILE_H
 
+#include "profile-cleanup.h"
+
 class USBDevice;
 
 class OrionThrottleAircraftProfile {
@@ -9,7 +11,10 @@ class OrionThrottleAircraftProfile {
 
     public:
         OrionThrottleAircraftProfile(USBDevice *product) : product(product) {};
-        virtual ~OrionThrottleAircraftProfile() = default;
+
+        virtual ~OrionThrottleAircraftProfile() {
+            cleanupProfile(this);
+        }
 
         virtual void update() {}
 };

@@ -15,6 +15,8 @@
 #include <cmath>
 
 ProductUrsaMinorThrottle::ProductUrsaMinorThrottle(HIDDeviceHandle hidDevice, uint16_t vendorId, uint16_t productId, std::string vendorName, std::string productName) : USBDevice(hidDevice, vendorId, productId, vendorName, productName) {
+    profile = nullptr;
+    menuItemId = -1;
     lastButtonStateLo = 0;
     lastButtonStateHi = 0;
     pressedButtonIndices = {};
@@ -23,6 +25,7 @@ ProductUrsaMinorThrottle::ProductUrsaMinorThrottle(HIDDeviceHandle hidDevice, ui
 }
 
 ProductUrsaMinorThrottle::~ProductUrsaMinorThrottle() {
+    AppState::getInstance()->cancelTasksForOwner(this);
     blackout();
 
     PluginsMenu::getInstance()->removeItem(menuItemId);
@@ -87,7 +90,7 @@ bool ProductUrsaMinorThrottle::connect() {
                  setLedBrightness(UrsaMinorThrottleLed::BACKLIGHT, 128);
                  setLedBrightness(UrsaMinorThrottleLed::OVERALL_LEDS_AND_LCD_BRIGHTNESS, 255);
                  setAllLedsEnabled(true);
-                 AppState::getInstance()->executeAfter(2000, [this]() {
+                 AppState::getInstance()->executeAfter(2000, this, [this]() {
                      setAllLedsEnabled(false);
                  });
              }},
@@ -340,6 +343,10 @@ void ProductUrsaMinorThrottle::didReceiveButton(uint16_t hardwareButtonIndex, bo
     USBDevice::didReceiveButton(hardwareButtonIndex, pressed, count);
 
     if (!connected || !profile) {
+        return;
+    }
+
+    if (isButtonHandledByXPlane(hardwareButtonIndex)) {
         return;
     }
 

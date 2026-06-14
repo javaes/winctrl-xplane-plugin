@@ -4,13 +4,13 @@
 #include "config.h"
 
 #include <atomic>
-#include <typeinfo>
 #include <condition_variable>
 #include <cstdint>
 #include <mutex>
 #include <queue>
 #include <string>
 #include <thread>
+#include <typeinfo>
 #include <vector>
 
 #if APL
@@ -53,8 +53,23 @@ class USBDevice {
         void handleHIDValue(IOHIDValueRef value);
 #elif IBM
         USHORT outputReportByteLength = 0;
+        std::thread inputThread;
+        // Win32 handle of the input thread, published by the thread itself.
+        // std::thread::native_handle() is a pthread_t under MinGW's posix
+        // thread model, so it cannot be used with WaitForSingleObject or
+        // CancelSynchronousIo.
+        std::atomic<HANDLE> inputThreadHandle{nullptr};
+        // Dedicated write handle. Windows serializes synchronous I/O per file
+        // object, so a blocking ReadFile pending on hidDevice would stall every
+        // WriteFile on that handle until the next input report arrives. Writing
+        // through a second file object decouples the two; writes stay fully
+        // synchronous and ordered.
+        HANDLE hidWriteDevice = INVALID_HANDLE_VALUE;
+        std::string devicePath;
         static void InputReportCallback(void *context, DWORD bytesRead, uint8_t *report);
 #elif LIN
+        std::thread inputThread;
+        int inputPipe[2] = {-1, -1};
         static void InputReportCallback(void *context, int bytesRead, uint8_t *report);
 #endif
 
@@ -64,6 +79,20 @@ class USBDevice {
 
         HIDDeviceHandle hidDevice;
         std::atomic<bool> connected{false};
+#if IBM
+        // Device interface path of the next device to be constructed, set by
+        // USBController immediately before the USBDevice::Device factory call
+        // and consumed by the constructor. Creation is serialized on the
+        // flight loop, so a static handoff is safe. Needed because connect()
+        // runs inside the product constructor, before the controller could
+        // set an instance member.
+        static std::string pendingDevicePath;
+#endif
+#if APL
+        // Set when the OS already removed the device: disconnect() must skip
+        // IOHIDDeviceClose but still release the retained reference.
+        std::atomic<bool> deviceRemoved{false};
+#endif
         bool profileReady = false;
         uint16_t vendorId;
         uint16_t productId;
@@ -77,6 +106,12 @@ class USBDevice {
         virtual void update();
         virtual void didReceiveData(int reportId, uint8_t *report, int reportLength);
         virtual void didReceiveButton(uint16_t hardwareButtonIndex, bool pressed, uint8_t count = 1);
+        // True when the user assigned this button in X-Plane's joystick
+        // settings (globally or in the active aircraft's control profile).
+        // X-Plane fires that binding itself, so product didReceiveButton
+        // overrides must return early instead of running the built-in action.
+        // Not implemented in the stresstest build (usbdevice_shared.cpp).
+        bool isButtonHandledByXPlane(uint16_t hardwareButtonIndex);
 
         virtual void blackout();
         virtual void forceStateSync();

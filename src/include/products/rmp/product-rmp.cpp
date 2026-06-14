@@ -3,14 +3,16 @@
 #include "appstate.h"
 #include "dataref.h"
 #include "plugins-menu.h"
-#include "profiles/toliss-rmp-profile.h"
 #include "profiles/ff777-rmp-profile.h"
+#include "profiles/toliss-rmp-profile.h"
 #include "segment-display.h"
 
 #include <XPLMProcessing.h>
 #include <XPLMUtilities.h>
 
-ProductRMP::ProductRMP(HIDDeviceHandle hidDevice, uint16_t vendorId, uint16_t productId, std::string vendorName, std::string productName, RMPDeviceVariant variant, uint8_t identifierByte) : USBDevice(hidDevice, vendorId, productId, vendorName, productName), identifierByte(identifierByte), deviceVariant(variant) {
+ProductRMP::ProductRMP(HIDDeviceHandle hidDevice, uint16_t vendorId, uint16_t productId, std::string vendorName, std::string productName) : USBDevice(hidDevice, vendorId, productId, vendorName, productName) {
+    profile = nullptr;
+    menuItemId = -1;
     lastButtonStateLo = 0;
     lastButtonStateHi = 0;
     pressedButtonIndices = {};
@@ -20,6 +22,7 @@ ProductRMP::ProductRMP(HIDDeviceHandle hidDevice, uint16_t vendorId, uint16_t pr
 }
 
 ProductRMP::~ProductRMP() {
+    AppState::getInstance()->cancelTasksForOwner(this);
     blackout();
 
     PluginsMenu::getInstance()->removeItem(menuItemId);
@@ -30,14 +33,30 @@ ProductRMP::~ProductRMP() {
     }
 }
 
+const char *ProductRMP::positionName() const {
+    switch (productId) {
+        case 0xBB83:
+            return "L";
+        case 0xBB85:
+            return "C";
+        case 0xBB84:
+            return "R";
+    }
+    return "L";
+}
+
+std::string ProductRMP::variantPreferenceKey() const {
+    return std::string("RMPVariant") + positionName();
+}
+
 const char *ProductRMP::classIdentifier() {
-    switch (deviceVariant) {
-        case RMPDeviceVariant::VARIANT_CAPTAIN:
-            return "RMP (Captain)";
-        case RMPDeviceVariant::VARIANT_STBY:
-            return "RMP (Stby)";
-        case RMPDeviceVariant::VARIANT_FIRSTOFFICER:
-            return "RMP (First Officer)";
+    switch (productId) {
+        case 0xBB83:
+            return "RMP (L)";
+        case 0xBB85:
+            return "RMP (C)";
+        case 0xBB84:
+            return "RMP (R)";
     }
     return "RMP";
 }
@@ -72,6 +91,15 @@ bool ProductRMP::connect() {
     setLedBrightness(RMPLed::OVERALL_LEDS_BRIGHTNESS, 255);
     setAllLedsEnabled(false);
 
+    std::string variantPreference = AppState::getInstance()->readPreference(variantPreferenceKey(), "captain");
+    if (variantPreference == "stby") {
+        deviceVariant = RMPDeviceVariant::VARIANT_STBY;
+    } else if (variantPreference == "first_officer") {
+        deviceVariant = RMPDeviceVariant::VARIANT_FIRSTOFFICER;
+    } else {
+        deviceVariant = RMPDeviceVariant::VARIANT_CAPTAIN;
+    }
+
     setProfileForCurrentAircraft();
 
     menuItemId = PluginsMenu::getInstance()->addItem(
@@ -83,7 +111,7 @@ bool ProductRMP::connect() {
                  setLedBrightness(RMPLed::OVERALL_LEDS_BRIGHTNESS, 255);
                  setAllLedsEnabled(true);
 
-                 AppState::getInstance()->executeAfter(2000, [this]() {
+                 AppState::getInstance()->executeAfter(2000, this, [this]() {
                      setAllLedsEnabled(false);
                  });
              }},
@@ -164,6 +192,18 @@ void ProductRMP::setDeviceVariant(RMPDeviceVariant variant) {
     }
 
     deviceVariant = variant;
+
+    switch (variant) {
+        case RMPDeviceVariant::VARIANT_CAPTAIN:
+            AppState::getInstance()->writePreference(variantPreferenceKey(), "captain");
+            break;
+        case RMPDeviceVariant::VARIANT_STBY:
+            AppState::getInstance()->writePreference(variantPreferenceKey(), "stby");
+            break;
+        case RMPDeviceVariant::VARIANT_FIRSTOFFICER:
+            AppState::getInstance()->writePreference(variantPreferenceKey(), "first_officer");
+            break;
+    }
     cachedActiveDisplay.clear();
     cachedStbyDisplay.clear();
 
@@ -189,7 +229,7 @@ void ProductRMP::setLedBrightness(RMPLed led, uint8_t brightness) {
     }
     lastLedBrightness[ledInt] = brightness;
 
-    writeData({0x02, identifierByte, 0xBB, 0x00, 0x00, 0x03, 0x49, static_cast<uint8_t>(led), brightness, 0x00, 0x00, 0x00, 0x00, 0x00});
+    writeData({0x02, ProductRMP::IdentifierByte, 0xBB, 0x00, 0x00, 0x03, 0x49, static_cast<uint8_t>(led), brightness, 0x00, 0x00, 0x00, 0x00, 0x00});
 }
 
 void ProductRMP::parseSegment(const std::string &text, int expectedLength, std::string &outDigits, uint16_t &colonMask, int digitOffset) {
@@ -235,7 +275,7 @@ void ProductRMP::setDisplayText(const std::string &active, const std::string &st
     cachedStbyDisplay = stby;
 
     std::vector<uint8_t> packet = {
-        0xF0, 0x00, packetNumber, 0x35, identifierByte,
+        0xF0, 0x00, packetNumber, 0x35, ProductRMP::IdentifierByte,
         0xBB, 0x00, 0x00, 0x02, 0x01, 0x00, 0x00, 0xFF, 0xFF, 0x00, 0x00,
         0x00, 0x24, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
     packet.resize(64, 0x00);
@@ -263,13 +303,21 @@ void ProductRMP::setDisplayText(const std::string &active, const std::string &st
     writeData(packet);
 
     std::vector<uint8_t> commitPacket = {
-        0xF0, 0x00, packetNumber, 0x11, identifierByte,
+        0xF0, 0x00, packetNumber, 0x11, ProductRMP::IdentifierByte,
         0xBB, 0x00, 0x00, 0x03, 0x01, 0x00, 0x00, 0xFF, 0xFF, 0x00, 0x00};
     commitPacket.resize(64, 0x00);
     writeData(commitPacket);
     if (++packetNumber == 0) {
         packetNumber = 1;
     }
+}
+
+void ProductRMP::forceStateSync() {
+    pressedButtonIndices.clear();
+    lastButtonStateLo = 0;
+    lastButtonStateHi = 0;
+
+    USBDevice::forceStateSync();
 }
 
 void ProductRMP::didReceiveData(int reportId, uint8_t *report, int reportLength) {
@@ -314,6 +362,10 @@ void ProductRMP::didReceiveButton(uint16_t hardwareButtonIndex, bool pressed, ui
     USBDevice::didReceiveButton(hardwareButtonIndex, pressed, count);
 
     if (!connected || !profile) {
+        return;
+    }
+
+    if (isButtonHandledByXPlane(hardwareButtonIndex)) {
         return;
     }
 

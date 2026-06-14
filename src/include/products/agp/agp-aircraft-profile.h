@@ -1,6 +1,8 @@
 #ifndef AGP_AIRCRAFT_PROFILE_H
 #define AGP_AIRCRAFT_PROFILE_H
 
+#include "profile-cleanup.h"
+
 #include <string>
 #include <unordered_map>
 #include <XPLMUtilities.h>
@@ -27,7 +29,10 @@ class AGPAircraftProfile {
 
     public:
         AGPAircraftProfile(ProductAGP *product) : product(product) {};
-        virtual ~AGPAircraftProfile() = default;
+
+        virtual ~AGPAircraftProfile() {
+            cleanupProfile(this);
+        }
 
         virtual const std::unordered_map<uint16_t, AGPButtonDef> &buttonDefs() const = 0;
         virtual void buttonPressed(const AGPButtonDef *button, XPLMCommandPhase phase) = 0;

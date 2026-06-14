@@ -3,16 +3,18 @@
 #include "appstate.h"
 #include "dataref.h"
 #include "plugins-menu.h"
-#include "profiles/fps748-pdc-profile.h"
 #include "profiles/ff777-pdc-profile.h"
-#include "profiles/zibo-pdc-profile.h"
-#include "profiles/xcrafts-erj-pdc-profile.h"
+#include "profiles/fps748-pdc-profile.h"
 #include "profiles/xcrafts-ejets-pdc-profile.h"
+#include "profiles/xcrafts-erj-pdc-profile.h"
+#include "profiles/zibo-pdc-profile.h"
 
 #include <algorithm>
 #include <cmath>
 
 ProductPDC::ProductPDC(HIDDeviceHandle hidDevice, uint16_t vendorId, uint16_t productId, std::string vendorName, std::string productName, PDCDeviceVariant variant, unsigned char identifierByte) : USBDevice(hidDevice, vendorId, productId, vendorName, productName), identifierByte(identifierByte), deviceVariant(variant) {
+    profile = nullptr;
+    menuItemId = -1;
     lastButtonStateLo = 0;
     lastButtonStateHi = 0;
     pressedButtonIndices = {};
@@ -21,6 +23,7 @@ ProductPDC::ProductPDC(HIDDeviceHandle hidDevice, uint16_t vendorId, uint16_t pr
 }
 
 ProductPDC::~ProductPDC() {
+    AppState::getInstance()->cancelTasksForOwner(this);
     blackout();
 
     PluginsMenu::getInstance()->removeItem(menuItemId);
@@ -75,9 +78,9 @@ bool ProductPDC::connect() {
         std::vector<MenuItem>{
             {.name = "Identify", .content = [this](int menuId) {
                  setLedBrightness(PDCLed::BACKLIGHT, 255);
-                 AppState::getInstance()->executeAfter(1000, [this]() {
+                 AppState::getInstance()->executeAfter(1000, this, [this]() {
                      setLedBrightness(PDCLed::BACKLIGHT, 0);
-                     AppState::getInstance()->executeAfter(1000, [this]() {
+                     AppState::getInstance()->executeAfter(1000, this, [this]() {
                          setLedBrightness(PDCLed::BACKLIGHT, 128);
                      });
                  });
@@ -157,6 +160,10 @@ void ProductPDC::didReceiveButton(uint16_t hardwareButtonIndex, bool pressed, ui
     USBDevice::didReceiveButton(hardwareButtonIndex, pressed, count);
 
     if (!connected || !profile) {
+        return;
+    }
+
+    if (isButtonHandledByXPlane(hardwareButtonIndex)) {
         return;
     }
 

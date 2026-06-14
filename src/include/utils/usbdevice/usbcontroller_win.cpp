@@ -26,15 +26,18 @@ static std::set<std::pair<uint16_t, uint16_t>> pendingDevices;
 USBController::USBController() {
     enumerateDevices();
 
-    std::thread monitorThread([this]() {
+    monitorThread = std::thread([this]() {
         while (!shouldShutdown) {
-            std::this_thread::sleep_for(std::chrono::seconds(5));
+            std::unique_lock<std::mutex> lock(monitorMutex);
+            monitorCV.wait_for(lock, std::chrono::seconds(5), [this] {
+                return shouldShutdown.load();
+            });
+            lock.unlock();
             if (!shouldShutdown) {
                 checkForDeviceChanges();
             }
         }
     });
-    monitorThread.detach();
 }
 
 USBController::~USBController() {
@@ -49,10 +52,20 @@ USBController *USBController::getInstance() {
 }
 
 void USBController::destroy() {
-    shouldShutdown = true;
+    // Set the flag while holding the mutex so the notify cannot fall between
+    // the monitor thread's predicate check and its wait, which would delay
+    // shutdown by a full wait_for timeout.
+    {
+        std::lock_guard<std::mutex> lock(monitorMutex);
+        shouldShutdown = true;
+    }
+    monitorCV.notify_one();
 
-    std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    if (monitorThread.joinable()) {
+        monitorThread.join();
+    }
 
+    std::lock_guard<std::mutex> lock(devicesMutex);
     for (auto ptr : devices) {
         devicePaths.erase(ptr);
         delete ptr;
@@ -61,6 +74,12 @@ void USBController::destroy() {
     pendingDevices.clear();
 
     instance = nullptr;
+}
+
+void USBController::forgetDevice(USBDevice *device) {
+    // Caller holds devicesMutex.
+    devicePaths.erase(device);
+    pendingDevices.erase(std::make_pair(device->vendorId, device->productId));
 }
 
 USBDevice *USBController::createDeviceFromHandle(HANDLE hidDevice, const std::string &devicePath) {
@@ -82,15 +101,20 @@ USBDevice *USBController::createDeviceFromHandle(HANDLE hidDevice, const std::st
     WideCharToMultiByte(CP_UTF8, 0, vendorName, -1, vendorNameA, sizeof(vendorNameA), nullptr, nullptr);
     WideCharToMultiByte(CP_UTF8, 0, productName, -1, productNameA, sizeof(productNameA), nullptr, nullptr);
 
+    USBDevice::pendingDevicePath = devicePath;
     USBDevice *device = USBDevice::Device(hidDevice, attributes.VendorID, attributes.ProductID, std::string(vendorNameA), std::string(productNameA));
+    USBDevice::pendingDevicePath.clear();
 
     if (device) {
         devicePaths[device] = devicePath;
+    } else {
+        CloseHandle(hidDevice);
     }
     return device;
 }
 
 bool USBController::deviceExistsWithPath(const std::string &devicePath) {
+    std::lock_guard<std::mutex> lock(devicesMutex);
     for (const auto &pair : devicePaths) {
         if (pair.second == devicePath) {
             return true;
@@ -100,6 +124,7 @@ bool USBController::deviceExistsWithPath(const std::string &devicePath) {
 }
 
 bool USBController::deviceExistsWithVidPid(uint16_t vendorId, uint16_t productId) {
+    std::lock_guard<std::mutex> lock(devicesMutex);
     for (auto *dev : devices) {
         if (dev->vendorId == vendorId && dev->productId == productId) {
             return true;
@@ -114,6 +139,7 @@ bool USBController::deviceExistsWithVidPid(uint16_t vendorId, uint16_t productId
 }
 
 bool USBController::deviceExistsWithHandle(HANDLE hidDevice) {
+    std::lock_guard<std::mutex> lock(devicesMutex);
     for (auto *dev : devices) {
         if (dev->hidDevice == hidDevice) {
             return true;
@@ -143,7 +169,8 @@ void USBController::addDeviceFromHandle(HANDLE hidDevice, const std::string &dev
     uint16_t vendorId = attributes.VendorID;
     uint16_t productId = attributes.ProductID;
 
-    AppState::getInstance()->executeAfter(0, [this, hidDevice, devicePath, vendorId, productId]() {
+    AppState::getInstance()->executeAfter(0, this, [this, hidDevice, devicePath, vendorId, productId]() {
+        std::lock_guard<std::mutex> lock(devicesMutex);
         USBDevice *device = createDeviceFromHandle(hidDevice, devicePath);
         if (device) {
             devices.push_back(device);
@@ -194,7 +221,10 @@ void USBController::enumerateDevices() {
                 return;
             }
 
-            pendingDevices.insert(std::make_pair(attributes.VendorID, attributes.ProductID));
+            {
+                std::lock_guard<std::mutex> lock(devicesMutex);
+                pendingDevices.insert(std::make_pair(attributes.VendorID, attributes.ProductID));
+            }
             addDeviceFromHandle(hidDevice, devicePath);
         } else {
             CloseHandle(hidDevice);
@@ -212,7 +242,10 @@ void USBController::checkForDeviceChanges() {
             currentDevicePaths.push_back(devicePath);
 
             if (!deviceExistsWithVidPid(attributes.VendorID, attributes.ProductID)) {
-                pendingDevices.insert(std::make_pair(attributes.VendorID, attributes.ProductID));
+                {
+                    std::lock_guard<std::mutex> lock(devicesMutex);
+                    pendingDevices.insert(std::make_pair(attributes.VendorID, attributes.ProductID));
+                }
                 addDeviceFromHandle(hidDevice, devicePath);
             } else {
                 CloseHandle(hidDevice);
@@ -222,38 +255,27 @@ void USBController::checkForDeviceChanges() {
         }
     });
 
-    // First pass: disconnect stale devices
-    for (auto *dev : devices) {
-        auto pathIt = devicePaths.find(dev);
-        bool found = false;
-        if (pathIt != devicePaths.end()) {
-            found = std::find(currentDevicePaths.begin(), currentDevicePaths.end(), pathIt->second) != currentDevicePaths.end();
-        }
-        if (!found || dev->hidDevice == INVALID_HANDLE_VALUE || !dev->connected) {
-            dev->blackout();
-            dev->disconnect();
-        }
-    }
-
-    // Second pass: deferred erase
-    AppState::getInstance()->executeAfter(0, [this]() {
+    // Disconnect and erase stale devices on the flight loop. Disconnecting
+    // from the monitor thread would race the deferred deletion below: it sets
+    // connected = false first and then blocks joining the device threads,
+    // during which the deletion task could free the object under it.
+    AppState::getInstance()->executeAfter(0, this, [this, currentDevicePaths]() {
+        std::lock_guard<std::mutex> lock(devicesMutex);
         for (auto it = devices.begin(); it != devices.end();) {
-            auto pathIt = devicePaths.find(*it);
-            bool remove = false;
-            if ((*it)->hidDevice == INVALID_HANDLE_VALUE || !(*it)->connected) {
-                remove = true;
+            USBDevice *dev = *it;
+            auto pathIt = devicePaths.find(dev);
+            bool found = false;
+            if (pathIt != devicePaths.end()) {
+                found = std::find(currentDevicePaths.begin(), currentDevicePaths.end(), pathIt->second) != currentDevicePaths.end();
             }
-            if (pathIt != devicePaths.end() &&
-                std::find_if(devices.begin(), devices.end(), [&](USBDevice *d) {
-                    return devicePaths[d] == pathIt->second;
-                }) == devices.end()) {
-                remove = true;
-            }
-            if (remove) {
+
+            if (!found || dev->hidDevice == INVALID_HANDLE_VALUE || !dev->connected) {
+                dev->blackout();
+                dev->disconnect();
                 if (pathIt != devicePaths.end()) {
                     devicePaths.erase(pathIt);
                 }
-                delete *it;
+                delete dev;
                 it = devices.erase(it);
             } else {
                 ++it;

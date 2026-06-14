@@ -17,6 +17,8 @@
 #include <XPLMUtilities.h>
 
 ProductAGP::ProductAGP(HIDDeviceHandle hidDevice, uint16_t vendorId, uint16_t productId, std::string vendorName, std::string productName) : USBDevice(hidDevice, vendorId, productId, vendorName, productName) {
+    profile = nullptr;
+    menuItemId = -1;
     lastButtonStateLo = 0;
     lastButtonStateHi = 0;
     pressedButtonIndices = {};
@@ -25,6 +27,7 @@ ProductAGP::ProductAGP(HIDDeviceHandle hidDevice, uint16_t vendorId, uint16_t pr
 }
 
 ProductAGP::~ProductAGP() {
+    AppState::getInstance()->cancelTasksForOwner(this);
     blackout();
 
     PluginsMenu::getInstance()->removeItem(menuItemId);
@@ -93,7 +96,7 @@ bool ProductAGP::connect() {
                  setLedBrightness(AGPLed::OVERALL_LEDS_BRIGHTNESS, 255);
                  setAllLedsEnabled(true);
 
-                 AppState::getInstance()->executeAfter(2000, [this]() {
+                 AppState::getInstance()->executeAfter(2000, this, [this]() {
                      setAllLedsEnabled(false);
                  });
              }},
@@ -296,6 +299,10 @@ void ProductAGP::didReceiveButton(uint16_t hardwareButtonIndex, bool pressed, ui
     USBDevice::didReceiveButton(hardwareButtonIndex, pressed, count);
 
     if (!connected || !profile) {
+        return;
+    }
+
+    if (isButtonHandledByXPlane(hardwareButtonIndex)) {
         return;
     }
 

@@ -2,6 +2,7 @@
 #define FMC_AIRCRAFT_PROFILE_H
 
 #include "fmc-hardware-mapping.h"
+#include "profile-cleanup.h"
 
 #include <array>
 #include <map>
@@ -102,7 +103,10 @@ class FMCAircraftProfile {
     public:
         FMCAircraftProfile(ProductFMC *product) :
             product(product) {};
-        virtual ~FMCAircraftProfile() = default;
+
+        virtual ~FMCAircraftProfile() {
+            cleanupProfile(this);
+        }
 
         virtual const std::vector<std::string> &displayDatarefs() const = 0;
         virtual const std::vector<FMCButtonDef> &buttonDefs() const = 0;

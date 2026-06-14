@@ -9,9 +9,18 @@
 #include <XPLMUtilities.h>
 
 USBDevice::USBDevice(HIDDeviceHandle aHidDevice, uint16_t aVendorId, uint16_t aProductId, std::string aVendorName, std::string aProductName) :
-    hidDevice(aHidDevice), vendorId(aVendorId), productId(aProductId), vendorName(aVendorName), productName(aProductName), connected(false) {}
+    hidDevice(aHidDevice), vendorId(aVendorId), productId(aProductId), vendorName(aVendorName), productName(aProductName), connected(false) {
+    // The HID manager owns the ref it handed us and is free to release it the
+    // moment the device is unplugged; retain it for this object's lifetime.
+    if (hidDevice) {
+        CFRetain(hidDevice);
+    }
+}
 
 USBDevice::~USBDevice() {
+    // Device destructor calls cancelTasksForOwner as a fallback in case a
+    // derived product class forgot. Profile destructors call cleanupProfile.
+    AppState::getInstance()->cancelTasksForOwner(this);
     disconnect();
 }
 
@@ -27,7 +36,10 @@ bool USBDevice::connect() {
         }
     } catch (const std::exception &ex) {
         Logger::getInstance()->debug("Failed to open HID device: %s\nError: %s\n", productName.c_str(), ex.what());
-        hidDevice = nullptr;
+        if (hidDevice) {
+            CFRelease(hidDevice);
+            hidDevice = nullptr;
+        }
         return false;
     }
 
@@ -95,7 +107,10 @@ void USBDevice::disconnect() {
     }
 
     if (hidDevice) {
-        IOHIDDeviceClose(hidDevice, kIOHIDOptionsTypeNone);
+        if (!deviceRemoved) {
+            IOHIDDeviceClose(hidDevice, kIOHIDOptionsTypeNone);
+        }
+        CFRelease(hidDevice);
         hidDevice = nullptr;
     }
 }

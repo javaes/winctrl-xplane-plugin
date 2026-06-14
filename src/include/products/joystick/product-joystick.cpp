@@ -10,10 +10,14 @@
 #include <cmath>
 
 ProductJoystick::ProductJoystick(HIDDeviceHandle hidDevice, uint16_t vendorId, uint16_t productId, std::string vendorName, std::string productName, unsigned char identifierByte, unsigned char motorCode) : USBDevice(hidDevice, vendorId, productId, vendorName, productName), identifierByte(identifierByte), motorCode(motorCode) {
+    profile = nullptr;
+    menuItemId = -1;
+
     connect();
 }
 
 ProductJoystick::~ProductJoystick() {
+    AppState::getInstance()->cancelTasksForOwner(this);
     blackout();
 
     PluginsMenu::getInstance()->removeItem(menuItemId);
@@ -79,7 +83,7 @@ bool ProductJoystick::connect() {
             {.name = "Identify", .content = [this](int menuId) {
                  setLedBrightness(255);
                  setVibration(128);
-                 AppState::getInstance()->executeAfter(2000, [this]() {
+                 AppState::getInstance()->executeAfter(2000, this, [this]() {
                      setLedBrightness(0);
                      setVibration(0);
                  });

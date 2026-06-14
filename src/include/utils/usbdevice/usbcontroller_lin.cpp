@@ -41,10 +41,9 @@ USBController::USBController() {
     udev_monitor_enable_receiving(hidManager);
 
     shouldStopMonitoring = false;
-    std::thread monitorThread([this]() {
+    monitorThread = std::thread([this]() {
         monitorDevices();
     });
-    monitorThread.detach();
 }
 
 USBController::~USBController() {
@@ -61,8 +60,10 @@ USBController *USBController::getInstance() {
 void USBController::destroy() {
     shouldStopMonitoring = true;
 
-    // Give the monitoring thread time to exit gracefully
-    std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    // Join before touching any shared state or freeing udev resources
+    if (monitorThread.joinable()) {
+        monitorThread.join();
+    }
 
     for (auto ptr : devices) {
         delete ptr;
@@ -77,6 +78,11 @@ void USBController::destroy() {
     }
 
     instance = nullptr;
+}
+
+void USBController::forgetDevice(USBDevice *device) {
+    // No path/pending tracking outside the devices vector on Linux.
+    (void) device;
 }
 
 USBDevice *USBController::createDeviceFromPath(const std::string &devicePath) {
@@ -97,7 +103,13 @@ USBDevice *USBController::createDeviceFromPath(const std::string &devicePath) {
         return nullptr;
     }
 
-    return USBDevice::Device(fd, info.vendor, info.product, "WINCTRL", std::string(name));
+    USBDevice *device = USBDevice::Device(fd, info.vendor, info.product, "WINCTRL", std::string(name));
+    if (!device) {
+        // Unimplemented product ID: nobody owns the fd, close it or it leaks
+        // once per udev add event and enumeration pass.
+        close(fd);
+    }
+    return device;
 }
 
 bool USBController::deviceExistsAtPath(const std::string &devicePath) {
@@ -119,7 +131,7 @@ bool USBController::deviceExistsAtPath(const std::string &devicePath) {
 }
 
 void USBController::addDeviceFromPath(const std::string &devicePath) {
-    AppState::getInstance()->executeAfter(0, [this, devicePath]() {
+    AppState::getInstance()->executeAfter(0, this, [this, devicePath]() {
         if (deviceExistsAtPath(devicePath)) {
             return;
         }
@@ -200,47 +212,33 @@ void USBController::DeviceRemovedCallback(void *context, struct udev_device *dev
         return;
     }
 
-    // First pass: disconnect
-    for (auto it = self->devices.begin(); it != self->devices.end(); ++it) {
-        if ((*it)->hidDevice >= 0) {
-            char existingPath[256];
-            snprintf(existingPath, sizeof(existingPath), "/proc/self/fd/%d", (*it)->hidDevice);
-            char linkTarget[256];
-            ssize_t len = readlink(existingPath, linkTarget, sizeof(linkTarget) - 1);
-            if (len > 0) {
-                linkTarget[len] = '\0';
-                if (strcmp(linkTarget, devicePath) == 0) {
-                    (*it)->blackout();
-                    (*it)->disconnect();
-                    break;
-                }
-            }
-        } else {
-            (*it)->blackout();
-            (*it)->disconnect();
-            break;
-        }
-    }
-
-    // Second pass: deferred erase
-    AppState::getInstance()->executeAfter(0, [self, devicePath = std::string(devicePath)]() {
+    // Disconnect and erase on the flight loop. Touching the devices vector or
+    // calling disconnect() from the udev monitor thread races the flight-loop
+    // tasks that mutate the same vector and delete the same objects.
+    AppState::getInstance()->executeAfter(0, self, [self, devicePath = std::string(devicePath)]() {
         for (auto it = self->devices.begin(); it != self->devices.end();) {
-            if (!(*it) || !(*it)->connected) {
-                delete *it;
-                it = self->devices.erase(it);
-            } else {
+            USBDevice *dev = *it;
+            bool stale = !dev || dev->hidDevice < 0 || !dev->connected;
+
+            if (!stale) {
                 char existingPath[256];
-                snprintf(existingPath, sizeof(existingPath), "/proc/self/fd/%d", (*it)->hidDevice);
+                snprintf(existingPath, sizeof(existingPath), "/proc/self/fd/%d", dev->hidDevice);
                 char linkTarget[256];
                 ssize_t len = readlink(existingPath, linkTarget, sizeof(linkTarget) - 1);
                 if (len > 0) {
                     linkTarget[len] = '\0';
-                    if (strcmp(linkTarget, devicePath.c_str()) == 0) {
-                        delete *it;
-                        it = self->devices.erase(it);
-                        continue;
-                    }
+                    stale = strcmp(linkTarget, devicePath.c_str()) == 0;
                 }
+            }
+
+            if (stale) {
+                if (dev) {
+                    dev->blackout();
+                    dev->disconnect();
+                    delete dev;
+                }
+                it = self->devices.erase(it);
+            } else {
                 ++it;
             }
         }

@@ -15,12 +15,55 @@
 
 #include "stress_fmc.h"
 
-// Self-contained font data — no X-Plane or AppState dependency.
+// Self-contained font data — no X-Plane or AppState dependency. All of these
+// are MCDU-format packet arrays (identifier 0x32 baked in), so they can be
+// sent verbatim. md11-cdu.h is excluded: it targets different hardware.
+#include "737.h"
+#include "744.h"
+#include "airbus.h"
 #include "default.h"
+#include "vga_1.h"
+#include "xcrafts.h"
 
 #include <algorithm>
 #include <cstdio>
 #include <cstring>
+
+// ---------------------------------------------------------------------------
+// Selectable fonts. Index 0 is the default font used by connect().
+// ---------------------------------------------------------------------------
+namespace {
+    struct StressFont {
+            const char *name;
+            const std::vector<std::vector<unsigned char>> *packets;
+    };
+
+    const StressFont kFonts[] = {
+        {"Default", &fmcFontDefault},
+        {"Airbus", &fmcFontAirbus},
+        {"Boeing 737", &fmcFont737},
+        {"Boeing 744", &fmcFont744},
+        {"X-Crafts", &fmcFontXCrafts},
+        {"VGA", &fmcFontVGA1},
+    };
+} // namespace
+
+size_t StressFMC::fontCount() {
+    return sizeof(kFonts) / sizeof(kFonts[0]);
+}
+
+const char *StressFMC::fontName(size_t index) {
+    return index < fontCount() ? kFonts[index].name : "?";
+}
+
+void StressFMC::loadFont(size_t index) {
+    if (index >= fontCount()) {
+        return;
+    }
+    for (const auto &packet : *kFonts[index].packets) {
+        writeData(std::vector<uint8_t>(packet.begin(), packet.end()));
+    }
+}
 
 // ---------------------------------------------------------------------------
 // Scrolling text source — uppercase ASCII, wraps around.
@@ -95,13 +138,11 @@ void StressFMC::sendInitPackets() {
 }
 
 // ---------------------------------------------------------------------------
-// Font upload — send fmcFontDefault packets directly.
+// Font upload — send the default font packets directly.
 // For MCDU the hardware-conversion is a no-op (data is already for 0x32).
 // ---------------------------------------------------------------------------
 void StressFMC::sendFont() {
-    for (const auto &packet : fmcFontDefault) {
-        writeData(std::vector<uint8_t>(packet.begin(), packet.end()));
-    }
+    loadFont(0);
 }
 
 // ---------------------------------------------------------------------------

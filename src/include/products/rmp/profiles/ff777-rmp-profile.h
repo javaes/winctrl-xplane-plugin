@@ -18,7 +18,6 @@ class FF777RMPProfile : public RMPAircraftProfile {
 
     public:
         FF777RMPProfile(ProductRMP *product);
-        ~FF777RMPProfile();
 
         static bool IsEligible();
         const std::vector<std::string> &displayDatarefs() const override;

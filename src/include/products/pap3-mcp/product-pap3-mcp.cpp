@@ -30,6 +30,7 @@ using namespace pap3mcp::lcd;
 ProductPAP3MCP::ProductPAP3MCP(HIDDeviceHandle hidDevice, uint16_t vendorId, uint16_t productId, std::string vendorName, std::string productName) :
     USBDevice(hidDevice, vendorId, productId, vendorName, productName) {
     profile = nullptr;
+    menuItemId = -1;
     displayData = {};
     lastUpdateCycle = 0;
     pressedButtonIndices = {};
@@ -38,6 +39,7 @@ ProductPAP3MCP::ProductPAP3MCP(HIDDeviceHandle hidDevice, uint16_t vendorId, uin
 }
 
 ProductPAP3MCP::~ProductPAP3MCP() {
+    AppState::getInstance()->cancelTasksForOwner(this);
     blackout();
 
     PluginsMenu::getInstance()->removeItem(menuItemId);
@@ -60,6 +62,7 @@ void ProductPAP3MCP::setProfileForCurrentAircraft() {
         profileReady = true;
     } else if (Strato77WPAP3MCPProfile::IsEligible()) {
         profile = new Strato77WPAP3MCPProfile(this);
+        profileReady = true;
     } else if (FF777PAP3MCPProfile::IsEligible()) {
         profile = new FF777PAP3MCPProfile(this);
         profileReady = true;
@@ -105,7 +108,7 @@ bool ProductPAP3MCP::connect() {
                      setLedBrightness(PAP3MCPLed::LCD_BACKLIGHT, 255);
                      setLedBrightness(PAP3MCPLed::OVERALL_LED_BRIGHTNESS, 255);
                      setAllLedsEnabled(true);
-                     AppState::getInstance()->executeAfter(2000, [this]() {
+                     AppState::getInstance()->executeAfter(2000, this, [this]() {
                          setLedBrightness(PAP3MCPLed::BACKLIGHT, 128);
                          setLedBrightness(PAP3MCPLed::LCD_BACKLIGHT, 128);
                          setLedBrightness(PAP3MCPLed::OVERALL_LED_BRIGHTNESS, 128);
@@ -263,31 +266,33 @@ void ProductPAP3MCP::sendLCDDisplay(const std::string &speed, int heading, int a
     } else {
         // SPD: IAS vs MACH rendering
         const float spd = displayData.speed;
-        const bool isMach = (spd < 100.0f);
+        const bool isMach = displayData.digitA;
 
         if (displayData.speedVisible && isMach) {
             // MACH mode
             float mach = (spd < 1.0f) ? std::clamp(spd, 0.0f, 0.9999f) : std::clamp(spd / 100.0f, 0.0f, 0.9999f);
 
             if (displayData.machDigits >= 3) {
+                // ".XXX" — three decimal digits in HUNDREDS/TENS/UNITS, lower colon
+                // dot (before HUNDREDS) as the decimal point. KILO stays blank.
+                const int threeDigits = std::clamp(static_cast<int>(std::floor(mach * 1000.0f + 0.5f)), 0, 999);
+                drawDigit(G0, payload, SPD_HUNDREDS, (threeDigits / 100) % 10);
+                drawDigit(G0, payload, SPD_TENS, (threeDigits / 10) % 10);
+                drawDigit(G0, payload, SPD_UNITS, threeDigits % 10);
+                setFlag(payload, OFF_1E, DOT_SPD_COLON_LOWER, true);
+            } else {
                 // "0.XX" — KILO=0, HUNDREDS+TENS hold the two decimal digits, dot between them
                 const int twoDigits = std::clamp(static_cast<int>(std::floor(mach * 100.0f + 0.5f)), 0, 99);
-                drawDigit(G0, payload, SPD_KILO,     0);
-                drawDigit(G0, payload, SPD_HUNDREDS, (twoDigits / 10) % 10);
-                drawDigit(G0, payload, SPD_TENS,      twoDigits        % 10);
-            } else {
-                const int twoDigits = std::clamp(static_cast<int>(std::floor(mach * 100.0f + 0.5f)), 0, 99);
-                drawDigit(G0, payload, SPD_TENS,  (twoDigits / 10) % 10);
-                drawDigit(G0, payload, SPD_UNITS,  twoDigits        % 10);
+                drawDigit(G0, payload, SPD_TENS, (twoDigits / 10) % 10);
+                drawDigit(G0, payload, SPD_UNITS, twoDigits % 10);
+                setFlag(payload, OFF_19, DOT_SPD, true);
+                setFlag(payload, OFF_22, SPD_BAR_TOP, displayData.digitA);
+                setFlag(payload, OFF_1E, SPD_BAR_BOTTOM, displayData.digitA);
             }
 
             setFlag(payload, OFF_36, LBL_IAS, displayData.showLabels && false);
             setFlag(payload, OFF_32, LBL_MACH_L, displayData.showLabels && true);
             setFlag(payload, OFF_2E, LBL_MACH_R, displayData.showLabels && true);
-            setFlag(payload, OFF_19, DOT_SPD, true);
-
-            setFlag(payload, OFF_22, SPD_BAR_TOP, displayData.digitA);
-            setFlag(payload, OFF_1E, SPD_BAR_BOTTOM, displayData.digitA);
         } else if (displayData.speedVisible) {
             // IAS mode
             const int ias = std::max(0, static_cast<int>(std::floor(spd + 0.5f)));
@@ -444,6 +449,10 @@ void ProductPAP3MCP::sendLCDDisplay(const std::string &speed, int heading, int a
         }
     }
 
+    sendRawLCDPayload(payload);
+}
+
+void ProductPAP3MCP::sendRawLCDPayload(const std::array<uint8_t, 32> &payload) {
     // Send LCD payload command (opcode 0x38)
     // Packet structure (verified against working implementation):
     // - Bytes 0-3:   Header [F0 00 SEQ 38]
@@ -640,6 +649,10 @@ void ProductPAP3MCP::didReceiveButton(uint16_t hardwareButtonIndex, bool pressed
     USBDevice::didReceiveButton(hardwareButtonIndex, pressed, count);
 
     if (!connected || !profile) {
+        return;
+    }
+
+    if (isButtonHandledByXPlane(hardwareButtonIndex)) {
         return;
     }
 

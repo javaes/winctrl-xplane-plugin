@@ -21,16 +21,13 @@ FlightFactor767FMCProfile::FlightFactor767FMCProfile(ProductFMC *product) : FMCA
         uint8_t target = Dataref::getInstance()->get<bool>("sim/cockpit/electrical/avionics_on") ? brightness * 255 : 0;
         product->setLedBrightness(FMCLed::BACKLIGHT, target);
         product->setLedBrightness(FMCLed::SCREEN_BACKLIGHT, target);
-    });
+    },
+        this);
 
     Dataref::getInstance()->monitorExistingDataref<bool>("sim/cockpit/electrical/avionics_on", [](bool poweredOn) {
         Dataref::getInstance()->executeChangedCallbacksForDataref("sim/cockpit/electrical/instrument_brightness");
-    });
-}
-
-FlightFactor767FMCProfile::~FlightFactor767FMCProfile() {
-    Dataref::getInstance()->unbind("sim/cockpit/electrical/instrument_brightness");
-    Dataref::getInstance()->unbind("sim/cockpit/electrical/avionics_on");
+    },
+        this);
 }
 
 bool FlightFactor767FMCProfile::IsEligible() {

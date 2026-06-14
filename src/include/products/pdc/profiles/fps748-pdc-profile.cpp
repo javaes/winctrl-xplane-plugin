@@ -16,19 +16,13 @@ FPS748PDCProfile::FPS748PDCProfile(ProductPDC *product) : PDCAircraftProfile(pro
         uint8_t backlight = hasPower ? static_cast<uint8_t>(brightness * 255) : 0;
         product->setLedBrightness(PDCLed::BACKLIGHT, backlight);
         product->forceStateSync();
-    });
+    },
+        this);
 
     Dataref::getInstance()->monitorExistingDataref<bool>((altPrefix + "/Elec/bus_1_powered").c_str(), [altPrefix](bool) {
         Dataref::getInstance()->executeChangedCallbacksForDataref((altPrefix + "/LGT/glaresheld_sw").c_str());
-    });
-}
-
-FPS748PDCProfile::~FPS748PDCProfile() {
-    bool isSSG = IsSSGVersion();
-    std::string altPrefix = isSSG ? "ssg" : "FPS";
-
-    Dataref::getInstance()->unbind((altPrefix + "/LGT/glaresheld_sw").c_str());
-    Dataref::getInstance()->unbind((altPrefix + "/Elec/bus_1_powered").c_str());
+    },
+        this);
 }
 
 bool FPS748PDCProfile::IsSSGVersion() {

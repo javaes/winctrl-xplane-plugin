@@ -24,7 +24,7 @@ DEVICE_NAMES="
 0|tcas|32 TCAS
 0|rmp|32 RMP
 0|ursa-minor-throttle|URSA MINOR 32 Throttle Metal (+ optional 32 PAC Metal)
-0|orion-throttle|ORION Throttle Base II
+1|orion-throttle|ORION Throttle Base II
 "
 
 # Aircraft display names (pipe-separated: key|display_name)
@@ -48,6 +48,7 @@ c172|Laminar C172
 sparky744|Sparky 744
 jar330|JarDesign A330
 stratosphere77w|Stratosphere Studios 777-300ER
+kingair350|Airfoillabs King Air 350
 "
 
 # Function to get display name

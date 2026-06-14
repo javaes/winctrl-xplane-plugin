@@ -4,6 +4,7 @@
 #include "pap3-mcp-aircraft-profile.h"
 #include "usbdevice.h"
 
+#include <array>
 #include <map>
 #include <set>
 #include <vector>
@@ -47,6 +48,7 @@ class ProductPAP3MCP : public USBDevice {
         void initializeDisplays();
         void clearDisplays();
         void sendLCDDisplay(const std::string &speed, int heading, int altitude, const std::string &vs, int crsCapt, int crsFo);
+        void sendRawLCDPayload(const std::array<uint8_t, 32> &payload);
         void sendLCDCommit();
 };
 

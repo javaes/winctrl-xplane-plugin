@@ -119,7 +119,7 @@ const std::vector<std::string> &FPS748PAP3MCPProfile::displayDatarefs() const {
     return cache.try_emplace(isSSG, std::vector<std::string>{
                                         altPrefix + "/Elec/bus_1_powered",
                                         prefix + "/B748/MCP/mcp_ias_mach_act",
-                                        prefix + "/B748/systems/athr/MCPSPD_spdmach",
+                                        prefix + "/B748/MCP/mcp_ias_co_act",
                                         prefix + "/B748/mcp/speed_is_blank",
                                         prefix + "/B748/MCP/mcp_heading_bug_act",
                                         prefix + "/B748/MCP/mcp_alt_target_act",
@@ -151,7 +151,7 @@ const std::unordered_map<uint16_t, PAP3MCPButtonDef> &FPS748PAP3MCPProfile::butt
                                         {9, {"V/S", prefix + "/B748/MCP/mcp_vert_speed_sw", PAP3MCPDatarefType::SET_VALUE_PHASED, 1.0}},
                                         {10, {"CMD A", prefix + "/B748/MCP/mcp_a_cmd_sw", PAP3MCPDatarefType::SET_VALUE_PHASED, 1.0}},
                                         {12, {"CMD B", prefix + "/B748/MCP/mcp_b_cmd_sw", PAP3MCPDatarefType::SET_VALUE_PHASED, 1.0}},
-                                        {14, {"C/O", prefix + "/B748/MCP/mcp_ias_co_sw", PAP3MCPDatarefType::TOGGLE_VALUE}},
+                                        {14, {"C/O", "custom_co", PAP3MCPDatarefType::TOGGLE_VALUE}},
                                         {15, {"SPD INTV", prefix + "/B748/MCP/mcp_speed_int_sw", PAP3MCPDatarefType::SET_VALUE_PHASED, 1.0}},
 
                                         // Row 3
@@ -199,11 +199,13 @@ void FPS748PAP3MCPProfile::updateDisplayData(PAP3MCPDisplayData &data) {
     data.displayTest = false;
     data.showLabels = true;
 
-    bool isMach = dm->getCached<float>((prefix + "/B748/systems/athr/MCPSPD_spdmach").c_str()) > 0.5f;
+    // mcp_ias_co_act is the authoritative MCP speed-window mode: 1 = MACH, 0 = IAS.
+    // (Not MCPSPD_spdmach, which only tracks the autothrottle mode and does not
+    // flip on the ground.)
+    bool isMach = dm->getCached<float>((prefix + "/B748/MCP/mcp_ias_co_act").c_str()) > 0.5f;
     data.digitA = isMach;
     data.machDigits = 3;
-    float rawSpeed = dm->getCached<float>((prefix + "/B748/MCP/mcp_ias_mach_act").c_str());
-    data.speed = rawSpeed;
+    data.speed = dm->getCached<float>((prefix + "/B748/MCP/mcp_ias_mach_act").c_str());
     data.speedVisible = dm->getCached<float>((prefix + "/B748/mcp/speed_is_blank").c_str()) < 0.5f;
 
     data.heading = static_cast<int>(dm->getCached<float>((prefix + "/B748/MCP/mcp_heading_bug_act").c_str()));
@@ -237,6 +239,18 @@ void FPS748PAP3MCPProfile::buttonPressed(const PAP3MCPButtonDef *button, XPLMCom
         } else if (phase == xplm_CommandEnd) {
             dm->set<int>((prefix + "/B748/MCP/mcp_hdg_hold_sw").c_str(), 0);
             dm->set<int>((prefix + "/B748/MCP/mcp_hdg_select_sw").c_str(), 0);
+        }
+        return;
+    }
+
+    if (button->dataref == "custom_co") {
+        // Flip the MCP speed window IAS<->MACH. mcp_ias_co_act is the authoritative
+        // mode (1 = MACH, 0 = IAS); write the inverse to mcp_ias_co_sw to toggle.
+        if (phase == xplm_CommandBegin) {
+            std::string prefix = IsSSGVersion() ? "SSG" : "FPS";
+            auto dm = Dataref::getInstance();
+            bool isMach = dm->get<float>((prefix + "/B748/MCP/mcp_ias_co_act").c_str()) > 0.5f;
+            dm->set<int>((prefix + "/B748/MCP/mcp_ias_co_sw").c_str(), isMach ? 0 : 1);
         }
         return;
     }

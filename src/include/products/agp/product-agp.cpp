@@ -83,6 +83,8 @@ bool ProductAGP::connect() {
     std::string terrainPreference = AppState::getInstance()->readPreference("AGPTerrainND", "first_officer");
     if (terrainPreference == "captain") {
         terrainNDPreference = AGPTerrainNDPreference::CAPTAIN;
+    } else if (terrainPreference == "both") {
+        terrainNDPreference = AGPTerrainNDPreference::BOTH;
     } else {
         terrainNDPreference = AGPTerrainNDPreference::FIRST_OFFICER;
     }
@@ -110,6 +112,12 @@ bool ProductAGP::connect() {
                                           {.name = "ND2 (First officer)", .checked = terrainPreference == "first_officer", .content = [this](int itemId) {
                                                AppState::getInstance()->writePreference("AGPTerrainND", "first_officer");
                                                terrainNDPreference = AGPTerrainNDPreference::FIRST_OFFICER;
+                                               PluginsMenu::getInstance()->uncheckSubmenuSiblings(itemId);
+                                               PluginsMenu::getInstance()->setItemChecked(itemId, true);
+                                           }},
+                                          {.name = "ND1 + ND2 (Both)", .checked = terrainPreference == "both", .content = [this](int itemId) {
+                                               AppState::getInstance()->writePreference("AGPTerrainND", "both");
+                                               terrainNDPreference = AGPTerrainNDPreference::BOTH;
                                                PluginsMenu::getInstance()->uncheckSubmenuSiblings(itemId);
                                                PluginsMenu::getInstance()->setItemChecked(itemId, true);
                                            }},

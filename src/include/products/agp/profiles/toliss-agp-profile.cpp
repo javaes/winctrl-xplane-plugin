@@ -43,18 +43,28 @@ TolissAGPProfile::TolissAGPProfile(ProductAGP *product) : AGPAircraftProfile(pro
         this);
 
     Dataref::getInstance()->monitorExistingDataref<bool>("AirbusFBW/TerrainSelectedND1", [this, product](bool enabled) {
-        if (product->terrainNDPreference == AGPTerrainNDPreference::CAPTAIN) {
-            bool hasPower = Dataref::getInstance()->get<bool>("sim/cockpit/electrical/avionics_on");
-            product->setLedBrightness(AGPLed::TERRAIN_ON, hasPower && (enabled || isAnnunTest()) ? 1 : 0);
+        if (product->terrainNDPreference == AGPTerrainNDPreference::FIRST_OFFICER) {
+            return;
         }
+
+        bool terrainOn = (product->terrainNDPreference == AGPTerrainNDPreference::BOTH)
+                             ? enabled || Dataref::getInstance()->get<bool>("AirbusFBW/TerrainSelectedND2")
+                             : enabled;
+        bool hasPower = Dataref::getInstance()->get<bool>("sim/cockpit/electrical/avionics_on");
+        product->setLedBrightness(AGPLed::TERRAIN_ON, hasPower && (terrainOn || isAnnunTest()) ? 1 : 0);
     },
         this);
 
     Dataref::getInstance()->monitorExistingDataref<bool>("AirbusFBW/TerrainSelectedND2", [this, product](bool enabled) {
-        if (product->terrainNDPreference == AGPTerrainNDPreference::FIRST_OFFICER) {
-            bool hasPower = Dataref::getInstance()->get<bool>("sim/cockpit/electrical/avionics_on");
-            product->setLedBrightness(AGPLed::TERRAIN_ON, hasPower && (enabled || isAnnunTest()) ? 1 : 0);
+        if (product->terrainNDPreference == AGPTerrainNDPreference::CAPTAIN) {
+            return;
         }
+
+        bool terrainOn = (product->terrainNDPreference == AGPTerrainNDPreference::BOTH)
+                             ? enabled || Dataref::getInstance()->get<bool>("AirbusFBW/TerrainSelectedND1")
+                             : enabled;
+        bool hasPower = Dataref::getInstance()->get<bool>("sim/cockpit/electrical/avionics_on");
+        product->setLedBrightness(AGPLed::TERRAIN_ON, hasPower && (terrainOn || isAnnunTest()) ? 1 : 0);
     },
         this);
 
@@ -132,8 +142,15 @@ void TolissAGPProfile::buttonPressed(const AGPButtonDef *button, XPLMCommandPhas
             return;
         }
 
-        std::string dataref = (product->terrainNDPreference == AGPTerrainNDPreference::CAPTAIN) ? "AirbusFBW/TerrainSelectedND1" : "AirbusFBW/TerrainSelectedND2";
-        datarefManager->set<int>(dataref.c_str(), datarefManager->get<bool>(dataref.c_str()) ? 0 : 1);
+        if (product->terrainNDPreference == AGPTerrainNDPreference::BOTH) {
+            bool currentlyOn = datarefManager->get<bool>("AirbusFBW/TerrainSelectedND1") || datarefManager->get<bool>("AirbusFBW/TerrainSelectedND2");
+            int newValue = currentlyOn ? 0 : 1;
+            datarefManager->set<int>("AirbusFBW/TerrainSelectedND1", newValue);
+            datarefManager->set<int>("AirbusFBW/TerrainSelectedND2", newValue);
+        } else {
+            std::string dataref = (product->terrainNDPreference == AGPTerrainNDPreference::CAPTAIN) ? "AirbusFBW/TerrainSelectedND1" : "AirbusFBW/TerrainSelectedND2";
+            datarefManager->set<int>(dataref.c_str(), datarefManager->get<bool>(dataref.c_str()) ? 0 : 1);
+        }
     } else if (button->datarefType == AGPDatarefType::SET_VALUE) {
         if (phase != xplm_CommandBegin) {
             return;

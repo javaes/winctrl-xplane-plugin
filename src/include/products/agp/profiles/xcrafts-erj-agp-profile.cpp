@@ -33,16 +33,26 @@ XCraftsErjAGPProfile::XCraftsErjAGPProfile(ProductAGP *product) : AGPAircraftPro
         this);
 
     Dataref::getInstance()->monitorExistingDataref<int>("XCrafts/ERJ/MFD1/WX_TERR_status", [product](int terrainStatus) {
-        if (product->terrainNDPreference == AGPTerrainNDPreference::CAPTAIN) {
-            product->setLedBrightness(AGPLed::TERRAIN_ON, terrainStatus == 2 ? 1 : 0);
+        if (product->terrainNDPreference == AGPTerrainNDPreference::FIRST_OFFICER) {
+            return;
         }
+
+        bool terrainOn = (product->terrainNDPreference == AGPTerrainNDPreference::BOTH)
+                             ? terrainStatus == 2 || Dataref::getInstance()->get<int>("XCrafts/ERJ/MFD2/WX_TERR_status") == 2
+                             : terrainStatus == 2;
+        product->setLedBrightness(AGPLed::TERRAIN_ON, terrainOn ? 1 : 0);
     },
         this);
 
     Dataref::getInstance()->monitorExistingDataref<int>("XCrafts/ERJ/MFD2/WX_TERR_status", [product](int terrainStatus) {
-        if (product->terrainNDPreference == AGPTerrainNDPreference::FIRST_OFFICER) {
-            product->setLedBrightness(AGPLed::TERRAIN_ON, terrainStatus == 2 ? 1 : 0);
+        if (product->terrainNDPreference == AGPTerrainNDPreference::CAPTAIN) {
+            return;
         }
+
+        bool terrainOn = (product->terrainNDPreference == AGPTerrainNDPreference::BOTH)
+                             ? terrainStatus == 2 || Dataref::getInstance()->get<int>("XCrafts/ERJ/MFD1/WX_TERR_status") == 2
+                             : terrainStatus == 2;
+        product->setLedBrightness(AGPLed::TERRAIN_ON, terrainOn ? 1 : 0);
     },
         this);
 }
@@ -95,8 +105,13 @@ void XCraftsErjAGPProfile::buttonPressed(const AGPButtonDef *button, XPLMCommand
         if (phase != xplm_CommandBegin) {
             return;
         }
-        std::string command = (product->terrainNDPreference == AGPTerrainNDPreference::CAPTAIN) ? "XCrafts/ERJ/MFD1/butt_5_cmnd" : "XCrafts/ERJ/MFD2/butt_5_cmnd";
-        datarefManager->executeCommand(command.c_str(), phase);
+        if (product->terrainNDPreference == AGPTerrainNDPreference::BOTH) {
+            datarefManager->executeCommand("XCrafts/ERJ/MFD1/butt_5_cmnd", phase);
+            datarefManager->executeCommand("XCrafts/ERJ/MFD2/butt_5_cmnd", phase);
+        } else {
+            std::string command = (product->terrainNDPreference == AGPTerrainNDPreference::CAPTAIN) ? "XCrafts/ERJ/MFD1/butt_5_cmnd" : "XCrafts/ERJ/MFD2/butt_5_cmnd";
+            datarefManager->executeCommand(command.c_str(), phase);
+        }
         return;
     }
 
@@ -106,13 +121,6 @@ void XCraftsErjAGPProfile::buttonPressed(const AGPButtonDef *button, XPLMCommand
 
     if (button->datarefType == AGPDatarefType::LANDING_GEAR) {
         datarefManager->executeCommand(button->dataref.c_str(), phase);
-    } else if (button->datarefType == AGPDatarefType::TERRAIN_ON_ND) {
-        if (phase != xplm_CommandBegin) {
-            return;
-        }
-
-        std::string dataref = (product->terrainNDPreference == AGPTerrainNDPreference::CAPTAIN) ? "sim/cockpit2/EFIS/TERRAIN_on_nd1" : "sim/cockpit2/EFIS/TERRAIN_on_nd2";
-        datarefManager->set<bool>(dataref.c_str(), !datarefManager->get<bool>(dataref.c_str()));
     } else if (button->datarefType == AGPDatarefType::SET_VALUE) {
         if (phase != xplm_CommandBegin) {
             return;

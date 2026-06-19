@@ -83,13 +83,6 @@ void XCraftsEjetsAGPProfile::buttonPressed(const AGPButtonDef *button, XPLMComma
 
     if (button->datarefType == AGPDatarefType::LANDING_GEAR) {
         datarefManager->executeCommand(button->dataref.c_str(), phase);
-    } else if (button->datarefType == AGPDatarefType::TERRAIN_ON_ND) {
-        if (phase != xplm_CommandBegin) {
-            return;
-        }
-
-        std::string dataref = (product->terrainNDPreference == AGPTerrainNDPreference::CAPTAIN) ? "sim/cockpit2/EFIS/TERRAIN_on_nd1" : "sim/cockpit2/EFIS/TERRAIN_on_nd2";
-        datarefManager->set<bool>(dataref.c_str(), !datarefManager->get<bool>(dataref.c_str()));
     } else if (button->datarefType == AGPDatarefType::SET_VALUE) {
         if (phase != xplm_CommandBegin) {
             return;

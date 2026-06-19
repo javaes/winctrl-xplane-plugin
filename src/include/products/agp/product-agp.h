@@ -33,7 +33,8 @@ enum class AGPLed : int {
 
 enum class AGPTerrainNDPreference {
     CAPTAIN = 0,
-    FIRST_OFFICER
+    FIRST_OFFICER,
+    BOTH
 };
 
 class ProductAGP : public USBDevice {

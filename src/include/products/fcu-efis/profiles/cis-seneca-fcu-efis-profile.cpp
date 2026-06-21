@@ -31,6 +31,11 @@ CISSenecaFCUEfisProfile::CISSenecaFCUEfisProfile(ProductFCUEfis *product) : FCUE
     },
         this);
 
+    Dataref::getInstance()->monitorExistingDataref<bool>("sim/cockpit/electrical/battery_on", [product](bool batteryOn) {
+        Dataref::getInstance()->executeChangedCallbacksForDataref("sim/cockpit2/electrical/instrument_brightness_ratio_manual");
+    },
+        this);
+
     Dataref::getInstance()->monitorExistingDataref<bool>("CIS/PA34/instruments/altimeter/HpA", [product](bool isHpa) {
         product->updateDisplays();
     },

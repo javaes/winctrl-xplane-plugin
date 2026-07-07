@@ -6,6 +6,8 @@
 #include "plugins-menu.h"
 #include "profiles/c172-fcu-efis-profile.h"
 #include "profiles/cis-seneca-fcu-efis-profile.h"
+#include "profiles/cl650-fcu-efis-profile.h"
+#include "profiles/q4xp-fcu-efis-profile.h"
 #include "profiles/ff350-fcu-efis-profile.h"
 #include "profiles/ff767-fcu-efis-profile.h"
 #include "profiles/ff777-fcu-efis-profile.h"
@@ -70,6 +72,12 @@ void ProductFCUEfis::setProfileForCurrentAircraft() {
         profileReady = true;
     } else if (XCraftsErjFCUEfisProfile::IsEligible()) {
         profile = new XCraftsErjFCUEfisProfile(this);
+        profileReady = true;
+    } else if (Q4XPFCUEfisProfile::IsEligible()) {
+        profile = new Q4XPFCUEfisProfile(this);
+        profileReady = true;
+    } else if (CL650FCUEfisProfile::IsEligible()) {
+        profile = new CL650FCUEfisProfile(this);
         profileReady = true;
     } else if (TolissFCUEfisProfile::IsEligible()) {
         profile = new TolissFCUEfisProfile(this);

@@ -11,9 +11,11 @@
 #include "profiles/jar330-fmc-profile.h"
 #include "profiles/laminar-a333-fmc-profile.h"
 #include "profiles/laminar-citx-fmc-profile.h"
+#include "profiles/q4xp-fmc-profile.h"
 #include "profiles/rotatemd11-fmc-profile.h"
 #include "profiles/sparky744-fmc-profile.h"
 #include "profiles/stratosphere77w-fmc-profile.h"
+#include "profiles/cl650-fmc-profile.h"
 #include "profiles/toliss-fmc-profile.h"
 #include "profiles/xcrafts-ejets-fmc-profile.h"
 #include "profiles/xcrafts-erj-fmc-profile.h"
@@ -73,6 +75,14 @@ void ProductFMC::setProfileForCurrentAircraft() {
     } else if (TolissFMCProfile::IsEligible()) {
         clearDisplay();
         profile = new TolissFMCProfile(this);
+        profileReady = true;
+    } else if (CL650FMCProfile::IsEligible()) {
+        clearDisplay();
+        profile = new CL650FMCProfile(this);
+        profileReady = true;
+    } else if (Q4XPFMCProfile::IsEligible()) {
+        clearDisplay();
+        profile = new Q4XPFMCProfile(this);
         profileReady = true;
     } else if (LaminarA333FMCProfile::IsEligible()) {
         clearDisplay();

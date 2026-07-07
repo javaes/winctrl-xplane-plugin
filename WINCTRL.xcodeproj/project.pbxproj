@@ -82,6 +82,14 @@
 		F635AD4B2E05819E005D6CDC /* usbdevice_mac.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F635AD492E05819E005D6CDC /* usbdevice_mac.cpp */; };
 		F635AD502E058FFC005D6CDC /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F635AD4F2E058FFC005D6CDC /* IOKit.framework */; platformFilters = (ios, maccatalyst, macos, tvos, xros, ); };
 		F63BC99A2E30D73E00ACBBB0 /* appstate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F6AF9ECB2D078ED400530297 /* appstate.cpp */; };
+		F6402E452FFDB71B00998B2D /* q4xp-fmc-profile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F6402E442FFDB71B00998B2D /* q4xp-fmc-profile.cpp */; };
+		F6402E462FFDB71B00998B2D /* cl650-fmc-profile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F6402E422FFDB71B00998B2D /* cl650-fmc-profile.cpp */; };
+		F6402E472FFDB71B00998B2D /* q4xp-fmc-profile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F6402E442FFDB71B00998B2D /* q4xp-fmc-profile.cpp */; };
+		F6402E482FFDB71B00998B2D /* cl650-fmc-profile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F6402E422FFDB71B00998B2D /* cl650-fmc-profile.cpp */; };
+		F6402E4D2FFDB72E00998B2D /* cl650-fcu-efis-profile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F6402E4A2FFDB72E00998B2D /* cl650-fcu-efis-profile.cpp */; };
+		F6402E4E2FFDB72E00998B2D /* q4xp-fcu-efis-profile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F6402E4C2FFDB72E00998B2D /* q4xp-fcu-efis-profile.cpp */; };
+		F6402E4F2FFDB72E00998B2D /* cl650-fcu-efis-profile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F6402E4A2FFDB72E00998B2D /* cl650-fcu-efis-profile.cpp */; };
+		F6402E502FFDB72E00998B2D /* q4xp-fcu-efis-profile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F6402E4C2FFDB72E00998B2D /* q4xp-fcu-efis-profile.cpp */; };
 		F646535F2FDAFB23001F7640 /* profile-cleanup.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F646535E2FDAFB23001F7640 /* profile-cleanup.cpp */; };
 		F64653602FDAFB23001F7640 /* profile-cleanup.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F646535E2FDAFB23001F7640 /* profile-cleanup.cpp */; };
 		F647201E2E16CF6D00C9976B /* usbdevice.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F647201D2E16CF6D00C9976B /* usbdevice.cpp */; };
@@ -307,6 +315,14 @@
 		F635AD492E05819E005D6CDC /* usbdevice_mac.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = usbdevice_mac.cpp; sourceTree = "<group>"; };
 		F635AD4E2E058905005D6CDC /* WINCTRL.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = WINCTRL.entitlements; sourceTree = "<group>"; };
 		F635AD4F2E058FFC005D6CDC /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = System/Library/Frameworks/IOKit.framework; sourceTree = SDKROOT; };
+		F6402E412FFDB71B00998B2D /* cl650-fmc-profile.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "cl650-fmc-profile.h"; sourceTree = "<group>"; };
+		F6402E422FFDB71B00998B2D /* cl650-fmc-profile.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "cl650-fmc-profile.cpp"; sourceTree = "<group>"; };
+		F6402E432FFDB71B00998B2D /* q4xp-fmc-profile.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "q4xp-fmc-profile.h"; sourceTree = "<group>"; };
+		F6402E442FFDB71B00998B2D /* q4xp-fmc-profile.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "q4xp-fmc-profile.cpp"; sourceTree = "<group>"; };
+		F6402E492FFDB72E00998B2D /* cl650-fcu-efis-profile.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "cl650-fcu-efis-profile.h"; sourceTree = "<group>"; };
+		F6402E4A2FFDB72E00998B2D /* cl650-fcu-efis-profile.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "cl650-fcu-efis-profile.cpp"; sourceTree = "<group>"; };
+		F6402E4B2FFDB72E00998B2D /* q4xp-fcu-efis-profile.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "q4xp-fcu-efis-profile.h"; sourceTree = "<group>"; };
+		F6402E4C2FFDB72E00998B2D /* q4xp-fcu-efis-profile.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "q4xp-fcu-efis-profile.cpp"; sourceTree = "<group>"; };
 		F646535D2FDAFB23001F7640 /* profile-cleanup.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "profile-cleanup.h"; sourceTree = "<group>"; };
 		F646535E2FDAFB23001F7640 /* profile-cleanup.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "profile-cleanup.cpp"; sourceTree = "<group>"; };
 		F647201D2E16CF6D00C9976B /* usbdevice.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = usbdevice.cpp; sourceTree = "<group>"; };
@@ -681,6 +697,10 @@
 				F60ABAE82FBE134D001C91EF /* jar330-fmc-profile.cpp */,
 				F681E21C2FC9E5A30009D9FB /* stratosphere77w-fmc-profile.h */,
 				F681E21D2FC9E5A30009D9FB /* stratosphere77w-fmc-profile.cpp */,
+				F6402E412FFDB71B00998B2D /* cl650-fmc-profile.h */,
+				F6402E422FFDB71B00998B2D /* cl650-fmc-profile.cpp */,
+				F6402E432FFDB71B00998B2D /* q4xp-fmc-profile.h */,
+				F6402E442FFDB71B00998B2D /* q4xp-fmc-profile.cpp */,
 			);
 			path = profiles;
 			sourceTree = "<group>";
@@ -818,6 +838,10 @@
 				F681E2212FC9E5AE0009D9FB /* stratosphere77w-fcu-efis-profile.cpp */,
 				F6E05E762FDDE23F00C1FA45 /* kingair350-fcu-efis-profile.h */,
 				F6E05E772FDDE23F00C1FA45 /* kingair350-fcu-efis-profile.cpp */,
+				F6402E492FFDB72E00998B2D /* cl650-fcu-efis-profile.h */,
+				F6402E4A2FFDB72E00998B2D /* cl650-fcu-efis-profile.cpp */,
+				F6402E4B2FFDB72E00998B2D /* q4xp-fcu-efis-profile.h */,
+				F6402E4C2FFDB72E00998B2D /* q4xp-fcu-efis-profile.cpp */,
 			);
 			path = profiles;
 			sourceTree = "<group>";
@@ -1076,6 +1100,10 @@
 				F6BB757B2E32634700C2B21F /* toliss-fcu-efis-profile.cpp in Sources */,
 				F68164E62E3161FD00319E9D /* usbcontroller.cpp in Sources */,
 				F67FA47C2FFDA4990027506D /* zibo-rmp-profile.cpp in Sources */,
+				F6402E4D2FFDB72E00998B2D /* cl650-fcu-efis-profile.cpp in Sources */,
+				F6402E4E2FFDB72E00998B2D /* q4xp-fcu-efis-profile.cpp in Sources */,
+				F6402E472FFDB71B00998B2D /* q4xp-fmc-profile.cpp in Sources */,
+				F6402E482FFDB71B00998B2D /* cl650-fmc-profile.cpp in Sources */,
 				F60ABAEE2FBE1355001C91EF /* jar330-fcu-efis-profile.cpp in Sources */,
 				F6EBDC0D2FC6C740005AFCBD /* xcrafts-erj-agp-profile.cpp in Sources */,
 				F60F7FE12FC9B694000EA4E2 /* rotatemd11-ursa-minor-throttle-profile.cpp in Sources */,
@@ -1174,6 +1202,8 @@
 				F64BE3EB2E1BF625003C1B73 /* usbdevice_win.cpp in Sources */,
 				F6CC2B492F0E4E5100C0A4D8 /* ff777-fcu-efis-profile.cpp in Sources */,
 				F64BE3ED2E1BF625003C1B73 /* usbcontroller_win.cpp in Sources */,
+				F6402E4F2FFDB72E00998B2D /* cl650-fcu-efis-profile.cpp in Sources */,
+				F6402E502FFDB72E00998B2D /* q4xp-fcu-efis-profile.cpp in Sources */,
 				F6BB75782E32634700C2B21F /* product-fcu-efis.cpp in Sources */,
 				F6EF56262F0AC43300AB61F1 /* zibo-pdc-profile.cpp in Sources */,
 				F6EF56272F0AC43300AB61F1 /* product-pdc.cpp in Sources */,
@@ -1189,6 +1219,8 @@
 				F64BE3EE2E1BF625003C1B73 /* usbcontroller_lin.cpp in Sources */,
 				F60ABADD2FBDF33E001C91EF /* xcrafts-erj-fmc-profile.cpp in Sources */,
 				F68164E52E3161FD00319E9D /* usbcontroller.cpp in Sources */,
+				F6402E452FFDB71B00998B2D /* q4xp-fmc-profile.cpp in Sources */,
+				F6402E462FFDB71B00998B2D /* cl650-fmc-profile.cpp in Sources */,
 				F6C345512E18797400D7C987 /* dataref.cpp in Sources */,
 				F6A149462E4F37ED00FB8395 /* FMCControlView.swift in Sources */,
 				F6C3455F2E187AB700D7C987 /* xplane-sdk-mock.cpp in Sources */,

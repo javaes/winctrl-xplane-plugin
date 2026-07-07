@@ -42,7 +42,7 @@ CL650FMCProfile::CL650FMCProfile(ProductFMC *product) : FMCAircraftProfile(produ
             }
 
             auto datarefManager = Dataref::getInstance();
-            const std::string cdu = product->deviceVariant == FMCDeviceVariant::VARIANT_CAPTAIN ? "1" : "2";
+            const std::string cdu = this->product->deviceVariant == FMCDeviceVariant::VARIANT_CAPTAIN ? "1" : "2";
 
             Logger::getInstance()->info("=== CL650 CDU style_line dump (CDU %s) ===\n", cdu.c_str());
 

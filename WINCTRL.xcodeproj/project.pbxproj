@@ -106,6 +106,8 @@
 		F67B29CD2FB71A19004849B1 /* cis-seneca-fcu-efis-profile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F67B29CB2FB71A19004849B1 /* cis-seneca-fcu-efis-profile.cpp */; };
 		F67B29CE2FB71A19004849B1 /* c172-fcu-efis-profile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F67B29C92FB71A19004849B1 /* c172-fcu-efis-profile.cpp */; };
 		F67B29CF2FB71A19004849B1 /* cis-seneca-fcu-efis-profile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F67B29CB2FB71A19004849B1 /* cis-seneca-fcu-efis-profile.cpp */; };
+		F67FA47C2FFDA4990027506D /* zibo-rmp-profile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F67FA47B2FFDA4990027506D /* zibo-rmp-profile.cpp */; };
+		F67FA47D2FFDA4990027506D /* zibo-rmp-profile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F67FA47B2FFDA4990027506D /* zibo-rmp-profile.cpp */; };
 		F67FE8142E895BAC00C4243C /* laminar-a333-fcu-efis-profile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F67FE8132E895BAC00C4243C /* laminar-a333-fcu-efis-profile.cpp */; };
 		F67FE8152E895BAC00C4243C /* laminar-a333-fcu-efis-profile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F67FE8132E895BAC00C4243C /* laminar-a333-fcu-efis-profile.cpp */; };
 		F68164E52E3161FD00319E9D /* usbcontroller.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F68164E42E3161FD00319E9D /* usbcontroller.cpp */; };
@@ -324,6 +326,8 @@
 		F67B29C92FB71A19004849B1 /* c172-fcu-efis-profile.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "c172-fcu-efis-profile.cpp"; sourceTree = "<group>"; };
 		F67B29CA2FB71A19004849B1 /* cis-seneca-fcu-efis-profile.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "cis-seneca-fcu-efis-profile.h"; sourceTree = "<group>"; };
 		F67B29CB2FB71A19004849B1 /* cis-seneca-fcu-efis-profile.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "cis-seneca-fcu-efis-profile.cpp"; sourceTree = "<group>"; };
+		F67FA47A2FFDA4990027506D /* zibo-rmp-profile.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "zibo-rmp-profile.h"; sourceTree = "<group>"; };
+		F67FA47B2FFDA4990027506D /* zibo-rmp-profile.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "zibo-rmp-profile.cpp"; sourceTree = "<group>"; };
 		F67FE8122E895BAC00C4243C /* laminar-a333-fcu-efis-profile.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "laminar-a333-fcu-efis-profile.h"; sourceTree = "<group>"; };
 		F67FE8132E895BAC00C4243C /* laminar-a333-fcu-efis-profile.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "laminar-a333-fcu-efis-profile.cpp"; sourceTree = "<group>"; };
 		F68164E42E3161FD00319E9D /* usbcontroller.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = usbcontroller.cpp; sourceTree = "<group>"; };
@@ -500,6 +504,8 @@
 				F603CF692FCDA132005DF928 /* toliss-rmp-profile.cpp */,
 				F6025FE32FDC04DD00C7F37D /* ff777-rmp-profile.h */,
 				F6025FE42FDC04DD00C7F37D /* ff777-rmp-profile.cpp */,
+				F67FA47A2FFDA4990027506D /* zibo-rmp-profile.h */,
+				F67FA47B2FFDA4990027506D /* zibo-rmp-profile.cpp */,
 			);
 			path = profiles;
 			sourceTree = "<group>";
@@ -1069,6 +1075,7 @@
 				F6BB757A2E32634700C2B21F /* product-fcu-efis.cpp in Sources */,
 				F6BB757B2E32634700C2B21F /* toliss-fcu-efis-profile.cpp in Sources */,
 				F68164E62E3161FD00319E9D /* usbcontroller.cpp in Sources */,
+				F67FA47C2FFDA4990027506D /* zibo-rmp-profile.cpp in Sources */,
 				F60ABAEE2FBE1355001C91EF /* jar330-fcu-efis-profile.cpp in Sources */,
 				F6EBDC0D2FC6C740005AFCBD /* xcrafts-erj-agp-profile.cpp in Sources */,
 				F60F7FE12FC9B694000EA4E2 /* rotatemd11-ursa-minor-throttle-profile.cpp in Sources */,
@@ -1203,6 +1210,7 @@
 				F6FBC55F2E3A3E15004E5F42 /* FCUEfisControlView.swift in Sources */,
 				F69FF22D2E1D13CB00F9D2D9 /* GenericDeviceView.swift in Sources */,
 				F60ABAD52FBDF03F001C91EF /* xcrafts-ejets-ursa-minor-throttle-profile.cpp in Sources */,
+				F67FA47D2FFDA4990027506D /* zibo-rmp-profile.cpp in Sources */,
 				F64653602FDAFB23001F7640 /* profile-cleanup.cpp in Sources */,
 				F69FF22E2E1D13CB00F9D2D9 /* DeviceModel.swift in Sources */,
 				F6EBDC092FC6C497005AFCBD /* xcrafts-erj-pdc-profile.cpp in Sources */,

@@ -185,6 +185,7 @@ void ProductPAP3MCP::updateDisplays(bool force) {
         displayData.verticalSpeed != oldDisplayData.verticalSpeed ||
         displayData.verticalSpeedVisible != oldDisplayData.verticalSpeedVisible ||
         displayData.speedVisible != oldDisplayData.speedVisible ||
+        displayData.spdMach != oldDisplayData.spdMach ||
         displayData.headingVisible != oldDisplayData.headingVisible ||
         displayData.crsCapt != oldDisplayData.crsCapt ||
         displayData.crsFo != oldDisplayData.crsFo ||
@@ -266,7 +267,7 @@ void ProductPAP3MCP::sendLCDDisplay(const std::string &speed, int heading, int a
     } else {
         // SPD: IAS vs MACH rendering
         const float spd = displayData.speed;
-        const bool isMach = displayData.digitA;
+        const bool isMach = displayData.spdMach;
 
         if (displayData.speedVisible && isMach) {
             // MACH mode

@@ -74,8 +74,10 @@ struct PAP3MCPDisplayData {
 
         uint8_t machDigits = 2; // Number of MACH decimal digits to display (2 = .84, 3 = .842)
 
+        bool spdMach = false; // Speed window is in MACH mode (renders ".XX"/".XXX" instead of IAS)
+
         // Special display flags
-        bool digitA = false; // Special 'A' digit for SPD/MACH mode
+        bool digitA = false; // Special 'A' digit for the SPD window
         bool digitB = false; // Special '8' digit for bank angle
 
         bool ledN1 = false;

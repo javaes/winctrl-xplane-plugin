@@ -203,7 +203,7 @@ void FPS748PAP3MCPProfile::updateDisplayData(PAP3MCPDisplayData &data) {
     // (Not MCPSPD_spdmach, which only tracks the autothrottle mode and does not
     // flip on the ground.)
     bool isMach = dm->getCached<float>((prefix + "/B748/MCP/mcp_ias_co_act").c_str()) > 0.5f;
-    data.digitA = isMach;
+    data.spdMach = isMach;
     data.machDigits = 3;
     data.speed = dm->getCached<float>((prefix + "/B748/MCP/mcp_ias_mach_act").c_str());
     data.speedVisible = dm->getCached<float>((prefix + "/B748/mcp/speed_is_blank").c_str()) < 0.5f;

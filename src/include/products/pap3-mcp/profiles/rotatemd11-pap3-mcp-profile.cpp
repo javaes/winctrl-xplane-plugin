@@ -145,6 +145,7 @@ void RotateMD11PAP3MCPProfile::updateDisplayData(PAP3MCPDisplayData &data) {
         // MACH mode
         data.speed = dataref->getCached<float>("Rotate/aircraft/systems/gcp_spd_presel_mach");
     }
+    data.spdMach = (iasMachMode != 0);
 
     // Control SPD LCD visibility based on FMS SPD engagement
     // When FMS SPD is engaged (value = 1), hide the SPD display

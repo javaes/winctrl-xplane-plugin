@@ -129,6 +129,7 @@ void XCraftsEjetsPAP3MCPProfile::updateDisplayData(PAP3MCPDisplayData &data) {
     } else {
         data.speed = speedRaw;
     }
+    data.spdMach = isMach;
 
     float headingRaw = dr->getCached<float>("sim/cockpit/autopilot/heading_mag");
     data.heading = (static_cast<int>(headingRaw) % 360 + 360) % 360;

@@ -6,6 +6,7 @@
 #include "product-fcu-efis.h"
 #include "product-fmc.h"
 #include "product-joystick.h"
+#include "product-nws.h"
 #include "product-orion-throttle.h"
 #include "product-pap3-mcp.h"
 #include "product-pdc.h"
@@ -150,6 +151,9 @@ USBDevice *USBDevice::Device(HIDDeviceHandle hidDevice, uint16_t vendorId, uint1
         case 0xB920: // URSA MINOR 32 Throttle Metal L
         case 0xB930: // URSA MINOR 32 Throttle Metal R
             return new ProductUrsaMinorThrottle(hidDevice, vendorId, productId, vendorName, productName);
+
+        case 0xB961: // WINCTRL 32 NWS (Nosewheel Steering tiller)
+            return new ProductNWS(hidDevice, vendorId, productId, vendorName, productName);
 
         case 0xBD64: // Orion Throttle Base II + F15EX HANDLE L + F15EX HANDLE R
             return new ProductOrionThrottle(hidDevice, vendorId, productId, vendorName, productName);

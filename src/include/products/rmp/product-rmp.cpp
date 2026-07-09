@@ -95,7 +95,22 @@ bool ProductRMP::connect() {
     setLedBrightness(RMPLed::OVERALL_LEDS_BRIGHTNESS, 255);
     setAllLedsEnabled(false);
 
-    std::string variantPreference = AppState::getInstance()->readPreference(variantPreferenceKey(), "captain");
+    // Preset a sensible default variant per physical unit; a stored user
+    // preference still takes precedence via readPreference().
+    const char *defaultVariant = "captain";
+    switch (productId) {
+        case 0xBB83: // RMP L
+            defaultVariant = "captain";
+            break;
+        case 0xBB85: // RMP C
+            defaultVariant = "captain";
+            break;
+        case 0xBB84: // RMP R
+            defaultVariant = "first_officer";
+            break;
+    }
+
+    std::string variantPreference = AppState::getInstance()->readPreference(variantPreferenceKey(), defaultVariant);
     if (variantPreference == "stby") {
         deviceVariant = RMPDeviceVariant::VARIANT_STBY;
     } else if (variantPreference == "first_officer") {

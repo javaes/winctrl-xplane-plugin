@@ -10,25 +10,25 @@
 #include <vector>
 
 namespace {
-// VHF1/VHF2 use the standard 8.33 datarefs where the value is the frequency in
-// kHz (e.g. 122800 -> "122.800").
-std::string formatVhfFreq(int hz833) {
-    if (hz833 <= 0) {
-        return "      ";
+    // VHF1/VHF2 use the standard 8.33 datarefs where the value is the frequency in
+    // kHz (e.g. 122800 -> "122.800").
+    std::string formatVhfFreq(int hz833) {
+        if (hz833 <= 0) {
+            return "      ";
+        }
+
+        char buf[16];
+        snprintf(buf, sizeof(buf), "%.3f", hz833 / 1000.0);
+        return std::string(buf);
     }
 
-    char buf[16];
-    snprintf(buf, sizeof(buf), "%.3f", hz833 / 1000.0);
-    return std::string(buf);
-}
-
-// COM3 exposes the frequency split into an integer MHz part and a kHz part
-// (e.g. MHz=118, kHz=25 -> "118.025").
-std::string formatCom3Freq(float mhz, float khz) {
-    char buf[16];
-    snprintf(buf, sizeof(buf), "%.0f.%03.0f", mhz, khz);
-    return std::string(buf);
-}
+    // COM3 exposes the frequency split into an integer MHz part and a kHz part
+    // (e.g. MHz=118, kHz=25 -> "118.025").
+    std::string formatCom3Freq(float mhz, float khz) {
+        char buf[16];
+        snprintf(buf, sizeof(buf), "%.0f.%03.0f", mhz, khz);
+        return std::string(buf);
+    }
 } // namespace
 
 const char *ZiboRMPProfile::rtpName() const {
@@ -68,7 +68,7 @@ ZiboRMPProfile::ZiboRMPProfile(ProductRMP *product) : RMPAircraftProfile(product
         uint8_t backlight = (hasPower && brightness.size() > 3) ? static_cast<uint8_t>(brightness[3] * 255) : 0;
 
         product->setLedBrightness(RMPLed::BACKLIGHT, backlight);
-        product->setLedBrightness(RMPLed::LCD_BRIGHTNESS, hasPower ? 255 : 0);
+        product->setLedBrightness(RMPLed::LCD_BRIGHTNESS, backlight);
         product->setLedBrightness(RMPLed::OVERALL_LEDS_BRIGHTNESS, hasPower ? 255 : 0);
 
         product->forceStateSync();

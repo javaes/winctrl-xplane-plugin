@@ -62,14 +62,13 @@ ZiboRMPProfile::ZiboRMPProfile(ProductRMP *product) : RMPAircraftProfile(product
         "laminar/B738/comm/com3/stdby_freq_kHz",
     };
 
-    // Backlight follows the pedestal panel brightness (index 3), gated on avionics power.
     Dataref::getInstance()->monitorExistingDataref<std::vector<float>>("laminar/B738/electric/panel_brightness", [product](const std::vector<float> &brightness) {
         bool hasPower = Dataref::getInstance()->getCached<bool>("sim/cockpit/electrical/avionics_on");
         uint8_t backlight = (hasPower && brightness.size() > 3) ? static_cast<uint8_t>(brightness[3] * 255) : 0;
 
         product->setLedBrightness(RMPLed::BACKLIGHT, backlight);
         product->setLedBrightness(RMPLed::LCD_BRIGHTNESS, backlight);
-        product->setLedBrightness(RMPLed::OVERALL_LEDS_BRIGHTNESS, hasPower ? 255 : 0);
+        product->setLedBrightness(RMPLed::OVERALL_LEDS_BRIGHTNESS, backlight);
 
         product->forceStateSync();
     },

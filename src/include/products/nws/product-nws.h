@@ -24,7 +24,7 @@ class ProductNWS : public USBDevice {
         ProductNWS(HIDDeviceHandle hidDevice, uint16_t vendorId, uint16_t productId, std::string vendorName, std::string productName);
         ~ProductNWS();
 
-        static constexpr unsigned char IdentifierByte = 0x61;
+        static constexpr unsigned char IdentifierByte = 0x60;
 
         const char *classIdentifier() override;
         const char *activeProfileName() const override;

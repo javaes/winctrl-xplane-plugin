@@ -37,7 +37,7 @@ bool USBDevice::connect() {
     if (pipe(inputPipe) < 0) {
         // Without the self-pipe there is no way to wake the input thread out
         // of select(), so disconnect() would hang in join(). Fail the connect.
-        Logger::getInstance()->error("Failed to create shutdown pipe: %d\n", errno);
+        Logger::getInstance()->critical("Failed to create shutdown pipe: %d\n", errno);
         inputPipe[0] = inputPipe[1] = -1;
         return false;
     }
@@ -62,7 +62,7 @@ bool USBDevice::connect() {
                 if (errno == EINTR) {
                     continue;
                 }
-                Logger::getInstance()->error("Select failed: %d\n", errno);
+                Logger::getInstance()->critical("Select failed: %d\n", errno);
                 break;
             }
 
@@ -75,7 +75,7 @@ bool USBDevice::connect() {
                 if (bytesRead > 0 && connected) {
                     InputReportCallback(this, (int) bytesRead, buffer);
                 } else if (bytesRead < 0) {
-                    Logger::getInstance()->error("Read failed with error: %d\n", errno);
+                    Logger::getInstance()->critical("Read failed with error: %d\n", errno);
                     break;
                 } else {
                     break; // EOF — device disconnected
@@ -207,7 +207,7 @@ void USBDevice::writeThreadLoop() {
         if (!data.empty() && hidDevice >= 0 && connected) {
             ssize_t bytesWritten = write(hidDevice, data.data(), data.size());
             if (bytesWritten != (ssize_t) data.size()) {
-                Logger::getInstance()->error("Raw write failed: %s (wrote %zd of %zu bytes)\n", strerror(errno), bytesWritten, data.size());
+                Logger::getInstance()->critical("Raw write failed: %s (wrote %zd of %zu bytes)\n", strerror(errno), bytesWritten, data.size());
             }
         }
     }

@@ -13,7 +13,7 @@ USBController *USBController::instance = nullptr;
 USBController::USBController() {
     hidManager = IOHIDManagerCreate(kCFAllocatorDefault, kIOHIDOptionsTypeNone);
     if (CFGetTypeID(hidManager) != IOHIDManagerGetTypeID()) {
-        Logger::getInstance()->error("Failed to create IOHIDManager\n");
+        Logger::getInstance()->critical("Failed to create IOHIDManager\n");
         return;
     }
 

@@ -110,7 +110,8 @@ class USBDevice {
         // settings (globally or in the active aircraft's control profile).
         // X-Plane fires that binding itself, so product didReceiveButton
         // overrides must return early instead of running the built-in action.
-        // Not implemented in the stresstest build (usbdevice_shared.cpp).
+        // Logs the override in debug mode. Not implemented in the stresstest
+        // build (usbdevice_shared.cpp).
         bool isButtonHandledByXPlane(uint16_t hardwareButtonIndex);
 
         virtual void blackout();

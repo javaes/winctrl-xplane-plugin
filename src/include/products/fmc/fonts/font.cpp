@@ -26,7 +26,7 @@ const std::vector<std::vector<unsigned char>> Font::GlyphData(std::string filena
     std::filesystem::path fontFile = std::filesystem::path(pluginDirectory) / "fonts" / filename;
     std::ifstream file(fontFile, std::ios::binary);
     if (!file) {
-        Logger::getInstance()->error("Could not open custom font file: %s\n", fontFile.c_str());
+        Logger::getInstance()->critical("Could not open custom font file: %s\n", fontFile.c_str());
         return {};
     }
 
@@ -42,7 +42,7 @@ const std::vector<std::vector<unsigned char>> Font::GlyphData(std::string filena
         if (file.read(reinterpret_cast<char *>(glyphData.data()), lengthByte)) {
             result.push_back(glyphData);
         } else {
-            Logger::getInstance()->error("Failed to read glyph data from file: %s\n", fontFile.c_str());
+            Logger::getInstance()->critical("Failed to read glyph data from file: %s\n", fontFile.c_str());
             break;
         }
     }
@@ -109,10 +109,10 @@ const std::vector<std::string> Font::ReadCustomFontFiles() {
                 }
             }
         } else {
-            Logger::getInstance()->error("Fonts directory does not exist: %s\n", fontsDirectory.c_str());
+            Logger::getInstance()->critical("Fonts directory does not exist: %s\n", fontsDirectory.c_str());
         }
     } catch (const std::filesystem::filesystem_error &e) {
-        Logger::getInstance()->error("Error reading fonts directory: %s\n", e.what());
+        Logger::getInstance()->critical("Error reading fonts directory: %s\n", e.what());
     }
 
     return fontFiles;
@@ -324,7 +324,7 @@ bool padGlyphsToHeight(std::vector<std::vector<unsigned char>> &data, unsigned c
         }
     }
     if (resetIdx.size() < 2 || flushTpl.empty()) {
-        Logger::getInstance()->error("Font::ResizeCellHeight: unexpected font structure (resets=%zu)\n", resetIdx.size());
+        Logger::getInstance()->critical("Font::ResizeCellHeight: unexpected font structure (resets=%zu)\n", resetIdx.size());
         return false;
     }
 
@@ -340,11 +340,11 @@ bool padGlyphsToHeight(std::vector<std::vector<unsigned char>> &data, unsigned c
     std::vector<uint32_t> writeAddrs0, writeAddrs1;
     if (!parseGlyphSegment(seg0, geo0, buf0, writeTpl, commitTpl, writeAddrs0) ||
         !parseGlyphSegment(seg1, geo1, buf1, writeTpl, commitTpl, writeAddrs1)) {
-        Logger::getInstance()->error("Font::ResizeCellHeight: failed to parse glyph segments\n");
+        Logger::getInstance()->critical("Font::ResizeCellHeight: failed to parse glyph segments\n");
         return false;
     }
     if (writeTpl.size() != 29 || commitTpl.size() != 17) {
-        Logger::getInstance()->error("Font::ResizeCellHeight: missing WRITE/COMMIT block templates\n");
+        Logger::getInstance()->critical("Font::ResizeCellHeight: missing WRITE/COMMIT block templates\n");
         return false;
     }
 

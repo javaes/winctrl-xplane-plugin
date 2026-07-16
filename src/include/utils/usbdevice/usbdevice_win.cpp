@@ -57,11 +57,11 @@ bool USBDevice::connect() {
             outputReportByteLength = caps.OutputReportByteLength;
             Logger::getInstance()->debug("Output report byte length: %u\n", outputReportByteLength);
         } else {
-            Logger::getInstance()->error("Failed to get HID capabilities\n");
+            Logger::getInstance()->critical("Failed to get HID capabilities\n");
         }
         HidD_FreePreparsedData(preparsedData);
     } else {
-        Logger::getInstance()->error("Failed to get preparsed data\n");
+        Logger::getInstance()->critical("Failed to get preparsed data\n");
     }
 
     if (hidWriteDevice != INVALID_HANDLE_VALUE) {
@@ -78,7 +78,7 @@ bool USBDevice::connect() {
     if (hidWriteDevice == INVALID_HANDLE_VALUE) {
         // Writes fall back to the shared handle, where they serialize against
         // the blocking ReadFile and throttle to the device's input report rate.
-        Logger::getInstance()->error("Failed to open dedicated write handle for %s, falling back to shared handle: %lu\n",
+        Logger::getInstance()->critical("Failed to open dedicated write handle for %s, falling back to shared handle: %lu\n",
             productName.empty() ? "Unknown" : productName.c_str(), GetLastError());
     }
 
@@ -141,7 +141,7 @@ void USBDevice::InputReportCallback(void *context, DWORD bytesRead, uint8_t *rep
     } catch (const std::system_error &e) {
         return;
     } catch (...) {
-        Logger::getInstance()->error("Unexpected exception in InputReportCallback\n");
+        Logger::getInstance()->critical("Unexpected exception in InputReportCallback\n");
         return;
     }
 }
@@ -223,7 +223,7 @@ bool USBDevice::writeData(std::vector<uint8_t> data) {
     }
 
     if (data.size() > 1024) {
-        Logger::getInstance()->error("Data size too large: %zu bytes\n", data.size());
+        Logger::getInstance()->critical("Data size too large: %zu bytes\n", data.size());
         return false;
     }
 
@@ -236,7 +236,7 @@ bool USBDevice::writeData(std::vector<uint8_t> data) {
             // correct recovery is a full recycle: flag the device unhealthy and
             // let the reaper rebuild it. connected == false makes writeData
             // return early above, so this logs at most once per wedge.
-            Logger::getInstance()->error("Write queue overflow for %s (vendorId: 0x%04X, productId: 0x%04X): %zu packets queued, recycling device\n",
+            Logger::getInstance()->critical("Write queue overflow for %s (vendorId: 0x%04X, productId: 0x%04X): %zu packets queued, recycling device\n",
                 productName.empty() ? "Unknown" : productName.c_str(), vendorId, productId, writeQueue.size());
             connected = false;
             return false;
@@ -389,7 +389,7 @@ void USBDevice::writeThreadLoop() {
             }
             connected = false;
 
-            Logger::getInstance()->error("Write failed terminally for %s (vendorId: 0x%04X, productId: 0x%04X): %lu (%s), discarding %zu packet(s). Device will be recycled; if this repeats, disconnect and reconnect the device.\n",
+            Logger::getInstance()->critical("Write failed terminally for %s (vendorId: 0x%04X, productId: 0x%04X): %lu (%s), discarding %zu packet(s). Device will be recycled; if this repeats, disconnect and reconnect the device.\n",
                 productName.empty() ? "Unknown" : productName.c_str(), vendorId, productId, lastError, errorName, discarded);
 
             // Do not exit the thread and do not attempt further writes. Wait

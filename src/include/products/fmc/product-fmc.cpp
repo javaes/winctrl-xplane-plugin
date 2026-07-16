@@ -492,7 +492,7 @@ void ProductFMC::setFont(FontVariant preferredVariant) {
     preferredFontVariant = preferredVariant;
     bool shouldLoadDefaultFont = fontPreference == "default";
     if (!shouldLoadDefaultFont && !Font::IsCustomFontAvailable(fontPreference)) {
-        Logger::getInstance()->error("Font file not found for font '%s'\n", fontPreference.c_str());
+        Logger::getInstance()->critical("Font file not found for font '%s'\n", fontPreference.c_str());
         AppState::getInstance()->writePreference("FMCFont", "default");
         shouldLoadDefaultFont = true;
     }
@@ -505,7 +505,7 @@ void ProductFMC::setFont(FontVariant preferredVariant) {
     }
 
     if (font.empty()) {
-        Logger::getInstance()->error("Failed to load font data for font '%s'\n", fontPreference.c_str());
+        Logger::getInstance()->critical("Failed to load font data for font '%s'\n", fontPreference.c_str());
         AppState::getInstance()->writePreference("FMCFont", "default");
         return;
     }
@@ -530,7 +530,7 @@ void ProductFMC::setScreenLayout(FontVariant variant, unsigned char characterHei
     preferredFontVariant = variant;
     std::vector<std::vector<unsigned char>> font = Font::GlyphData(variant, identifierByte, hardwareType);
     if (font.empty()) {
-        Logger::getInstance()->error("setScreenLayout: failed to load font data\n");
+        Logger::getInstance()->critical("setScreenLayout: failed to load font data\n");
         return;
     }
 

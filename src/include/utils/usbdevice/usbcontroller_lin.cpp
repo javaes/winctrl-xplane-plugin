@@ -26,13 +26,13 @@ static std::atomic<bool> shouldStopMonitoring{false};
 USBController::USBController() {
     struct udev *udev = udev_new();
     if (!udev) {
-        Logger::getInstance()->error("Failed to create udev context");
+        Logger::getInstance()->critical("Failed to create udev context");
         return;
     }
 
     hidManager = udev_monitor_new_from_netlink(udev, "udev");
     if (!hidManager) {
-        Logger::getInstance()->error("Failed to create udev monitor");
+        Logger::getInstance()->critical("Failed to create udev monitor");
         udev_unref(udev);
         return;
     }

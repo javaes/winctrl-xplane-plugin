@@ -38,6 +38,8 @@ PLUGIN_API void XPluginReceiveMessage(XPLMPluginID from, long msg, void *params)
 void menuAction(void *mRef, void *iRef);
 
 PLUGIN_API int XPluginStart(char *name, char *sig, char *desc) {
+    Logger::getInstance()->initialize();
+
     strcpy(name, FRIENDLY_NAME);
     strcpy(sig, BUNDLE_ID);
     strcpy(desc, "WINCTRL X-Plane plugin");
@@ -120,6 +122,7 @@ PLUGIN_API void XPluginStop(void) {
     PluginsMenu::getInstance()->teardown();
     AppState::getInstance()->deinitialize();
     Logger::getInstance()->info("Plugin stopped\n");
+    Logger::getInstance()->destroy();
 }
 
 PLUGIN_API int XPluginEnable(void) {

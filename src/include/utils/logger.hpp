@@ -1,10 +1,14 @@
 #ifndef LOGGER_HPP
 #define LOGGER_HPP
 
+#include <atomic>
 #include <cstdarg>
 #include <cstdio>
 #include <mutex>
+#include <queue>
 #include <string>
+#include <thread>
+#include <XPLMProcessing.h>
 #include <XPLMUtilities.h>
 
 #ifndef PRODUCT_NAME
@@ -18,6 +22,14 @@ enum class LogLevel {
     CRITICAL = 3,
 };
 
+// Thread-safe logger. X-Plane requires XPLMDebugString to be called from the
+// main (simulator) thread only. Log calls made from any other thread are
+// queued and flushed on the main thread via a flight-loop callback, so the
+// underlying XPLMDebugString call always happens on the main thread.
+//
+// Call initialize() once from the main thread (XPluginStart) and destroy()
+// from XPluginStop. Before initialize() runs there are no other threads yet,
+// so logging falls back to emitting directly.
 class Logger {
     public:
         static Logger *getInstance() {
@@ -25,8 +37,19 @@ class Logger {
             return &instance;
         }
 
+        void initialize() {
+            mainThreadId = std::this_thread::get_id();
+            XPLMRegisterFlightLoopCallback(flushCallback, -1.0f, nullptr);
+            initialized = true;
+        }
+
+        void destroy() {
+            initialized = false;
+            XPLMUnregisterFlightLoopCallback(flushCallback, nullptr);
+            flush(); // Drain anything still queued (we are on the main thread here).
+        }
+
         void setLogLevel(LogLevel level) {
-            std::lock_guard<std::mutex> lock(logMutex);
             currentLogLevel = level;
         }
 
@@ -55,7 +78,7 @@ class Logger {
             va_end(args);
         }
 
-        void error(const char *format, ...) {
+        void critical(const char *format, ...) {
             va_list args;
             va_start(args, format);
             log(LogLevel::CRITICAL, format, args);
@@ -70,7 +93,7 @@ class Logger {
         }
 
     private:
-        Logger() : currentLogLevel(LogLevel::VERBOSE) {}
+        Logger() : currentLogLevel(LogLevel::INFO), initialized(false) {}
 
         ~Logger() = default;
         Logger(const Logger &) = delete;
@@ -81,11 +104,9 @@ class Logger {
         }
 
         void logInternal(LogLevel level, const char *format, va_list args, bool force) {
-            if (!force && level < currentLogLevel) {
+            if (!force && level < currentLogLevel.load(std::memory_order_relaxed)) {
                 return;
             }
-
-            std::lock_guard<std::mutex> lock(logMutex);
 
             const char *levelStr = "";
             switch (level) {
@@ -109,13 +130,47 @@ class Logger {
             char finalBuffer[1360];
             snprintf(finalBuffer, sizeof(finalBuffer), "[%s] %s: %s", PRODUCT_NAME, levelStr, buffer);
 
-            XPLMDebugString(finalBuffer);
-            printf("%s", finalBuffer);
+            if (!initialized || std::this_thread::get_id() == mainThreadId) {
+                // On the main thread (or before the plugin is up): emit directly.
+                emit(finalBuffer);
+            } else {
+                // Off the main thread: hand off to the flight-loop flush so
+                // XPLMDebugString is only ever touched from the main thread.
+                std::lock_guard<std::mutex> lock(queueMutex);
+                pending.emplace(finalBuffer);
+            }
+        }
+
+        // Only ever called on the main thread (directly, or from flush()).
+        void emit(const char *message) {
+            XPLMDebugString(message);
+            printf("%s", message);
             fflush(stdout);
         }
 
-        std::mutex logMutex;
-        LogLevel currentLogLevel;
+        void flush() {
+            std::queue<std::string> drained;
+            {
+                std::lock_guard<std::mutex> lock(queueMutex);
+                std::swap(drained, pending);
+            }
+
+            while (!drained.empty()) {
+                emit(drained.front().c_str());
+                drained.pop();
+            }
+        }
+
+        static float flushCallback(float, float, int, void *) {
+            Logger::getInstance()->flush();
+            return -1.0f; // Run again on the next flight loop.
+        }
+
+        std::mutex queueMutex;
+        std::queue<std::string> pending;
+        std::thread::id mainThreadId;
+        std::atomic<bool> initialized;
+        std::atomic<LogLevel> currentLogLevel;
 };
 
 #endif

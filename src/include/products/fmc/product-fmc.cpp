@@ -4,6 +4,7 @@
 #include "config.h"
 #include "dataref.h"
 #include "plugins-menu.h"
+#include "profiles/bae146-fmc-profile.h"
 #include "profiles/ff350-fmc-profile.h"
 #include "profiles/ff767-fmc-profile.h"
 #include "profiles/ff777-fmc-profile.h"
@@ -129,6 +130,10 @@ void ProductFMC::setProfileForCurrentAircraft() {
     } else if (FPS748FMCProfile::IsEligible()) {
         clearDisplay();
         profile = new FPS748FMCProfile(this);
+        profileReady = true;
+    } else if (BAE146FMCProfile::IsEligible()) {
+        clearDisplay();
+        profile = new BAE146FMCProfile(this);
         profileReady = true;
     } else if (SparkyB744FMCProfile::IsEligible()) {
         clearDisplay();

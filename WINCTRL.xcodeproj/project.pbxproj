@@ -147,10 +147,12 @@
 		F6A1492F2E4F03A400FB8395 /* product-fmc.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F6A1492D2E4F03A400FB8395 /* product-fmc.cpp */; };
 		F6A149302E4F03A400FB8395 /* toliss-fmc-profile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F6A149292E4F03A400FB8395 /* toliss-fmc-profile.cpp */; };
 		AF9A28ED2FB71A19004849B1 /* pa28-fmc-profile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AF9A28EC2FB71A19004849B1 /* pa28-fmc-profile.cpp */; };
+		BAE14600000000000000B001 /* bae146-fmc-profile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BAE14600000000000000C0DE /* bae146-fmc-profile.cpp */; };
 		F6A149312E4F03A400FB8395 /* laminar-a333-fmc-profile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F6A149272E4F03A400FB8395 /* laminar-a333-fmc-profile.cpp */; };
 		F6A149322E4F03A400FB8395 /* product-fmc.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F6A1492D2E4F03A400FB8395 /* product-fmc.cpp */; };
 		F6A149332E4F03A400FB8395 /* toliss-fmc-profile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F6A149292E4F03A400FB8395 /* toliss-fmc-profile.cpp */; };
 		AF9A28EE2FB71A19004849B1 /* pa28-fmc-profile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AF9A28EC2FB71A19004849B1 /* pa28-fmc-profile.cpp */; };
+		BAE14600000000000000B002 /* bae146-fmc-profile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BAE14600000000000000C0DE /* bae146-fmc-profile.cpp */; };
 		F6A149342E4F03A400FB8395 /* laminar-a333-fmc-profile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F6A149272E4F03A400FB8395 /* laminar-a333-fmc-profile.cpp */; };
 		F6A1493D2E4F04AE00FB8395 /* zibo-fmc-profile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F6A1493C2E4F04AE00FB8395 /* zibo-fmc-profile.cpp */; };
 		F6A1493F2E4F04AE00FB8395 /* ff777-fmc-profile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F6A149362E4F04AE00FB8395 /* ff777-fmc-profile.cpp */; };
@@ -405,7 +407,9 @@
 		F6A149282E4F03A400FB8395 /* toliss-fmc-profile.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "toliss-fmc-profile.h"; sourceTree = "<group>"; };
 		F6A149292E4F03A400FB8395 /* toliss-fmc-profile.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "toliss-fmc-profile.cpp"; sourceTree = "<group>"; };
 		AF9A28EF2FB71A19004849B1 /* pa28-fmc-profile.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "pa28-fmc-profile.h"; sourceTree = "<group>"; };
+		BAE14600000000000000A0DE /* bae146-fmc-profile.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "bae146-fmc-profile.h"; sourceTree = "<group>"; };
 		AF9A28EC2FB71A19004849B1 /* pa28-fmc-profile.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "pa28-fmc-profile.cpp"; sourceTree = "<group>"; };
+		BAE14600000000000000C0DE /* bae146-fmc-profile.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "bae146-fmc-profile.cpp"; sourceTree = "<group>"; };
 		F6A1492B2E4F03A400FB8395 /* fmc-aircraft-profile.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "fmc-aircraft-profile.h"; sourceTree = "<group>"; };
 		F6A1492C2E4F03A400FB8395 /* product-fmc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "product-fmc.h"; sourceTree = "<group>"; };
 		F6A1492D2E4F03A400FB8395 /* product-fmc.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "product-fmc.cpp"; sourceTree = "<group>"; };
@@ -751,7 +755,9 @@
 				F6A149282E4F03A400FB8395 /* toliss-fmc-profile.h */,
 				F6A149292E4F03A400FB8395 /* toliss-fmc-profile.cpp */,
 				AF9A28EF2FB71A19004849B1 /* pa28-fmc-profile.h */,
+				BAE14600000000000000A0DE /* bae146-fmc-profile.h */,
 				AF9A28EC2FB71A19004849B1 /* pa28-fmc-profile.cpp */,
+				BAE14600000000000000C0DE /* bae146-fmc-profile.cpp */,
 				F671B5DC2EA96BBE00141EF2 /* rotatemd11-fmc-profile.h */,
 				F671B5DD2EA96BBE00141EF2 /* rotatemd11-fmc-profile.cpp */,
 				F60ABAD72FBDF04F001C91EF /* xcrafts-ejets-fmc-profile.h */,
@@ -1255,6 +1261,7 @@
 				F6CC2B502F0E5F4B00C0A4D8 /* ff777-pdc-profile.cpp in Sources */,
 				F6A149302E4F03A400FB8395 /* toliss-fmc-profile.cpp in Sources */,
 				AF9A28ED2FB71A19004849B1 /* pa28-fmc-profile.cpp in Sources */,
+				BAE14600000000000000B001 /* bae146-fmc-profile.cpp in Sources */,
 				F6AAEE222F261A790020CF32 /* zibo-ursa-minor-throttle-profile.cpp in Sources */,
 				F6AAEE232F261A790020CF32 /* ff777-ursa-minor-throttle-profile.cpp in Sources */,
 				5DBA92322E6F4D71007328BC /* ff767-fmc-profile.cpp in Sources */,
@@ -1324,6 +1331,7 @@
 				F60D39C12FD0D3B600C792EB /* product-orion-throttle.cpp in Sources */,
 				F6A149332E4F03A400FB8395 /* toliss-fmc-profile.cpp in Sources */,
 				AF9A28EE2FB71A19004849B1 /* pa28-fmc-profile.cpp in Sources */,
+				BAE14600000000000000B002 /* bae146-fmc-profile.cpp in Sources */,
 				F6A149342E4F03A400FB8395 /* laminar-a333-fmc-profile.cpp in Sources */,
 				F6A149412E4F04AE00FB8395 /* zibo-fmc-profile.cpp in Sources */,
 				F6B149532E4F04AE00FB8395 /* fps748-fmc-profile.cpp in Sources */,

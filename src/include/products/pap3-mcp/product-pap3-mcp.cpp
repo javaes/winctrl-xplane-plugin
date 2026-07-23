@@ -100,6 +100,9 @@ bool ProductPAP3MCP::connect() {
         setLedBrightness(PAP3MCPLed::LCD_BACKLIGHT, 0);
         setLedBrightness(PAP3MCPLed::OVERALL_LED_BRIGHTNESS, 0);
 
+        std::string atSwitchSetting = AppState::getInstance()->readPreference("PAP3ATSwitchType", "magnetic");
+        loadATSwitchType(atSwitchSetting);
+
         menuItemId = PluginsMenu::getInstance()->addItem(
             classIdentifier(),
             std::vector<MenuItem>{
@@ -115,6 +118,20 @@ bool ProductPAP3MCP::connect() {
                          setAllLedsEnabled(false);
                      });
                  }},
+                {.name = "A/T ARM switch", .content = std::vector<MenuItem>{
+                                               {.name = "Magnetic", .checked = atSwitchSetting != "standard", .content = [this](int itemId) {
+                                                    AppState::getInstance()->writePreference("PAP3ATSwitchType", "magnetic");
+                                                    loadATSwitchType("magnetic");
+                                                    PluginsMenu::getInstance()->uncheckSubmenuSiblings(itemId);
+                                                    PluginsMenu::getInstance()->setItemChecked(itemId, true);
+                                                }},
+                                               {.name = "Standard", .checked = atSwitchSetting == "standard", .content = [this](int itemId) {
+                                                    AppState::getInstance()->writePreference("PAP3ATSwitchType", "standard");
+                                                    loadATSwitchType("standard");
+                                                    PluginsMenu::getInstance()->uncheckSubmenuSiblings(itemId);
+                                                    PluginsMenu::getInstance()->setItemChecked(itemId, true);
+                                                }},
+                                           }},
             });
 
         if (!profile) {
@@ -602,6 +619,11 @@ void ProductPAP3MCP::setATSolenoid(bool engaged) {
     writeData(data);
 }
 
+void ProductPAP3MCP::loadATSwitchType(const std::string &value) {
+    atSwitchType = (value == "standard") ? ATSwitchType::Standard : ATSwitchType::Magnetic;
+    standardModeATArmed = false;
+}
+
 void ProductPAP3MCP::forceStateSync() {
     pressedButtonIndices.clear();
     lastButtonStateLo = 0;
@@ -654,6 +676,33 @@ void ProductPAP3MCP::didReceiveButton(uint16_t hardwareButtonIndex, bool pressed
     }
 
     if (isButtonHandledByXPlane(hardwareButtonIndex)) {
+        return;
+    }
+
+    // A/T ARM switch, standard (non-magnetic) variant. This switch is momentary
+    // and spring-loaded: it snaps back to the down position on its own because
+    // there is no solenoid to hold it up. Routing its two lines (index 40 =
+    // ARMED, index 41 = DISARMED) through the maintained-switch logic below would
+    // arm on the up-flick and immediately disarm on the spring-back. Instead we
+    // ignore the DISARMED line entirely and treat each rising edge of the ARMED
+    // line as a toggle, matching the real switch's "flick up to arm, flick up
+    // again to disarm" behaviour. The magnetic (maintained) variant is the
+    // default and keeps the two-line routing below unchanged.
+    if (atSwitchType == ATSwitchType::Standard && (hardwareButtonIndex == 40 || hardwareButtonIndex == 41)) {
+        if (hardwareButtonIndex == 40) {
+            bool wasPressed = pressedButtonIndices.count(hardwareButtonIndex) > 0;
+            if (pressed && !wasPressed) {
+                pressedButtonIndices.insert(hardwareButtonIndex);
+                standardModeATArmed = !standardModeATArmed;
+                // 0x01 = ARMED line, 0x02 = DISARMED line. The profile's handler
+                // reconciles the request against the sim (maybeToggle), so an
+                // external A/T state change only costs one extra flick to realign
+                // rather than driving the sim into the wrong state.
+                profile->handleSwitchChanged(0x06, standardModeATArmed ? 0x01 : 0x02, true);
+            } else if (!pressed && wasPressed) {
+                pressedButtonIndices.erase(hardwareButtonIndex);
+            }
+        }
         return;
     }
 

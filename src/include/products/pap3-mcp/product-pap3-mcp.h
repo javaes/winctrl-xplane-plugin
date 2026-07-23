@@ -10,6 +10,15 @@
 #include <vector>
 
 class ProductPAP3MCP : public USBDevice {
+    public:
+        // A/T ARM switch hardware variant. The magnetic switch is a maintained
+        // toggle held up by a solenoid; the standard switch is a momentary,
+        // spring-loaded toggle with no solenoid that snaps back on its own.
+        enum class ATSwitchType {
+            Magnetic,
+            Standard,
+        };
+
     private:
         uint8_t packetNumber = 1;
         PAP3MCPAircraftProfile *profile;
@@ -22,7 +31,11 @@ class ProductPAP3MCP : public USBDevice {
         uint64_t lastButtonStateLo = 0;
         uint32_t lastButtonStateHi = 0;
 
+        ATSwitchType atSwitchType = ATSwitchType::Magnetic;
+        bool standardModeATArmed = false;
+
         void setProfileForCurrentAircraft();
+        void loadATSwitchType(const std::string &value);
 
     public:
         ProductPAP3MCP(HIDDeviceHandle hidDevice, uint16_t vendorId, uint16_t productId, std::string vendorName, std::string productName);

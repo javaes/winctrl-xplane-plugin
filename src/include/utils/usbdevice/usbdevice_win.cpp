@@ -17,7 +17,7 @@ extern "C" {
 
 std::string USBDevice::pendingDevicePath;
 
-// Write path resilience tunables. See docs/windows-write-path-fix.md.
+// Write path resilience tunables.
 // kWriteTimeoutMs   - how long a single overlapped write may stay pending
 //                     before it is cancelled and (if not delivered) retried.
 // kWriteAttempts    - retries of the SAME packet in place before the device
@@ -155,16 +155,16 @@ void USBDevice::update() {
 }
 
 void USBDevice::disconnect() {
-    connected = false;
-
-    // Drain the write queue, then stop the write thread. Bound the drain with a
-    // deadline so a wedged write (blocked or pending forever) cannot hang
-    // shutdown; on deadline we stop the thread anyway and it discards the rest.
+    // Drain before clearing connected: the write thread gates each send on
+    // connected, so clearing it first discards the queued blackout packets
+    // instead of sending them. Bound the drain so a wedged write cannot hang
+    // shutdown; on the deadline the thread stops and discards the rest.
     auto drainDeadline = std::chrono::steady_clock::now() + std::chrono::seconds(2);
     while (writeQueueSize.load() > 0 && writeThreadRunning &&
            std::chrono::steady_clock::now() < drainDeadline) {
         std::this_thread::sleep_for(std::chrono::milliseconds(10));
     }
+    connected = false;
     writeThreadRunning = false;
     writeQueueCV.notify_all();
     // Wake an in-flight overlapped write immediately instead of after a full

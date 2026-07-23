@@ -120,18 +120,22 @@ void USBDevice::update() {
 }
 
 void USBDevice::disconnect() {
-    connected = false;
-
     // Wake the input thread via the self-pipe so it exits its select() block
     if (inputPipe[1] >= 0) {
         uint8_t c = 0;
         (void) write(inputPipe[1], &c, 1);
     }
 
-    // Drain write queue, then stop the write thread
-    while (writeQueueSize.load() > 0 && writeThreadRunning) {
+    // Drain before clearing connected: the write thread gates each send on
+    // connected, so clearing it first discards the queued blackout packets
+    // instead of sending them. Bound the drain so a wedged write cannot hang
+    // shutdown; on the deadline the thread stops and discards the rest.
+    auto drainDeadline = std::chrono::steady_clock::now() + std::chrono::seconds(2);
+    while (writeQueueSize.load() > 0 && writeThreadRunning &&
+           std::chrono::steady_clock::now() < drainDeadline) {
         std::this_thread::sleep_for(std::chrono::milliseconds(10));
     }
+    connected = false;
     writeThreadRunning = false;
     writeQueueCV.notify_all();
     if (writeThread.joinable()) {
